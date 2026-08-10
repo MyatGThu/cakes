@@ -78,15 +78,37 @@
   <main id="main">
     <!-- Act 1 · Arrival -->
     <section class="act act-hero" aria-label="Welcome">
-      <div class="parallax-layer" data-depth="0.35">
-        <img class="floret floret-1" src="images/decor/peony.webp" alt="" aria-hidden="true" width="360" height="360" fetchpriority="high">
+      <div class="parallax-layer" data-depth="0.35" aria-hidden="true">
+        <img class="floret floret-1" src="images/decor/peony.webp" alt="" width="360" height="360" fetchpriority="high">
+        <span class="ing-fly" style="top:15%; left:13%; --w:96px" data-fx="-320" data-fy="-80" data-rot="-140">
+          <img class="ing" src="images/ingredients/strawberry.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly" style="top:11%; left:80%; --w:104px" data-fx="340" data-fy="-120" data-rot="160">
+          <img class="ing" src="images/ingredients/lemon.webp" alt="" width="380" height="380"></span>
       </div>
-      <div class="parallax-layer" data-depth="0.2">
-        <img class="floret floret-2" src="images/decor/sprig.webp" alt="" aria-hidden="true" width="360" height="360">
+      <div class="parallax-layer" data-depth="0.2" aria-hidden="true">
+        <img class="floret floret-2" src="images/decor/sprig.webp" alt="" width="360" height="360">
+        <span class="ing-fly" style="top:60%; left:4%; --w:112px" data-fx="-380" data-fy="60" data-rot="-60">
+          <img class="ing" src="images/ingredients/whisk.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly m-hide" style="top:6%; left:42%; --w:96px" data-fx="0" data-fy="-260" data-rot="120">
+          <img class="ing" src="images/ingredients/vanilla.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly m-hide" style="top:76%; left:87%; --w:84px" data-fx="300" data-fy="180" data-rot="90">
+          <img class="ing" src="images/ingredients/sugar.webp" alt="" width="380" height="380"></span>
       </div>
-      <div class="parallax-layer" data-depth="0.5">
-        <img class="floret floret-3" src="images/decor/petals.webp" alt="" aria-hidden="true" width="360" height="360">
-        <img class="floret floret-4" src="images/decor/cake.webp" alt="" aria-hidden="true" width="360" height="360">
+      <div class="parallax-layer" data-depth="0.5" aria-hidden="true">
+        <span class="ing-fly m-hide" style="top:68%; left:15%; --w:60px" data-fx="-260" data-fy="200" data-rot="-220">
+          <img class="ing" src="images/ingredients/blueberry.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly" style="top:64%; left:79%; --w:108px" data-fx="320" data-fy="160" data-rot="140">
+          <img class="ing" src="images/ingredients/chocolate.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly" style="top:32%; left:5%; --w:70px" data-fx="-340" data-fy="-40" data-rot="-180">
+          <img class="ing" src="images/ingredients/raspberry.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly" style="top:28%; left:90%; --w:82px" data-fx="360" data-fy="-60" data-rot="200">
+          <img class="ing" src="images/ingredients/cherry.webp" alt="" width="380" height="380"></span>
+      </div>
+      <div class="parallax-layer" data-depth="0.75" aria-hidden="true">
+        <span class="ing-fly m-hide" style="top:80%; left:36%; --w:76px" data-fx="-80" data-fy="280" data-rot="-100">
+          <img class="ing" src="images/ingredients/egg.webp" alt="" width="380" height="380"></span>
+        <span class="ing-fly m-hide" style="top:7%; left:62%; --w:86px" data-fx="140" data-fy="-240" data-rot="80">
+          <img class="ing" src="images/ingredients/butter.webp" alt="" width="380" height="380"></span>
       </div>
 
       <div class="hero-inner">
@@ -109,6 +131,16 @@
     <!-- Act 2 · The cake builds itself as you scroll -->
     <section class="act cake-stage" id="story" aria-label="Our promise">
       <div class="stage-sticky">
+        <div class="stage-ingredients" aria-hidden="true">
+          <img class="stage-ing" src="images/ingredients/butter.webp" alt="" width="380" height="380" loading="lazy" style="--w:86px" data-sx="-430" data-sy="-120" data-srot="-160">
+          <img class="stage-ing" src="images/ingredients/egg.webp" alt="" width="380" height="380" loading="lazy" style="--w:74px" data-sx="400" data-sy="-170" data-srot="140">
+          <img class="stage-ing" src="images/ingredients/sugar.webp" alt="" width="380" height="380" loading="lazy" style="--w:78px" data-sx="-360" data-sy="180" data-srot="-120">
+          <img class="stage-ing" src="images/ingredients/strawberry.webp" alt="" width="380" height="380" loading="lazy" style="--w:92px" data-sx="430" data-sy="120" data-srot="180">
+          <img class="stage-ing" src="images/ingredients/chocolate.webp" alt="" width="380" height="380" loading="lazy" style="--w:96px" data-sx="-420" data-sy="40" data-srot="-90">
+          <img class="stage-ing" src="images/ingredients/raspberry.webp" alt="" width="380" height="380" loading="lazy" style="--w:66px" data-sx="390" data-sy="-40" data-srot="220">
+          <img class="stage-ing" src="images/ingredients/lemon.webp" alt="" width="380" height="380" loading="lazy" style="--w:88px" data-sx="-300" data-sy="-230" data-srot="160">
+          <img class="stage-ing" src="images/ingredients/cherry.webp" alt="" width="380" height="380" loading="lazy" style="--w:72px" data-sx="330" data-sy="230" data-srot="-200">
+        </div>
         <div class="stage-cake">
           <canvas id="turntable" width="640" height="640" aria-hidden="true"></canvas>
           <img id="turntableFallback" src="images/3d/hero/frame-00.webp" alt="A three-tier cream and raspberry celebration cake" width="640" height="640" loading="lazy">
@@ -126,6 +158,8 @@
       <div class="drift-field" aria-hidden="true">
         <img class="drift" src="images/decor/petals.webp" alt="" width="360" height="360" loading="lazy" style="top:-4%; left:6%; width:110px;">
         <img class="drift" src="images/decor/sprig.webp" alt="" width="360" height="360" loading="lazy" style="top:10%; right:4%; width:90px;">
+        <img class="drift" src="images/ingredients/raspberry.webp" alt="" width="380" height="380" loading="lazy" style="top:32%; left:3%; width:58px;">
+        <img class="drift" src="images/ingredients/lemon.webp" alt="" width="380" height="380" loading="lazy" style="top:52%; right:7%; width:74px;">
       </div>
       <div class="wrap">
         <div class="section-head" data-reveal>
@@ -149,6 +183,13 @@
       </div>
     </section>
 
+    <!-- Ribbon · scroll-speed-reactive marquee -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>Real butter&ensp;·&ensp;Real fruit&ensp;·&ensp;Baked for your date&ensp;·&ensp;Melbourne made&ensp;·&ensp;Pickup &amp; delivery&ensp;·&ensp;</span><span>Real butter&ensp;·&ensp;Real fruit&ensp;·&ensp;Baked for your date&ensp;·&ensp;Melbourne made&ensp;·&ensp;Pickup &amp; delivery&ensp;·&ensp;</span>
+      </div>
+    </div>
+
     <!-- Act 4 · Menu teaser with floating renders -->
     <section class="act teaser" aria-label="From the menu">
       <div class="wrap teaser-wrap">
@@ -162,6 +203,8 @@
           <img class="float-img float-a" src="images/3d/classic-vanilla.webp" alt="Classic vanilla two-tier cake" width="800" height="800" loading="lazy">
           <img class="float-img float-b" src="images/3d/cupcake-box.webp" alt="Cupcake box with swirled buttercream" width="800" height="800" loading="lazy">
           <img class="float-img float-c" src="images/3d/chocolate-fudge.webp" alt="Chocolate fudge cake" width="800" height="800" loading="lazy">
+          <img class="float-img float-d" src="images/ingredients/strawberry.webp" alt="" aria-hidden="true" width="380" height="380" loading="lazy">
+          <img class="float-img float-e" src="images/ingredients/cherry.webp" alt="" aria-hidden="true" width="380" height="380" loading="lazy">
         </div>
       </div>
     </section>

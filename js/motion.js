@@ -215,6 +215,30 @@
       opacity: 0,
       scrollTrigger: { trigger: heroAct, start: "top top", end: "18% top", scrub: true },
     });
+
+    // Ingredients: fly IN on arrival (img), bob idly (img), and scatter back
+    // OUT as you scroll away (wrapper) — separate layers, no transform fights.
+    var introDelay = (wipeArrived !== null ? 0.55 : 0.1) + 0.35;
+    gsap.utils.toArray(".act-hero .ing-fly").forEach(function (el, i) {
+      var img = el.querySelector(".ing");
+      var fx = parseFloat(el.getAttribute("data-fx") || "0");
+      var fy = parseFloat(el.getAttribute("data-fy") || "-160");
+      var rot = parseFloat(el.getAttribute("data-rot") || "90");
+      gsap.from(img, {
+        x: fx, y: fy, rotation: rot, opacity: 0,
+        duration: 1.3, delay: introDelay + i * 0.07, ease: "power3.out",
+        onComplete: function () {
+          gsap.to(img, {
+            y: "+=" + (7 + (i % 3) * 4), rotation: (i % 2 ? 4 : -4),
+            duration: 2 + (i % 3) * 0.6, repeat: -1, yoyo: true, ease: "sine.inOut",
+          });
+        },
+      });
+      gsap.fromTo(el, { x: 0, y: 0, rotation: 0, opacity: 1 }, {
+        x: fx * 0.55, y: -140 - (i % 4) * 70, rotation: rot * 0.4, opacity: 0, ease: "none",
+        scrollTrigger: { trigger: heroAct, start: "top top", end: "bottom top", scrub: 0.5 },
+      });
+    });
   }
 
   // The turntable: the 3D cake spins and rises as you scroll.
@@ -263,12 +287,52 @@
       scale: 1.0, y: 0, ease: "none",
       scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.4 },
     });
+
+    // The recipe plays out: ingredients fly in from the edges and disappear
+    // INTO the spinning cake, one after another, during the first half of
+    // the scroll story.
+    var stageIngs = gsap.utils.toArray(".stage-ing");
+    if (stageIngs.length) {
+      var squeeze = window.innerWidth < 700 ? 0.42 : 1;
+      var conv = gsap.timeline({
+        scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.4 },
+      });
+      stageIngs.forEach(function (el, i) {
+        var sx = parseFloat(el.getAttribute("data-sx") || "300") * squeeze;
+        var sy = parseFloat(el.getAttribute("data-sy") || "0") * squeeze;
+        var rot = parseFloat(el.getAttribute("data-srot") || "120");
+        var at = i * 0.16;
+        conv.fromTo(el,
+          { x: sx, y: sy, rotation: rot, scale: 1, opacity: 0 },
+          { x: sx * 0.16, y: sy * 0.16, rotation: rot * 0.25, opacity: 1, scale: 0.72, duration: 0.5, ease: "power1.in", immediateRender: true }, at)
+          .to(el, { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 0.2, ease: "power2.in" }, at + 0.5);
+      });
+      conv.to({}, { duration: 1.9 }); // hold: convergence owns only the first half of the stage
+    }
+  }
+
+  // Scroll-speed-reactive marquee ribbon: it drifts on its own, races when
+  // you scroll fast, and runs backwards when you scroll back up.
+  var track = document.querySelector(".marquee-track");
+  if (track) {
+    var loop = gsap.fromTo(track, { xPercent: 0 }, { xPercent: -50, ease: "none", duration: 24, repeat: -1 });
+    var boost = { v: 1 };
+    ScrollTrigger.create({
+      onUpdate: function (self) {
+        var v = gsap.utils.clamp(-5, 5, self.getVelocity() / 260);
+        if (Math.abs(v) > Math.abs(boost.v) || v * boost.v < 0) boost.v = v;
+      },
+    });
+    gsap.ticker.add(function () {
+      loop.timeScale(gsap.utils.interpolate(loop.timeScale(), boost.v, 0.08));
+      boost.v = gsap.utils.interpolate(boost.v, 1, 0.03);
+    });
   }
 
   // Teaser: renders float at different speeds and gently tilt while scrolling.
   var teaser = document.querySelector(".teaser");
   if (teaser) {
-    [[".float-a", -70, -5], [".float-b", -130, 6], [".float-c", -40, -3]].forEach(function (cfg) {
+    [[".float-a", -70, -5], [".float-b", -130, 6], [".float-c", -40, -3], [".float-d", -170, 14], [".float-e", -90, -18]].forEach(function (cfg) {
       gsap.fromTo(cfg[0], { y: 70, rotation: 0 }, {
         y: cfg[1], rotation: cfg[2], ease: "none",
         scrollTrigger: { trigger: teaser, start: "top bottom", end: "bottom top", scrub: 0.5 },

@@ -1,5 +1,9 @@
 /* Landing-page acts — layered on style.css tokens. */
 
+/* The tilted marquee leans past the viewport edge; clip (not hidden — that
+   would break the sticky header and cake stage) stops sideways scrolling. */
+body { overflow-x: clip; }
+
 .act { position: relative; }
 
 .drift-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
@@ -161,6 +165,8 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
 .float-a { width: min(52%, 300px); top: 0; left: 6%; }
 .float-b { width: min(44%, 250px); top: 34%; right: 2%; }
 .float-c { width: min(46%, 265px); bottom: 0; left: 22%; }
+.float-d { width: min(18%, 96px); top: 66%; right: 4%; }
+.float-e { width: min(14%, 76px); top: 4%; left: 4%; }
 @media (max-width: 879px) { .teaser-float { min-height: 380px; } }
 
 /* ---------- Act 5 · About tease ---------- */
@@ -180,4 +186,68 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
   line-height: 1.35;
   margin: 0 0 28px;
   text-wrap: balance;
+}
+
+/* ---------- Flying ingredients (hero) ----------
+   Wrapper (.ing-fly) takes the scroll fly-out, the img inside takes the
+   arrival fly-in + idle bob — three transform layers that never fight. */
+.ing-fly {
+  position: absolute;
+  width: var(--w, 90px);
+  pointer-events: none;
+  will-change: transform;
+}
+.ing-fly .ing {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 14px 20px rgba(51, 36, 28, 0.2));
+}
+@media (max-width: 640px) {
+  .ing-fly.m-hide { display: none; }
+  .ing-fly { --w: 64px; }
+}
+
+/* ---------- Ingredients converging into the cake (story stage) ---------- */
+.stage-sticky { overflow: hidden; }
+.stage-ingredients { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.stage-ing {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  width: var(--w, 84px);
+  height: auto;
+  margin-left: calc(var(--w, 84px) / -2);
+  margin-top: calc(var(--w, 84px) / -2);
+  opacity: 0;
+  filter: drop-shadow(0 12px 18px rgba(51, 36, 28, 0.22));
+  will-change: transform, opacity;
+}
+html:not(.motion-on) .stage-ingredients { display: none; }
+
+/* ---------- Marquee ribbon (scroll-speed reactive) ----------
+   The outer box stays axis-aligned (so nothing widens the page); the tilt
+   lives on the track, whose painted background is far wider than the screen. */
+.marquee {
+  overflow: hidden;
+  padding: 26px 0;
+  margin: clamp(4px, 2vh, 20px) 0;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  background: var(--accent);
+  color: #fff;
+  padding: 14px 40px 18px;
+  transform: rotate(-1.4deg);
+  box-shadow: 0 10px 30px rgba(176, 48, 82, 0.25);
+  will-change: transform;
+}
+.marquee-track span {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(22px, 3.4vw, 42px);
+  letter-spacing: 0.03em;
+  line-height: 1.2;
 }

@@ -26,6 +26,9 @@ images/3d/                   ← product renders + hero turntable frames, genera
                                with Three.js (scripts in the session scratchpad)
 images/3d/anim/              ← 32-frame 360° turntable loops (animated WebP), the
                                fallback card animation when a product has no video
+images/ingredients/          ← transparent 3D ingredient sprites (Three.js) that fly
+                               through the landing hero, converge into the scroll
+                               cake, and drift through sections
 images/video/                ← real footage: muted, chromeless clips the menu cards
                                play on hover (desktop) or while in view (mobile),
                                plus their poster frames; reduced-motion gets stills
