@@ -8,9 +8,17 @@
     "leadTimeDays": 3,
     "available": true,
     "variants": [
-      { "name": "6\" (serves 8)", "price": 38 },
-      { "name": "8\" (serves 14)", "price": 52 }
-    ]
+      {
+        "name": "6\" (serves 8)",
+        "price": 38
+      },
+      {
+        "name": "8\" (serves 14)",
+        "price": 52
+      }
+    ],
+    "video": "images/video/classic-vanilla.mp4",
+    "videoPoster": "images/video/classic-vanilla-poster.webp"
   },
   {
     "id": "chocolate-fudge",
@@ -21,9 +29,17 @@
     "leadTimeDays": 3,
     "available": true,
     "variants": [
-      { "name": "6\" (serves 8)", "price": 42 },
-      { "name": "8\" (serves 14)", "price": 56 }
-    ]
+      {
+        "name": "6\" (serves 8)",
+        "price": 42
+      },
+      {
+        "name": "8\" (serves 14)",
+        "price": 56
+      }
+    ],
+    "video": "images/video/chocolate-fudge.mp4",
+    "videoPoster": "images/video/chocolate-fudge-poster.webp"
   },
   {
     "id": "custom-celebration",
@@ -34,10 +50,21 @@
     "leadTimeDays": 5,
     "available": true,
     "variants": [
-      { "name": "6\" (serves 8)", "price": 55 },
-      { "name": "8\" (serves 14)", "price": 75 },
-      { "name": "Two tier (serves 25+)", "price": 130 }
-    ]
+      {
+        "name": "6\" (serves 8)",
+        "price": 55
+      },
+      {
+        "name": "8\" (serves 14)",
+        "price": 75
+      },
+      {
+        "name": "Two tier (serves 25+)",
+        "price": 130
+      }
+    ],
+    "video": "images/video/custom-celebration.mp4",
+    "videoPoster": "images/video/custom-celebration-poster.webp"
   },
   {
     "id": "cupcake-box",
@@ -48,8 +75,14 @@
     "leadTimeDays": 2,
     "available": true,
     "variants": [
-      { "name": "Box of 6", "price": 18 },
-      { "name": "Box of 12", "price": 33 }
+      {
+        "name": "Box of 6",
+        "price": 18
+      },
+      {
+        "name": "Box of 12",
+        "price": 33
+      }
     ]
   },
   {

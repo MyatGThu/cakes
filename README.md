@@ -24,8 +24,11 @@ shop.html + js/store.js      ← the menu, cart and ordering flow
 about.html                   ← Mia's story (parchment / torn-paper treatment)
 images/3d/                   ← product renders + hero turntable frames, generated
                                with Three.js (scripts in the session scratchpad)
-images/3d/anim/              ← 32-frame 360° turntable loops (animated WebP) that
-                               the menu cards autoplay; reduced-motion gets stills
+images/3d/anim/              ← 32-frame 360° turntable loops (animated WebP), the
+                               fallback card animation when a product has no video
+images/video/                ← real footage: muted, chromeless clips the menu cards
+                               play on hover (desktop) or while in view (mobile),
+                               plus their poster frames; reduced-motion gets stills
 js/motion.js                 ← GSAP/scroll animation layer (pure progressive enhancement)
 admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots
@@ -157,6 +160,25 @@ Each product has `leadTimeDays` ("days of notice needed"). At checkout:
 That date is shown as the earliest pickup, the date picker won't allow anything earlier,
 and picking a closed day politely bumps to the next open one. Each product card also shows
 its own earliest-pickup date up front, so there are no surprises at checkout.
+
+## Product videos (hover to play)
+
+A product whose JSON entry has a `video` (and ideally `videoPoster`) shows that clip on
+its menu card instead of a photo: still until the cursor hovers it on desktop, playing
+quietly while on screen on phones, never any player controls. To add one from a phone
+video (any orientation):
+
+```bash
+ffmpeg -i clip.mp4 -vf "crop=in_w:in_w*3/4,scale=720:540,fps=24" \
+  -c:v libx264 -crf 25 -an -movflags +faststart images/video/<product-id>.mp4
+ffmpeg -i images/video/<product-id>.mp4 -frames:v 1 images/video/<product-id>-poster.webp
+```
+
+Then in `data/products.json` add to the product:
+`"video": "images/video/<product-id>.mp4", "videoPoster": "images/video/<product-id>-poster.webp"`.
+Keep clips to ~4–8 seconds and roughly 0.3–1 MB. The admin page preserves these fields
+when Mia edits and publishes, and if a video file is missing the card quietly shows its
+photo instead.
 
 ## Local preview
 
