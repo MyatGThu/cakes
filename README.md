@@ -24,6 +24,8 @@ shop.html + js/store.js      ← the menu, cart and ordering flow
 about.html                   ← Mia's story (parchment / torn-paper treatment)
 images/3d/                   ← product renders + hero turntable frames, generated
                                with Three.js (scripts in the session scratchpad)
+images/3d/anim/              ← 32-frame 360° turntable loops (animated WebP) that
+                               the menu cards autoplay; reduced-motion gets stills
 js/motion.js                 ← GSAP/scroll animation layer (pure progressive enhancement)
 admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots

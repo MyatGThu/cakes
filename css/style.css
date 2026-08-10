@@ -340,6 +340,7 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
   aspect-ratio: 4 / 3;
   object-fit: cover;
   width: 100%;
+  height: auto; /* the width/height ATTRS otherwise pin height and defeat the aspect-ratio crop */
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 7px; flex: 1; }

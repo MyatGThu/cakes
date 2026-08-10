@@ -274,6 +274,17 @@
     return money(p.price);
   }
 
+  /* The 3D renders have animated turntable twins in images/3d/anim/ — slow
+     360° loops that autoplay like GIFs. Cards use those, unless the visitor
+     prefers reduced motion or the product photo is a real upload. */
+  var PREFERS_STILL = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function cardImage(p) {
+    if (!PREFERS_STILL && /^images\/3d\/[\w-]+\.webp$/.test(p.image || "")) {
+      return "images/3d/anim/" + p.image.split("/").pop();
+    }
+    return p.image || "";
+  }
+
   function renderGrid() {
     var host = $("productGrid");
     var items = visibleProducts();
@@ -290,7 +301,7 @@
       card.className = "card";
       card.style.setProperty("--cat-tint", categoryTint(p.category));
       card.innerHTML =
-        '<div class="photo-frame"><img class="photo" loading="lazy" width="800" height="800" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(p.image || "") + '"></div>' +
+        '<div class="photo-frame"><img class="photo" loading="lazy" width="800" height="800" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(cardImage(p)) + '"></div>' +
         '<div class="body">' +
           '<span class="badge ' + badge.cls + '">' + escapeHtml(badge.text) + "</span>" +
           "<h3>" + escapeHtml(p.name) + "</h3>" +
@@ -302,6 +313,11 @@
           "</div>" +
         "</div>";
       card.querySelector("[data-add]").addEventListener("click", function () { openModal(p); });
+      var photo = card.querySelector(".photo");
+      photo.addEventListener("error", function fallBack() {
+        photo.removeEventListener("error", fallBack);
+        if (p.image && photo.getAttribute("src") !== p.image) photo.src = p.image;
+      });
       host.appendChild(card);
     });
 
