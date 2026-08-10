@@ -50,6 +50,7 @@ Open `data/settings.json` (on GitHub: press `.` or use the pencil icon) and set:
 | `orderEmail` | Backup order channel. Empty `""` hides the email button |
 | `pickupAddress` | Shown in the footer — keep it vague if she prefers to share the exact address per order |
 | `orderCutoffHour` | 0–23. Orders placed after this hour count from tomorrow (e.g. `16` = 4 pm) |
+| `timezone` | Optional IANA zone (e.g. `"America/New_York"`) so the cutoff follows the *shop's* clock even for visitors in other time zones. Empty = each visitor's device clock |
 | `closedWeekdays` | Days with no pickups: `0`=Sunday … `6`=Saturday, e.g. `[0, 1]` |
 | `pickupSlots` | Time windows customers choose from, e.g. `["10:00 – 12:00", "14:00 – 17:00"]` |
 

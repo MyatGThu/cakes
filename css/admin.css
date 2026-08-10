@@ -31,7 +31,7 @@
   padding: 8px 18px;
   font-weight: 600;
 }
-.tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tab[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 .panel {
   background: var(--surface);

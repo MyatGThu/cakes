@@ -3,6 +3,7 @@
   "tagline": "Homemade cakes, baked to order with love",
   "announcement": "Now taking orders for the weekend — order by Thursday 4pm!",
   "currencySymbol": "$",
+  "timezone": "",
   "whatsappNumber": "15551234567",
   "orderEmail": "orders@example.com",
   "pickupAddress": "Maple Street area — exact address is shared when your order is confirmed",

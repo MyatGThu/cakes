@@ -24,11 +24,33 @@
     return sym + formatted;
   }
 
+  /* Repair whatever is in localStorage rather than trusting it — a single
+     malformed entry must never take the whole storefront down. */
+  function sanitizeCart(list) {
+    if (!Array.isArray(list)) return [];
+    return list
+      .filter(function (it) {
+        return it && typeof it === "object" &&
+          typeof it.productId === "string" &&
+          typeof it.qty === "number" && isFinite(it.qty) && it.qty >= 1 &&
+          (it.variantIndex == null ||
+            (typeof it.variantIndex === "number" && isFinite(it.variantIndex) && it.variantIndex >= 0));
+      })
+      .map(function (it) {
+        return {
+          productId: it.productId,
+          variantIndex: it.variantIndex == null ? null : Math.floor(it.variantIndex),
+          variantName: typeof it.variantName === "string" ? it.variantName : null,
+          qty: Math.min(50, Math.floor(it.qty)),
+          note: typeof it.note === "string" ? it.note : ""
+        };
+      });
+  }
+
   function loadCart() {
     try {
       var raw = localStorage.getItem("cakeCart");
-      var parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
+      return sanitizeCart(raw ? JSON.parse(raw) : []);
     } catch (e) {
       return [];
     }
@@ -92,18 +114,38 @@
     return closedWeekdays().indexOf(date.getDay()) !== -1;
   }
 
-  /* Earliest pickup for a given lead time, starting from `now`.
-     Orders after the cutoff hour start counting from tomorrow, and
-     pickups skip past the shop's closed weekdays. */
+  /* "Now" on the shop's clock. If settings.timezone (IANA name) is set, the
+     cutoff and lead-day counting follow the bakery's time zone even for
+     visitors whose device clock is elsewhere; otherwise the device clock. */
+  function shopNow() {
+    var tz = SETTINGS.timezone;
+    if (tz) {
+      try {
+        var parts = new Intl.DateTimeFormat("en-US", {
+          timeZone: tz, year: "numeric", month: "numeric", day: "numeric", hour: "numeric", hourCycle: "h23"
+        }).formatToParts(new Date());
+        var map = {};
+        parts.forEach(function (p) { map[p.type] = p.value; });
+        var hour = Number(map.hour);
+        return new Date(Number(map.year), Number(map.month) - 1, Number(map.day), hour === 24 ? 0 : hour);
+      } catch (e) { /* unknown zone string — fall back to the device clock */ }
+    }
+    return new Date();
+  }
+
+  /* Earliest pickup for a given lead time. Orders after the cutoff hour start
+     counting from tomorrow, and pickups skip past the shop's closed weekdays.
+     Returns null when no pickup day exists (e.g. every weekday marked closed) —
+     callers must treat that as "ordering is paused". */
   function earliestPickup(days, now) {
-    now = now || new Date();
+    now = now || shopNow();
     var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     var cutoff = parseInt(SETTINGS.orderCutoffHour, 10);
     if (!isNaN(cutoff) && now.getHours() >= cutoff) d.setDate(d.getDate() + 1);
     d.setDate(d.getDate() + days);
     var guard = 0;
     while (isClosedDay(d) && guard++ < 14) d.setDate(d.getDate() + 1);
-    return d;
+    return isClosedDay(d) ? null : d;
   }
 
   function cartEarliestPickup() {
@@ -114,6 +156,8 @@
     }
     return earliestPickup(maxLead);
   }
+
+  var PAUSED_MSG = "We're not taking new orders right now — check back soon!";
 
   /* Local YYYY-MM-DD (never toISOString — that shifts across timezones). */
   function toInputValue(d) {
@@ -228,6 +272,9 @@
     items.forEach(function (p) {
       var badge = leadBadge(p);
       var pickup = earliestPickup(leadDays(p));
+      var pickupHtml = pickup
+        ? 'Earliest pickup: <strong>' + escapeHtml(shortDate(pickup)) + "</strong>"
+        : escapeHtml(PAUSED_MSG);
       var card = document.createElement("article");
       card.className = "card";
       card.innerHTML =
@@ -236,7 +283,7 @@
           '<span class="badge ' + badge.cls + '">' + escapeHtml(badge.text) + "</span>" +
           "<h3>" + escapeHtml(p.name) + "</h3>" +
           '<p class="desc">' + escapeHtml(p.description || "") + "</p>" +
-          '<p class="pickup-note">Earliest pickup: <strong>' + escapeHtml(shortDate(pickup)) + "</strong></p>" +
+          '<p class="pickup-note">' + pickupHtml + "</p>" +
           '<div class="meta">' +
             '<span class="price">' + escapeHtml(priceLabel(p)) + "</span>" +
             '<button class="btn btn-primary" data-add>Add</button>' +
@@ -277,16 +324,26 @@
       vf.hidden = true;
     }
 
-    $("modalPickup").textContent = "Earliest pickup for this item: " + humanDate(earliestPickup(leadDays(p)));
+    var pickup = earliestPickup(leadDays(p));
+    $("modalPickup").textContent = pickup
+      ? "Earliest pickup for this item: " + humanDate(pickup)
+      : PAUSED_MSG;
+    $("modalAdd").disabled = !pickup;
+    $("modalAdd").textContent = pickup ? "Add to order" : "Ordering is paused";
+
     updateModalPrice();
+    lastFocus.modal = document.activeElement;
     $("productOverlay").hidden = false;
     document.body.style.overflow = "hidden";
+    $("modalClose").focus();
   }
 
   function closeModal() {
+    if ($("productOverlay").hidden) return;
     $("productOverlay").hidden = true;
     modalState = null;
     document.body.style.overflow = "";
+    restoreFocus("modal");
   }
 
   function updateModalPrice() {
@@ -313,7 +370,16 @@
       }
     }
     if (!merged) {
-      cart.push({ productId: p.id, variantIndex: vi, qty: modalState.qty, note: note });
+      cart.push({
+        productId: p.id,
+        variantIndex: vi,
+        // Snapshot the variant name so a menu edit can't silently re-point
+        // this line at a different size/price (indexes shift when the baker
+        // deletes a variant).
+        variantName: vi == null ? null : p.variants[vi].name,
+        qty: modalState.qty,
+        note: note
+      });
     }
     saveCart();
     renderCart();
@@ -336,8 +402,25 @@
   }
 
   function renderCart() {
-    // Drop items whose product was removed from the menu.
-    cart = cart.filter(function (it) { return !!findProduct(it.productId); });
+    // Drop items the current menu can no longer honor: product removed or
+    // hidden, variant structure changed, or the saved variant no longer
+    // matches (the baker may have edited sizes since this cart was saved).
+    var before = cart.length;
+    cart = cart.filter(function (it) {
+      var p = findProduct(it.productId);
+      if (!p || p.available === false) return false;
+      if (productHasVariants(p)) {
+        if (it.variantIndex == null || it.variantIndex >= p.variants.length) return false;
+        if (it.variantName && p.variants[it.variantIndex].name !== it.variantName) return false;
+      } else if (it.variantIndex != null) {
+        return false;
+      }
+      return true;
+    });
+    if (cart.length !== before) {
+      saveCart();
+      toast("The menu changed since your last visit — some items were removed from your order.");
+    }
 
     $("cartCount").textContent = String(cartCount());
     var host = $("cartItems");
@@ -388,6 +471,14 @@
   function refreshPickupControls() {
     var earliest = cartEarliestPickup();
     var dateInput = $("pickupDate");
+    dateInput.disabled = !earliest;
+    $("sendWhatsApp").disabled = !earliest;
+    $("sendEmail").disabled = !earliest;
+
+    if (!earliest) {
+      $("pickupBox").innerHTML = "⏸️ " + escapeHtml(PAUSED_MSG);
+      return;
+    }
     dateInput.min = toInputValue(earliest);
 
     var current = fromInputValue(dateInput.value);
@@ -422,7 +513,7 @@
     var dateInput = $("pickupDate");
     var chosen = fromInputValue(dateInput.value);
     var earliest = cartEarliestPickup();
-    if (!chosen) return;
+    if (!chosen || !earliest) return;
 
     if (chosen < earliest) {
       dateInput.value = toInputValue(earliest);
@@ -441,6 +532,9 @@
   /* ---------- Order submission ---------- */
 
   function validateOrderForm() {
+    var earliest = cartEarliestPickup();
+    if (!earliest) { toast("Sorry — " + PAUSED_MSG.charAt(0).toLowerCase() + PAUSED_MSG.slice(1)); return null; }
+
     var name = $("custName").value.trim();
     var phone = $("custPhone").value.trim();
     var date = fromInputValue($("pickupDate").value);
@@ -448,7 +542,6 @@
     if (!phone) { toast("Please add a phone number so we can confirm your order."); $("custPhone").focus(); return null; }
     if (!date) { toast("Please pick a pickup day."); $("pickupDate").focus(); return null; }
 
-    var earliest = cartEarliestPickup();
     if (date < earliest || isClosedDay(date)) {
       onPickupDateChange();
       toast("Please double-check your pickup day.");
@@ -502,21 +595,22 @@
     if (!SETTINGS.whatsappNumber) wa.style.display = "none";
     if (!SETTINGS.orderEmail) em.style.display = "none";
 
-    wa.addEventListener("click", function (e) {
+    wa.addEventListener("click", function () {
       var form = validateOrderForm();
-      if (!form) { e.preventDefault(); return; }
+      if (!form) return;
       var number = String(SETTINGS.whatsappNumber).replace(/[^0-9]/g, "");
-      wa.href = "https://wa.me/" + number + "?text=" + encodeURIComponent(buildOrderText(form));
       toast("Opening WhatsApp — just press send!");
+      window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(buildOrderText(form)),
+        "_blank", "noopener");
     });
 
-    em.addEventListener("click", function (e) {
+    em.addEventListener("click", function () {
       var form = validateOrderForm();
-      if (!form) { e.preventDefault(); return; }
-      em.href = "mailto:" + SETTINGS.orderEmail +
+      if (!form) return;
+      toast("Opening your email app…");
+      window.location.href = "mailto:" + SETTINGS.orderEmail +
         "?subject=" + encodeURIComponent("Cake order — " + form.name) +
         "&body=" + encodeURIComponent(buildOrderText(form));
-      toast("Opening your email app…");
     });
 
     $("copyOrder").addEventListener("click", function () {
@@ -536,16 +630,47 @@
     });
   }
 
+  /* ---------- Focus management ---------- */
+
+  var lastFocus = { modal: null, drawer: null };
+
+  function restoreFocus(which) {
+    var el = lastFocus[which];
+    lastFocus[which] = null;
+    if (el && document.contains(el) && typeof el.focus === "function") el.focus();
+  }
+
+  /* Keep Tab cycling inside whichever layer (modal or drawer) is open. */
+  function trapFocus(container, e) {
+    var nodes = container.querySelectorAll(
+      'a[href], button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled)'
+    );
+    var list = Array.prototype.filter.call(nodes, function (el) {
+      return el.getClientRects().length > 0;
+    });
+    if (!list.length) return;
+    var first = list[0], last = list[list.length - 1];
+    if (e.shiftKey && (document.activeElement === first || !container.contains(document.activeElement))) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && (document.activeElement === last || !container.contains(document.activeElement))) {
+      e.preventDefault(); first.focus();
+    }
+  }
+
   /* ---------- Drawer & modal wiring ---------- */
 
   function openDrawer() {
+    lastFocus.drawer = document.activeElement;
     $("drawerOverlay").hidden = false;
     $("cartDrawer").classList.add("open");
+    $("drawerClose").focus();
   }
 
   function closeDrawer() {
+    if (!$("cartDrawer").classList.contains("open")) return;
     $("drawerOverlay").hidden = true;
     $("cartDrawer").classList.remove("open");
+    restoreFocus("drawer");
   }
 
   function wireUi() {
@@ -559,6 +684,10 @@
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") { closeModal(); closeDrawer(); }
+      if (e.key === "Tab") {
+        if (!$("productOverlay").hidden) trapFocus($("productOverlay"), e);
+        else if ($("cartDrawer").classList.contains("open")) trapFocus($("cartDrawer"), e);
+      }
     });
 
     $("qtyMinus").addEventListener("click", function () {

@@ -18,6 +18,7 @@
   var shas = { products: null, settings: null };
   var dirty = { products: false, settings: false };
   var publishing = false;
+  var variantStash = {};        // sizes removed by unticking "has sizes", keyed by product id
 
   /* ---------- Small helpers ---------- */
 
@@ -105,11 +106,20 @@
     return gh("/contents/" + path, { method: "PUT", body: JSON.stringify(body) })
       .then(function (r) {
         if ((r.status === 409 || r.status === 422) && !retried) {
-          // Someone else (or a previous save) changed the file — refresh sha and retry once.
           return gh("/contents/" + path + "?ref=" + encodeURIComponent(config.branch) + "&t=" + Date.now())
             .then(function (rr) { return rr.ok ? rr.json() : null; })
             .then(function (meta) {
-              return putFile(path, base64Content, meta && meta.sha, message, true);
+              // Retry only for transient races where the file itself is
+              // unchanged. If the sha moved, someone edited this file since we
+              // loaded it (another device, or directly on GitHub) — blindly
+              // re-PUTting our copy would silently erase their changes.
+              if (meta && meta.sha === sha) {
+                return putFile(path, base64Content, sha, message, true);
+              }
+              throw new Error(
+                "The website's files changed since this page was opened — maybe on another device " +
+                "or directly on GitHub. Refresh this page to load the latest menu, then redo your changes."
+              );
             });
         }
         if (!r.ok) {
@@ -247,14 +257,14 @@
         "</div>" +
         "<div>" +
           '<div class="row-2">' +
-            '<div class="field"><label>Name</label><input type="text" data-f="name" value="' + escapeHtml(p.name) + '"></div>' +
-            '<div class="field"><label>Category</label><input type="text" data-f="category" value="' + escapeHtml(p.category || "") + '" placeholder="e.g. Cakes"></div>' +
+            '<div class="field"><label for="p' + idx + '-name">Name</label><input id="p' + idx + '-name" type="text" data-f="name" value="' + escapeHtml(p.name) + '"></div>' +
+            '<div class="field"><label for="p' + idx + '-category">Category</label><input id="p' + idx + '-category" type="text" data-f="category" value="' + escapeHtml(p.category || "") + '" placeholder="e.g. Cakes"></div>' +
           "</div>" +
-          '<div class="field"><label>Description</label><textarea rows="2" data-f="description">' + escapeHtml(p.description || "") + "</textarea></div>" +
+          '<div class="field"><label for="p' + idx + '-desc">Description</label><textarea id="p' + idx + '-desc" rows="2" data-f="description">' + escapeHtml(p.description || "") + "</textarea></div>" +
           '<div class="row-2">' +
-            '<div class="field"><label>Days of notice needed</label><input type="number" min="0" max="60" data-f="leadTimeDays" value="' + escapeHtml(String(p.leadTimeDays == null ? 0 : p.leadTimeDays)) + '">' +
+            '<div class="field"><label for="p' + idx + '-lead">Days of notice needed</label><input id="p' + idx + '-lead" type="number" min="0" max="60" data-f="leadTimeDays" value="' + escapeHtml(String(p.leadTimeDays == null ? 0 : p.leadTimeDays)) + '">' +
               '<p class="hint">0 = same-day, 3 = customers can pick up 3 days after ordering.</p></div>' +
-            '<div class="field" data-single-price' + (hasVariants ? " hidden" : "") + '><label>Price</label><input type="number" min="0" step="0.01" data-f="price" value="' + escapeHtml(String(p.price == null ? "" : p.price)) + '"></div>' +
+            '<div class="field" data-single-price' + (hasVariants ? " hidden" : "") + '><label for="p' + idx + '-price">Price</label><input id="p' + idx + '-price" type="number" min="0" step="0.01" data-f="price" value="' + escapeHtml(String(p.price == null ? "" : p.price)) + '"></div>' +
           "</div>" +
           '<div class="check-row field"><input type="checkbox" id="avail-' + idx + '" data-f="available"' + (p.available === false ? "" : " checked") + '><label for="avail-' + idx + '">Show on the website</label></div>' +
           '<div class="check-row field"><input type="checkbox" id="hasvar-' + idx + '" data-hasvariants' + (hasVariants ? " checked" : "") + '><label for="hasvar-' + idx + '">This product has sizes / options</label></div>' +
@@ -304,19 +314,33 @@
 
     // Variants
     var variantList = box.querySelector("[data-variant-list]");
+
+    function switchToSinglePrice(fromVariant) {
+      if (fromVariant) p.price = Number(fromVariant.price) || 0;
+      delete p.variants;
+      box.querySelector("[data-hasvariants]").checked = false;
+      box.querySelector("[data-variants]").hidden = true;
+      box.querySelector("[data-single-price]").hidden = false;
+      var priceInput = box.querySelector('[data-f="price"]');
+      if (priceInput) priceInput.value = String(p.price == null ? "" : p.price);
+    }
+
     function renderVariantRows() {
       variantList.innerHTML = "";
       (p.variants || []).forEach(function (v, vi) {
         var row = document.createElement("div");
         row.className = "variant-row";
         row.innerHTML =
-          '<input type="text" class="v-name" placeholder="e.g. 8&quot; (serves 14)" value="' + escapeHtml(v.name || "") + '">' +
-          '<input type="number" class="v-price" min="0" step="0.01" placeholder="Price" value="' + escapeHtml(String(v.price == null ? "" : v.price)) + '">' +
-          '<button type="button" title="Remove size">✕</button>';
+          '<input type="text" class="v-name" aria-label="Size name" placeholder="e.g. 8&quot; (serves 14)" value="' + escapeHtml(v.name || "") + '">' +
+          '<input type="number" class="v-price" aria-label="Size price" min="0" step="0.01" placeholder="Price" value="' + escapeHtml(String(v.price == null ? "" : v.price)) + '">' +
+          '<button type="button" title="Remove size" aria-label="Remove size">✕</button>';
         row.querySelector(".v-name").addEventListener("input", function (e) { v.name = e.target.value; markDirty("products"); });
         row.querySelector(".v-price").addEventListener("input", function (e) { v.price = e.target.value === "" ? 0 : parseFloat(e.target.value); markDirty("products"); });
         row.querySelector("button").addEventListener("click", function () {
           p.variants.splice(vi, 1);
+          // Removing the last size must never leave variants: [] behind — the
+          // storefront would show the product with no price at all.
+          if (!p.variants.length) switchToSinglePrice(v);
           markDirty("products"); renderVariantRows();
         });
         variantList.appendChild(row);
@@ -332,16 +356,18 @@
 
     box.querySelector("[data-hasvariants]").addEventListener("change", function (e) {
       if (e.target.checked) {
-        p.variants = (Array.isArray(p.variants) && p.variants.length) ? p.variants : [{ name: "", price: Number(p.price) || 0 }];
+        // Restore sizes stashed by an earlier untick, so an accidental toggle
+        // doesn't destroy them.
+        var stashed = variantStash[p.id];
+        p.variants = (Array.isArray(p.variants) && p.variants.length) ? p.variants
+          : (stashed && stashed.length) ? stashed
+          : [{ name: "", price: Number(p.price) || 0 }];
+        delete variantStash[p.id];
         box.querySelector("[data-variants]").hidden = false;
         box.querySelector("[data-single-price]").hidden = true;
       } else {
-        if (Array.isArray(p.variants) && p.variants.length) p.price = Number(p.variants[0].price) || 0;
-        delete p.variants;
-        box.querySelector("[data-variants]").hidden = true;
-        box.querySelector("[data-single-price]").hidden = false;
-        var priceInput = box.querySelector('[data-f="price"]');
-        if (priceInput) priceInput.value = String(p.price);
+        if (Array.isArray(p.variants) && p.variants.length) variantStash[p.id] = p.variants;
+        switchToSinglePrice(Array.isArray(p.variants) && p.variants.length ? p.variants[0] : null);
       }
       markDirty("products"); renderVariantRows();
     });
@@ -370,7 +396,11 @@
         var canvas = document.createElement("canvas");
         canvas.width = Math.max(1, Math.round(img.width * scale));
         canvas.height = Math.max(1, Math.round(img.height * scale));
-        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        var ctx = canvas.getContext("2d");
+        // JPEG has no transparency — without this, transparent PNG areas turn black.
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(function (blob) {
           if (!blob) return reject(new Error("Could not process that image."));
           blob.arrayBuffer().then(function (buf) { resolve(new Uint8Array(buf)); }, reject);
@@ -378,7 +408,7 @@
       };
       img.onerror = function () {
         URL.revokeObjectURL(url);
-        reject(new Error("That file doesn't look like an image."));
+        reject(new Error("That photo format couldn't be read — try a JPG or PNG (on iPhone, share the photo as JPEG or screenshot it)."));
       };
       img.src = url;
     });
@@ -392,11 +422,14 @@
       .then(function (bytes) {
         var path = "images/" + slugify(product.name || product.id) + "-" + Date.now() + ".jpg";
         return putFile(path, bytesToBase64(bytes), null, "Upload photo: " + (product.name || product.id))
-          .then(function () { return path; });
+          .then(function () { return { path: path, bytes: bytes }; });
       })
-      .then(function (path) {
-        product.image = path;
-        box.querySelector(".image-slot img").src = path;
+      .then(function (up) {
+        product.image = up.path;
+        // Preview from the bytes we just compressed — the committed file takes
+        // a minute to reach GitHub Pages, so its URL would 404 right now.
+        box.querySelector(".image-slot img").src =
+          URL.createObjectURL(new Blob([up.bytes], { type: "image/jpeg" }));
         markDirty("products");
         toast("Photo uploaded ✓ — press “Publish changes” to show it on the site.");
       })
@@ -417,13 +450,14 @@
     $("sAnnouncement").value = settings.announcement || "";
     $("sCurrency").value = settings.currencySymbol || "$";
     $("sCutoff").value = settings.orderCutoffHour == null ? 16 : settings.orderCutoffHour;
+    $("sTimezone").value = settings.timezone || "";
     $("sWhatsapp").value = settings.whatsappNumber || "";
     $("sEmail").value = settings.orderEmail || "";
     $("sAddress").value = settings.pickupAddress || "";
 
     var bindings = {
       sShopName: "shopName", sTagline: "tagline", sAnnouncement: "announcement",
-      sCurrency: "currencySymbol", sWhatsapp: "whatsappNumber",
+      sCurrency: "currencySymbol", sTimezone: "timezone", sWhatsapp: "whatsappNumber",
       sEmail: "orderEmail", sAddress: "pickupAddress"
     };
     Object.keys(bindings).forEach(function (id) {
@@ -474,8 +508,8 @@
       var row = document.createElement("div");
       row.className = "slot-row";
       row.innerHTML =
-        '<input type="text" placeholder="e.g. 10:00 – 12:00" value="' + escapeHtml(slot) + '">' +
-        '<button type="button" class="btn btn-quiet" title="Remove slot">✕</button>';
+        '<input type="text" aria-label="Pickup time slot" placeholder="e.g. 10:00 – 12:00" value="' + escapeHtml(slot) + '">' +
+        '<button type="button" class="btn btn-quiet" title="Remove slot" aria-label="Remove slot">✕</button>';
       row.querySelector("input").addEventListener("input", function (e) {
         settings.pickupSlots[i] = e.target.value;
         markDirty("settings");
@@ -492,6 +526,10 @@
   /* ---------- Publish ---------- */
 
   function validateBeforePublish() {
+    if (Array.isArray(settings.closedWeekdays) && settings.closedWeekdays.length >= 7) {
+      return "Every day of the week is marked closed, so customers couldn't pick any pickup day. " +
+        "Untick at least one day — if you're taking a break, use the announcement banner and hide your products instead.";
+    }
     for (var i = 0; i < products.length; i++) {
       var p = products[i];
       if (!String(p.name || "").trim()) return "Product " + (i + 1) + " needs a name.";
@@ -515,10 +553,13 @@
       p.name = String(p.name || "").trim();
       p.leadTimeDays = Math.max(0, parseInt(p.leadTimeDays, 10) || 0);
       if (!p.id || /^new-item-/.test(p.id)) p.id = slugify(p.name) + "-" + Math.random().toString(36).slice(2, 6);
-      if (Array.isArray(p.variants)) {
+      if (Array.isArray(p.variants) && p.variants.length) {
         p.variants.forEach(function (v) { v.price = Number(v.price) || 0; });
         delete p.price;
       } else {
+        // An empty variants array must not survive to the storefront — it
+        // would render the product with no price at all.
+        delete p.variants;
         p.price = Number(p.price) || 0;
       }
     });
@@ -538,11 +579,13 @@
     publishing = true;
     updatePublishButton();
 
-    // Trim empty pickup slots before saving.
+    // Trim empty pickup slots before saving, and re-render the slot rows so
+    // their handlers' captured indices match the rebuilt array.
     if (Array.isArray(settings.pickupSlots)) {
       settings.pickupSlots = settings.pickupSlots
         .map(function (s) { return String(s).trim(); })
         .filter(Boolean);
+      renderSlots();
     }
 
     var steps = Promise.resolve();
@@ -583,7 +626,7 @@
     var tabs = { products: "tabProducts", settings: "tabSettings", help: "tabHelp" };
     var panes = { products: "productsPane", settings: "settingsPane", help: "helpPane" };
     Object.keys(tabs).forEach(function (key) {
-      $(tabs[key]).setAttribute("aria-selected", String(key === name));
+      $(tabs[key]).setAttribute("aria-pressed", String(key === name));
       $(panes[key]).hidden = key !== name;
     });
   }

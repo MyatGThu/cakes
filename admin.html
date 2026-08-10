@@ -56,10 +56,10 @@
     <section id="editorSection" hidden>
       <div id="publishNotice"></div>
 
-      <div class="tabs" role="tablist">
-        <button class="tab" id="tabProducts" role="tab" aria-selected="true">Menu &amp; products</button>
-        <button class="tab" id="tabSettings" role="tab" aria-selected="false">Shop settings</button>
-        <button class="tab" id="tabHelp" role="tab" aria-selected="false">Help</button>
+      <div class="tabs">
+        <button class="tab" id="tabProducts" aria-pressed="true">Menu &amp; products</button>
+        <button class="tab" id="tabSettings" aria-pressed="false">Shop settings</button>
+        <button class="tab" id="tabHelp" aria-pressed="false">Help</button>
       </div>
 
       <div id="productsPane">
@@ -98,6 +98,12 @@
               <input id="sCutoff" type="number" min="0" max="23">
               <p class="hint">Orders placed after this hour count from the next day. E.g. 16 = 4pm.</p>
             </div>
+          </div>
+          <div class="field">
+            <label for="sTimezone">Shop time zone <span style="font-weight:400;color:var(--ink-soft);">(optional)</span></label>
+            <input id="sTimezone" type="text" placeholder="e.g. America/New_York" autocapitalize="off">
+            <p class="hint">Keeps the order cutoff accurate even for customers whose phone clock is set elsewhere.
+               Leave empty to use each visitor's own clock.</p>
           </div>
         </div>
 
