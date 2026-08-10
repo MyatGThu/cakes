@@ -1,0 +1,26 @@
+// Cloudflare Workers configuration — "Workers with Static Assets" (the setup
+// Cloudflare recommends for new projects; classic Pages is in maintenance).
+//
+// One-time setup (see README "Deploying on Cloudflare"):
+//   npx wrangler kv namespace create IG        → paste the id below
+//   npx wrangler secret put IG_TOKEN           → Mia's long-lived Instagram token (optional at first)
+//   npx wrangler secret put STRIPE_SECRET_KEY  → only when enabling online payments
+//   npx wrangler deploy
+{
+  "name": "aurette",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    // Replace the id after running: npx wrangler kv namespace create IG
+    { "binding": "IG", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+  ],
+  "triggers": {
+    // 17:00 UTC = 3am-ish Melbourne: refresh the Instagram feed daily and
+    // renew the 60-day token long before it can lapse.
+    "crons": ["0 17 * * *"]
+  }
+}

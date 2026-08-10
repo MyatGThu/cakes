@@ -6,6 +6,9 @@
   <title>Shop Admin — Edit Menu</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%93%9D%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&display=swap">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/admin.css">
 </head>
@@ -101,9 +104,14 @@
           </div>
           <div class="field">
             <label for="sTimezone">Shop time zone <span style="font-weight:400;color:var(--ink-soft);">(optional)</span></label>
-            <input id="sTimezone" type="text" placeholder="e.g. America/New_York" autocapitalize="off">
+            <input id="sTimezone" type="text" placeholder="e.g. Australia/Melbourne" autocapitalize="off">
             <p class="hint">Keeps the order cutoff accurate even for customers whose phone clock is set elsewhere.
                Leave empty to use each visitor's own clock.</p>
+          </div>
+          <div class="field">
+            <label for="sInstagram">Instagram handle <span style="font-weight:400;color:var(--ink-soft);">(optional)</span></label>
+            <input id="sInstagram" type="text" placeholder="e.g. aurettebymia" autocapitalize="off">
+            <p class="hint">Shown as the “Follow” button in the Fresh Bakes section. Just the handle, no @.</p>
           </div>
         </div>
 

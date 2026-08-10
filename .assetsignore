@@ -1,0 +1,7 @@
+.claude/
+src/
+README.md
+GUIDE.md
+skills-lock.json
+wrangler.jsonc
+.assetsignore

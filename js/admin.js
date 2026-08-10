@@ -451,6 +451,7 @@
     $("sCurrency").value = settings.currencySymbol || "$";
     $("sCutoff").value = settings.orderCutoffHour == null ? 16 : settings.orderCutoffHour;
     $("sTimezone").value = settings.timezone || "";
+    $("sInstagram").value = settings.instagramHandle || "";
     $("sWhatsapp").value = settings.whatsappNumber || "";
     $("sEmail").value = settings.orderEmail || "";
     $("sAddress").value = settings.pickupAddress || "";
@@ -465,8 +466,9 @@
 
     var bindings = {
       sShopName: "shopName", sTagline: "tagline", sAnnouncement: "announcement",
-      sCurrency: "currencySymbol", sTimezone: "timezone", sWhatsapp: "whatsappNumber",
-      sEmail: "orderEmail", sAddress: "pickupAddress", sDeliveryNote: "deliveryNote"
+      sCurrency: "currencySymbol", sTimezone: "timezone", sInstagram: "instagramHandle",
+      sWhatsapp: "whatsappNumber", sEmail: "orderEmail", sAddress: "pickupAddress",
+      sDeliveryNote: "deliveryNote"
     };
     Object.keys(bindings).forEach(function (id) {
       var el = $(id);

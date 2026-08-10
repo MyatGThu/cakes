@@ -288,8 +288,9 @@
         : escapeHtml(PAUSED_MSG);
       var card = document.createElement("article");
       card.className = "card";
+      card.style.setProperty("--cat-tint", categoryTint(p.category));
       card.innerHTML =
-        '<img class="photo" loading="lazy" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(p.image || "") + '">' +
+        '<div class="photo-frame"><img class="photo" loading="lazy" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(p.image || "") + '"></div>' +
         '<div class="body">' +
           '<span class="badge ' + badge.cls + '">' + escapeHtml(badge.text) + "</span>" +
           "<h3>" + escapeHtml(p.name) + "</h3>" +
@@ -303,6 +304,18 @@
       card.querySelector("[data-add]").addEventListener("click", function () { openModal(p); });
       host.appendChild(card);
     });
+
+    document.dispatchEvent(new CustomEvent("aurette:menu-rendered"));
+  }
+
+  /* A soft tint per category so flavours read at a glance (Ceremony Coffee's
+     colour-coding lesson) — stable hash into a small pastel palette. */
+  var TINTS = ["#f7e4e9", "#f5ead3", "#e9f0e2", "#eee6f4", "#fbeadd"];
+  function categoryTint(cat) {
+    var s = String(cat || "");
+    var h = 0;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 997;
+    return TINTS[h % TINTS.length];
   }
 
   /* ---------- Product modal ---------- */
@@ -347,6 +360,8 @@
     $("productOverlay").hidden = false;
     document.body.style.overflow = "hidden";
     $("modalClose").focus();
+    // Deep-linkable cakes: Mia can put this exact URL in an Instagram story.
+    if (history.replaceState) history.replaceState(null, "", "#cake-" + encodeURIComponent(p.id));
   }
 
   function closeModal() {
@@ -354,7 +369,15 @@
     $("productOverlay").hidden = true;
     modalState = null;
     document.body.style.overflow = "";
+    if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
     restoreFocus("modal");
+  }
+
+  function openFromHash() {
+    var m = location.hash.match(/^#cake-(.+)$/);
+    if (!m) return;
+    var p = findProduct(decodeURIComponent(m[1]));
+    if (p && p.available !== false) openModal(p);
   }
 
   function updateModalPrice() {
@@ -396,6 +419,7 @@
     renderCart();
     closeModal();
     toast(p.name + " added to your order");
+    document.dispatchEvent(new CustomEvent("aurette:added"));
   }
 
   /* ---------- Cart ---------- */
@@ -641,9 +665,10 @@
       var form = validateOrderForm();
       if (!form) return;
       var number = String(SETTINGS.whatsappNumber).replace(/[^0-9]/g, "");
-      toast("Opening WhatsApp — just press send!");
-      window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(buildOrderText(form)),
-        "_blank", "noopener");
+      // Direct navigation, not window.open: popups are silently eaten inside
+      // Instagram/Facebook in-app browsers, where much of our traffic arrives.
+      // The cart lives in localStorage, so coming back loses nothing.
+      window.location.href = "https://wa.me/" + number + "?text=" + encodeURIComponent(buildOrderText(form));
     });
 
     em.addEventListener("click", function () {
@@ -748,6 +773,14 @@
     });
     $("variantSelect").addEventListener("change", updateModalPrice);
     $("modalAdd").addEventListener("click", addFromModal);
+    $("modalShare").addEventListener("click", function () {
+      if (!modalState) return;
+      var url = location.origin + location.pathname + "#cake-" + encodeURIComponent(modalState.product.id);
+      copyText(url).then(
+        function () { toast("Link copied — perfect for an Instagram story!"); },
+        function () { toast("Couldn't copy — the link is: " + url); }
+      );
+    });
     $("pickupDate").addEventListener("change", onPickupDateChange);
 
     var radios = document.querySelectorAll('input[name="fulfillment"]');
@@ -759,6 +792,60 @@
     });
 
     wireOrderActions();
+  }
+
+  /* ---------- Instagram section ----------
+     Tries the Worker's cached feed; on any failure (GitHub Pages hosting, no
+     token yet, Meta outage) it quietly falls back to a gallery built from the
+     menu itself — the section never looks broken. */
+
+  function renderIgTiles(tiles) {
+    var host = $("igGrid");
+    host.innerHTML = "";
+    tiles.forEach(function (t) {
+      var el = document.createElement(t.href ? "a" : "div");
+      el.className = "ig-tile";
+      if (t.href) { el.href = t.href; el.target = "_blank"; el.rel = "noopener"; }
+      el.innerHTML =
+        '<img loading="lazy" alt="' + escapeHtml(t.alt || "") + '" src="' + escapeHtml(t.image) + '">' +
+        (t.caption ? '<span class="veil"><span>' + escapeHtml(t.caption) + "</span></span>" : "");
+      host.appendChild(el);
+    });
+    document.dispatchEvent(new CustomEvent("aurette:ig-rendered"));
+  }
+
+  function igFallbackGallery() {
+    $("igTitle").textContent = "This week's bakes";
+    $("igSub").textContent = "A taste of what leaves the kitchen.";
+    var tiles = PRODUCTS.filter(function (p) { return p.available !== false && p.image; })
+      .slice(0, 8)
+      .map(function (p) { return { image: p.image, alt: p.name, caption: p.name }; });
+    renderIgTiles(tiles);
+  }
+
+  function loadInstagram() {
+    var handle = String(SETTINGS.instagramHandle || "").replace(/^@/, "");
+    if (handle) {
+      $("igFollow").href = "https://instagram.com/" + encodeURIComponent(handle);
+      $("igFollow").textContent = "Follow @" + handle;
+      $("igActions").hidden = false;
+    }
+
+    var timeout = new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 4000); });
+    Promise.race([fetch("api/instagram").catch(function () { return null; }), timeout])
+      .then(function (r) { return r && r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (data) {
+        if (data && Array.isArray(data.posts) && data.posts.length) {
+          if (handle) $("igTitle").textContent = "Fresh from @" + handle;
+          $("igSub").textContent = "The latest bakes, straight from Instagram.";
+          renderIgTiles(data.posts.map(function (p) {
+            return { image: p.image, href: p.permalink, alt: p.caption || "Instagram post", caption: p.caption };
+          }));
+        } else {
+          igFallbackGallery();
+        }
+      });
   }
 
   /* ---------- Init ---------- */
@@ -779,6 +866,8 @@
       renderGrid();
       renderCart();
       wireUi();
+      loadInstagram();
+      openFromHash();
     })
     .catch(function (err) {
       $("shopName").textContent = "Oops";

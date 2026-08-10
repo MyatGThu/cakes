@@ -20,13 +20,69 @@ to maintain day-to-day:
 
 ```
 index.html + js/store.js     ← the shop customers see
+js/motion.js                 ← GSAP/scroll animation layer (pure progressive enhancement)
 admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots
 data/products.json           ← the menu: names, prices/sizes, photos, lead times
 images/                      ← product photos (admin uploads compressed JPEGs here)
+src/worker.js + wrangler.jsonc ← Cloudflare Worker: serves the site, /api/instagram feed
+                               cache + daily token refresh, /api/checkout Stripe stub
 ```
 
-## One-time setup (you, ~15 minutes)
+## Deploying on Cloudflare (recommended)
+
+Cloudflare's free tier permits commercial sites (Vercel's doesn't) and includes everything
+the live Instagram feed needs. One-time setup:
+
+1. Create a free account at [dash.cloudflare.com](https://dash.cloudflare.com), then either:
+   - **Push-to-deploy (recommended):** Workers & Pages → Create → *Import a repository* →
+     pick this repo, build command *(none)*, deploy command `npx wrangler deploy`. Every push
+     to `main` deploys; PRs get preview URLs.
+   - **Or from a terminal:** `npm i -g wrangler && wrangler login && wrangler deploy`.
+2. Create the KV namespace for the Instagram cache:
+   `npx wrangler kv namespace create IG` → paste the printed `id` into `wrangler.jsonc`.
+3. (When ready) add the Instagram token: `npx wrangler secret put IG_TOKEN` — see the
+   Instagram section below. Until then the Fresh Bakes section shows the menu gallery.
+4. Custom domain: buy it in Cloudflare (Registrar sells at cost, ~US$10–11/yr for .com)
+   and attach it under the Worker's **Settings → Domains & Routes**. Then update the
+   `og:image` URL in `index.html` to the new domain.
+
+> GitHub Pages also still works as a free fallback host (steps below) — the site detects
+> that `/api/instagram` doesn't exist there and quietly shows its built-in gallery instead.
+
+## The live Instagram feed (one-time, ~15 minutes)
+
+1. Mia converts her Instagram to a **Professional account** (free, reversible):
+   Instagram app → Settings → Account type → *Switch to professional* → Creator or Business.
+2. At [developers.facebook.com](https://developers.facebook.com): **My Apps → Create App**,
+   any name (e.g. "Aurette Website").
+3. In the app dashboard: add the **Instagram** product → choose **API setup with Instagram
+   business login** (not the Facebook-login variant).
+4. Under *Generate access tokens*: **Add an Instagram Account** → log in as the shop account
+   (accept the tester invite inside the Instagram app if prompted).
+5. Click **Generate Token** next to the connected account, authorise, and copy the token —
+   it's shown once. The app never needs review or to go "Live" for showing your own feed.
+6. Store it: `npx wrangler secret put IG_TOKEN` (paste the token).
+
+The Worker's daily cron then keeps everything alive automatically: it refetches the feed
+(Instagram's image URLs expire, so this matters) and renews the 60-day token weekly.
+**If the Worker is ever paused for 60+ days the token dies permanently** — just repeat
+steps 4–6 to mint a new one.
+
+## Online payments (Stripe, when she's ready)
+
+Mia is Melbourne-based, and Stripe fully supports Australia (AUD):
+
+- **Phase 1 — no code:** create a [Stripe](https://stripe.com/au) account, and send
+  customers **Payment Links** in WhatsApp when confirming orders (e.g. a 50% deposit for
+  custom cakes). Nothing to deploy.
+- **Phase 2 — built-in checkout:** `npx wrangler secret put STRIPE_SECRET_KEY`. The
+  Worker's `/api/checkout` endpoint already creates AUD Checkout Sessions with
+  **server-side prices** (it re-reads `data/products.json`, never trusting the browser),
+  which unlocks Apple Pay / Google Pay. The storefront button for it can be added when
+  this phase begins.
+
+## GitHub Pages fallback (original setup)
 
 ### 1. Put the site live on GitHub Pages
 
@@ -52,7 +108,8 @@ Open `data/settings.json` (on GitHub: press `.` or use the pencil icon) and set:
 | `deliveryAvailable` | `true` shows a Pickup / Delivery choice at checkout (delivery asks for an address); `false` = pickup only |
 | `deliveryNote` | Small print under the delivery address field, e.g. how the delivery fee works |
 | `orderCutoffHour` | 0–23. Orders placed after this hour count from tomorrow (e.g. `16` = 4 pm) |
-| `timezone` | Optional IANA zone (e.g. `"America/New_York"`) so the cutoff follows the *shop's* clock even for visitors in other time zones. Empty = each visitor's device clock |
+| `timezone` | Optional IANA zone (e.g. `"Australia/Melbourne"`) so the cutoff follows the *shop's* clock even for visitors in other time zones. Empty = each visitor's device clock |
+| `instagramHandle` | Shown as the "Follow @…" button in the Fresh Bakes section (no `@`). The live feed itself comes from the Worker — see the Instagram section |
 | `closedWeekdays` | Days with no pickups: `0`=Sunday … `6`=Saturday, e.g. `[0, 1]` |
 | `pickupSlots` | Time windows customers choose from, e.g. `["10:00 – 12:00", "14:00 – 17:00"]` |
 
