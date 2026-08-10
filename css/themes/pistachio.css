@@ -1,0 +1,15 @@
+/* Theme: Pistachio Garden — fresh, botanical, daytime-café feeling. */
+:root {
+  --bg: #f3f6ee;
+  --surface: #fcfdf9;
+  --ink: #27352a;
+  --ink-soft: #64705f;
+  --line: #dde5d2;
+  --accent: #3e6b4a;
+  --accent-dark: #2e5238;
+  --accent-soft: #e3eedd;
+  --gold: #a8842f;
+  --gold-soft: #f3ecd4;
+  --green: #3e6b4a;
+  --green-soft: #e3eedd;
+}

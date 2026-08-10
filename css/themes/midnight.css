@@ -1,0 +1,22 @@
+/* Theme: Midnight Patisserie — after-dark luxe (the Cédric Grolet direction).
+   Deep cocoa ground, cream type, gilded accents. */
+:root {
+  --bg: #211611;
+  --surface: #2c1f18;
+  --ink: #f4e9da;
+  --ink-soft: #b8a190;
+  --line: #433024;
+  --accent: #c9a227;
+  --accent-dark: #ab861a;
+  --accent-soft: #3b2f12;
+  --gold: #d9a4b4;
+  --gold-soft: #3a2530;
+  --green: #9cc3a4;
+  --green-soft: #24352a;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 12px 34px rgba(0, 0, 0, 0.5);
+}
+.btn-primary { color: #211611; box-shadow: 0 4px 14px rgba(201, 162, 39, 0.3); }
+.cart-button { background: var(--accent); color: #211611; }
+.cart-button .count { background: #211611; color: var(--accent); }
+.ribbon { background: var(--accent); color: #211611; }

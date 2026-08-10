@@ -14,7 +14,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,600&display=swap">
   <link rel="stylesheet" href="css/style.css">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    document.documentElement.classList.add("js");
+    /* Theme preview: ?theme=<name> applies a token override from css/themes/
+       and remembers it on this device; ?theme=default clears it. */
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search).get("theme");
+        if (q === "default") { localStorage.removeItem("auretteTheme"); q = null; }
+        else if (q) { localStorage.setItem("auretteTheme", q); }
+        var t = q || localStorage.getItem("auretteTheme");
+        if (t && /^[a-z-]{1,30}$/.test(t)) {
+          document.write('<link rel="stylesheet" href="css/themes/' + t + '.css">');
+        }
+      } catch (e) { /* theming is optional */ }
+    })();
+  </script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
   <script defer src="js/store.js"></script>

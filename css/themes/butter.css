@@ -1,0 +1,15 @@
+/* Theme: Butter & Cocoa — warm, nostalgic, grandma's-kitchen classic. */
+:root {
+  --bg: #fbf3dc;
+  --surface: #fffbef;
+  --ink: #3d2a1a;
+  --ink-soft: #83705c;
+  --line: #eddfc2;
+  --accent: #6b4226;
+  --accent-dark: #52301a;
+  --accent-soft: #f0e4d4;
+  --gold: #9a7b33;
+  --gold-soft: #f5ead3;
+  --green: #4f6b3a;
+  --green-soft: #e9efdd;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theme picker — Aurette by Mia</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8E%A8%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .picker-wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
+    .picker-wrap > h1 { font-family: var(--font-display); font-size: clamp(30px, 5vw, 44px); font-weight: 600; margin: 0 0 8px; text-align: center; }
+    .picker-wrap > .lede { color: var(--ink-soft); text-align: center; max-width: 56ch; margin: 0 auto 36px; }
+    .theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    .theme-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 20px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .theme-card h2 { font-family: var(--font-display); font-size: 21px; font-weight: 600; margin: 0; }
+    .theme-card p { margin: 0; color: var(--ink-soft); font-size: 14px; flex: 1; }
+    .swatches { display: flex; gap: 6px; }
+    .swatches span { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.08); }
+    .theme-card .btn { margin-top: 6px; }
+    .picker-note { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 34px; }
+    .picker-note a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="picker-wrap">
+    <h1>Pick Aurette's look 🎨</h1>
+    <p class="lede">Same shop, five moods. Open one, browse around, add something to the order — everything works in every theme.
+       The choice sticks on your device until you pick another (or reset). Send Mia the link of her favourite!</p>
+
+    <div class="theme-grid">
+      <div class="theme-card">
+        <h2>Raspberry Cream</h2>
+        <p>The current default — warm cream with raspberry-jam accents. Confident, appetising, grown-up but friendly.</p>
+        <div class="swatches"><span style="background:#fbf7ef"></span><span style="background:#b03052"></span><span style="background:#33241c"></span><span style="background:#f5ead3"></span></div>
+        <a class="btn btn-primary" href="index.html?theme=default">View the shop</a>
+      </div>
+
+      <div class="theme-card">
+        <h2>Midnight Patisserie</h2>
+        <p>After-dark luxe — deep cocoa, cream type, gilded buttons. The Cédric Grolet direction; makes photos glow.</p>
+        <div class="swatches"><span style="background:#211611"></span><span style="background:#c9a227"></span><span style="background:#f4e9da"></span><span style="background:#3a2530"></span></div>
+        <a class="btn btn-primary" href="index.html?theme=midnight">View the shop</a>
+      </div>
+
+      <div class="theme-card">
+        <h2>Pistachio Garden</h2>
+        <p>Fresh and botanical — soft sage ground with deep-green accents. Daytime café energy, very Melbourne.</p>
+        <div class="swatches"><span style="background:#f3f6ee"></span><span style="background:#3e6b4a"></span><span style="background:#27352a"></span><span style="background:#f3ecd4"></span></div>
+        <a class="btn btn-primary" href="index.html?theme=pistachio">View the shop</a>
+      </div>
+
+      <div class="theme-card">
+        <h2>Butter &amp; Cocoa</h2>
+        <p>Warm nostalgia — butter-yellow ground and cocoa-brown accents. Grandma's kitchen, in the best way.</p>
+        <div class="swatches"><span style="background:#fbf3dc"></span><span style="background:#6b4226"></span><span style="background:#3d2a1a"></span><span style="background:#f5ead3"></span></div>
+        <a class="btn btn-primary" href="index.html?theme=butter">View the shop</a>
+      </div>
+
+      <div class="theme-card">
+        <h2>Fairy Floss</h2>
+        <p>Playful and party-forward — blush ground with bright pink accents. Leans birthday cakes and celebration orders.</p>
+        <div class="swatches"><span style="background:#fdf1f5"></span><span style="background:#d4527e"></span><span style="background:#4a2434"></span><span style="background:#f8eed8"></span></div>
+        <a class="btn btn-primary" href="index.html?theme=fairy">View the shop</a>
+      </div>
+    </div>
+
+    <p class="picker-note">
+      A theme is ~20 lines of colour tokens in <code>css/themes/</code> — new moods (or seasonal ones) are cheap to add.
+      · <a href="index.html?theme=default">Reset to default</a>
+    </p>
+  </div>
+</body>
+</html>
