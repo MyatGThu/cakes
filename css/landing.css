@@ -1,0 +1,175 @@
+/* Landing-page acts — layered on style.css tokens. */
+
+.act { position: relative; }
+
+.drift-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.drift { position: absolute; height: auto; opacity: 0.85; filter: drop-shadow(0 8px 14px rgba(51, 36, 28, 0.16)); }
+.act > .wrap, .about-tease-inner { position: relative; z-index: 1; }
+
+/* ---------- Act 1 · Hero ---------- */
+.act-hero {
+  min-height: calc(100svh - 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 48px 20px 72px;
+}
+.hero-inner { position: relative; z-index: 2; max-width: 880px; }
+.act-hero .eyebrow {
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 20px;
+}
+.act-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 8vw, 88px);
+  line-height: 1.04;
+  font-weight: 600;
+  margin: 0 0 22px;
+  max-width: 18ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+.act-hero h1 .accent, .act-hero h1 em { color: var(--accent); font-style: italic; }
+.act-hero h1 .word { display: inline-block; }
+.act-hero .sub { color: var(--ink-soft); font-size: clamp(16px, 2.2vw, 19px); max-width: 52ch; margin: 0 auto 32px; }
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-lg { padding: 15px 30px; font-size: 17px; }
+
+.parallax-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+.scroll-cue {
+  position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: var(--ink-soft); text-decoration: none; z-index: 2;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.scroll-cue:hover { color: var(--accent); }
+.cue-arrow { font-size: 18px; }
+@media (prefers-reduced-motion: no-preference) {
+  .cue-arrow { animation: cueBob 1.6s ease-in-out infinite; }
+}
+@keyframes cueBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+/* ---------- Act 2 · Turntable stage ---------- */
+.cake-stage { height: 340vh; }
+html:not(.motion-on) .cake-stage { height: auto; }
+
+.stage-sticky {
+  position: sticky; top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 62%, var(--accent-soft) 0%, transparent 62%),
+    var(--bg);
+}
+html:not(.motion-on) .stage-sticky { position: relative; height: auto; padding: 72px 20px; gap: 32px; }
+
+.stage-cake { position: relative; width: min(74vw, 520px); aspect-ratio: 1; z-index: 1; }
+.stage-cake canvas { width: 100%; height: 100%; display: block; }
+.stage-cake img { width: 100%; height: 100%; display: none; }
+html:not(.motion-on) .stage-cake canvas { display: none; }
+html:not(.motion-on) .stage-cake img { display: block; }
+
+.stage-captions { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+html:not(.motion-on) .stage-captions { position: static; display: grid; gap: 18px; }
+
+.stage-caption {
+  position: absolute;
+  max-width: 300px;
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.6vw, 27px);
+  line-height: 1.3;
+  margin: 0;
+  text-wrap: balance;
+}
+.stage-caption em { color: var(--accent); }
+html.motion-on .stage-caption { opacity: 0; }
+.stage-caption[data-at="0"] { top: 16%; left: 6%; }
+.stage-caption[data-at="1"] { top: 40%; right: 5%; text-align: right; }
+.stage-caption[data-at="2"] { bottom: 14%; left: 8%; }
+@media (max-width: 720px) {
+  .stage-caption { max-width: 220px; font-size: 17px; }
+  .stage-caption[data-at="0"] { top: 8%; left: 5%; }
+  .stage-caption[data-at="1"] { top: auto; bottom: 20%; right: 5%; }
+  .stage-caption[data-at="2"] { bottom: 4%; left: 5%; }
+}
+html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: left; }
+
+.stamp {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  padding: 4px 10px;
+  width: fit-content;
+  margin-bottom: 10px;
+  transform: rotate(-1.5deg);
+}
+.stage-caption[data-at="1"] .stamp { margin-left: auto; }
+
+/* ---------- Act 3 · Features ---------- */
+.feature-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.feature-card {
+  background: var(--tint, var(--surface));
+  border-radius: var(--radius);
+  padding: 28px 26px;
+}
+.feature-card h3 { font-family: var(--font-display); font-size: 22px; font-weight: 600; margin: 0 0 8px; }
+.feature-card p { margin: 0; color: var(--ink-soft); font-size: 15px; }
+.feature-card em { color: var(--ink); font-style: italic; }
+
+/* ---------- Act 4 · Teaser with floating renders ---------- */
+.teaser { padding: clamp(72px, 12vh, 140px) 0; overflow: hidden; }
+.teaser-wrap { display: grid; grid-template-columns: 1fr; gap: 44px; align-items: center; }
+@media (min-width: 880px) { .teaser-wrap { grid-template-columns: 0.9fr 1.1fr; } }
+.teaser-copy h2 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4.6vw, 48px);
+  font-weight: 600; line-height: 1.1;
+  margin: 0 0 14px; text-wrap: balance;
+}
+.teaser-copy .kicker {
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin: 0 0 10px;
+}
+.teaser-copy .sub { color: var(--ink-soft); margin: 0 0 26px; max-width: 46ch; }
+
+.teaser-float { position: relative; min-height: 460px; }
+.float-img {
+  position: absolute;
+  height: auto;
+  filter: drop-shadow(0 18px 30px rgba(51, 36, 28, 0.2));
+}
+.float-a { width: min(52%, 300px); top: 0; left: 6%; }
+.float-b { width: min(44%, 250px); top: 34%; right: 2%; }
+.float-c { width: min(46%, 265px); bottom: 0; left: 22%; }
+@media (max-width: 879px) { .teaser-float { min-height: 380px; } }
+
+/* ---------- Act 5 · About tease ---------- */
+.about-tease {
+  background:
+    radial-gradient(ellipse 120% 90% at 50% 0%, rgba(154, 123, 51, 0.06), transparent 55%),
+    var(--surface);
+  text-align: center;
+  padding: 0 20px clamp(64px, 10vh, 110px);
+}
+.torn-top { height: 26px; margin: 0 -20px; background: var(--bg); clip-path: polygon(0 0, 100% 0, 100% 30%, 96% 65%, 91% 35%, 85% 78%, 79% 42%, 72% 70%, 66% 38%, 59% 82%, 52% 45%, 45% 75%, 38% 40%, 31% 68%, 24% 36%, 17% 72%, 10% 44%, 4% 66%, 0 38%); }
+.about-tease-inner { max-width: 640px; margin: 0 auto; padding-top: clamp(48px, 8vh, 80px); }
+.about-tease .stamp { margin: 0 auto 22px; }
+.tease-quote {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.4vw, 33px);
+  line-height: 1.35;
+  margin: 0 0 28px;
+  text-wrap: balance;
+}

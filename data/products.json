@@ -4,7 +4,7 @@
     "name": "Classic Vanilla Cake",
     "description": "Light vanilla sponge layered with silky buttercream. A crowd-pleaser for any occasion.",
     "category": "Cakes",
-    "image": "images/classic-vanilla.svg",
+    "image": "images/3d/classic-vanilla.webp",
     "leadTimeDays": 3,
     "available": true,
     "variants": [
@@ -17,7 +17,7 @@
     "name": "Chocolate Fudge Cake",
     "description": "Rich, moist chocolate layers with dark chocolate ganache. For serious chocolate lovers.",
     "category": "Cakes",
-    "image": "images/chocolate-fudge.svg",
+    "image": "images/3d/chocolate-fudge.webp",
     "leadTimeDays": 3,
     "available": true,
     "variants": [
@@ -30,7 +30,7 @@
     "name": "Custom Celebration Cake",
     "description": "Birthdays, anniversaries, baby showers — tell us your theme and we'll design something special. Add your ideas in the order note and we'll confirm the details with you.",
     "category": "Cakes",
-    "image": "images/custom-celebration.svg",
+    "image": "images/3d/custom-celebration.webp",
     "leadTimeDays": 5,
     "available": true,
     "variants": [
@@ -44,7 +44,7 @@
     "name": "Cupcake Box",
     "description": "Soft cupcakes with swirled buttercream — a mix of vanilla and chocolate unless you request otherwise in the note.",
     "category": "Cupcakes",
-    "image": "images/cupcake-box.svg",
+    "image": "images/3d/cupcake-box.webp",
     "leadTimeDays": 2,
     "available": true,
     "variants": [
@@ -57,7 +57,7 @@
     "name": "Banana Bread Loaf",
     "description": "Old-fashioned banana bread with walnuts, baked fresh the morning of your pickup.",
     "category": "Bakes",
-    "image": "images/banana-bread.svg",
+    "image": "images/3d/banana-bread.webp",
     "leadTimeDays": 1,
     "available": true,
     "price": 14
@@ -67,7 +67,7 @@
     "name": "Chocolate Chip Cookie Box",
     "description": "A dozen chewy, golden chocolate chip cookies. Great as a gift — or don't share at all.",
     "category": "Bakes",
-    "image": "images/cookie-box.svg",
+    "image": "images/3d/cookie-box.webp",
     "leadTimeDays": 1,
     "available": true,
     "price": 16
@@ -77,7 +77,7 @@
     "name": "Lemon Drizzle Cake (seasonal)",
     "description": "Zesty lemon sponge soaked in tangy syrup. Back soon!",
     "category": "Cakes",
-    "image": "images/lemon-drizzle.svg",
+    "image": "images/3d/lemon-drizzle.webp",
     "leadTimeDays": 3,
     "available": false,
     "price": 34

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Baker — Aurette by Mia</title>
+  <meta name="description" content="Meet Mia — the baker behind Aurette. Made-to-order cakes from one Melbourne kitchen.">
+  <meta name="theme-color" content="#f6eedd">
+  <meta property="og:title" content="The Baker — Aurette by Mia">
+  <meta property="og:description" content="Every cake has a story — usually it starts with someone’s favourite person.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://myatgthu.github.io/cakes/images/og.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8E%82%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/about.css">
+  <script>
+    document.documentElement.classList.add("js");
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search).get("theme");
+        if (q === "default") { localStorage.removeItem("auretteTheme"); q = null; }
+        else if (q) { localStorage.setItem("auretteTheme", q); }
+        var t = q || localStorage.getItem("auretteTheme");
+        if (t && /^[a-z-]{1,30}$/.test(t)) {
+          document.write('<link rel="stylesheet" href="css/themes/' + t + '.css">');
+        }
+      } catch (e) { /* theming is optional */ }
+    })();
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="js/landing.js"></script>
+  <script defer src="js/motion.js"></script>
+</head>
+<body class="parchment">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="announcement" id="announcement" hidden></div>
+
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="brand-name" id="shopName">Aurette by Mia</span>
+        <span class="tagline" id="shopTagline"></span>
+      </a>
+      <nav class="nav-links" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Menu</a>
+        <a href="about.html" aria-current="page">About</a>
+      </nav>
+      <a class="cart-button" id="orderNow" href="shop.html">
+        Order Now<span class="count" id="cartCount" hidden>0</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="paper-grain" aria-hidden="true"></div>
+
+    <section class="sheet sheet-title" aria-label="Introduction">
+      <p class="stamp" data-reveal>Est. Melbourne · One Kitchen</p>
+      <h1 data-reveal>The baker behind <em>Aurette</em></h1>
+      <p class="lede" data-reveal>Aurette is not a factory, a franchise, or a “cloud bakery.”
+         It’s Mia, an oven with opinions, and a calendar that only says yes when a cake can be made properly.</p>
+    </section>
+
+    <div class="torn-divider" aria-hidden="true"></div>
+
+    <section class="sheet sheet-story" aria-label="Mia’s story">
+      <div class="story-grid">
+        <figure class="polaroid" data-reveal>
+          <img src="images/decor/cake.webp" alt="Paper cut-out illustration of a two-tier celebration cake" width="360" height="360" loading="lazy">
+          <figcaption>The first Aurette cake — as remembered, generously.</figcaption>
+        </figure>
+        <div class="story-copy">
+          <p class="stamp" data-reveal>Chapter 01 · How it started</p>
+          <p data-reveal>It started, like most good things, with a birthday emergency. A friend’s cake order fell through
+             two days before the party, and Mia — armed with her grandmother’s notebook and an optimistic amount of butter —
+             said the four words every baker regrets and treasures: <em>“I can make one.”</em></p>
+          <p data-reveal>The party ate every crumb. Someone asked for a card. There was no card.
+             There was, eventually, an Instagram handle.</p>
+          <p class="stamp" data-reveal>Chapter 02 · How it works now</p>
+          <p data-reveal>Every Aurette cake is made to order in one Melbourne kitchen — that’s the whole business model.
+             No freezer full of “just in case,” no shelf life to chase. You pick a date, the calendar checks it’s honest,
+             and your cake goes in the oven <em>because it’s yours</em>.</p>
+          <p data-reveal>Custom requests are the favourite part. Bring the wild idea. The worst that happens is a
+             conversation about structural engineering and buttercream.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="torn-divider flip" aria-hidden="true"></div>
+
+    <section class="sheet sheet-values" aria-label="What Aurette stands for">
+      <h2 class="values-title" data-reveal>Baked into everything</h2>
+      <div class="values-row">
+        <p class="value-stamp" data-reveal>Slow<br>Baked</p>
+        <p class="value-stamp" data-reveal>Real<br>Butter</p>
+        <p class="value-stamp" data-reveal>Made to<br>Order</p>
+        <p class="value-stamp" data-reveal>Melbourne<br>Made</p>
+      </div>
+      <blockquote class="pull-quote" data-reveal>
+        <p>“Every cake has a story — usually it starts with someone’s favourite person.”</p>
+        <cite>— Mia</cite>
+      </blockquote>
+      <div class="values-cta" data-reveal>
+        <a class="btn btn-primary btn-lg" href="shop.html">Browse the Menu</a>
+        <a class="btn btn-outline btn-lg" id="igFollowAbout" href="https://instagram.com/aurette_by_mia" target="_blank" rel="noopener">Follow on Instagram</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong id="footerShopName"></strong></p>
+    <p id="footerPickup"></p>
+    <p id="footerContact"></p>
+  </footer>
+</body>
+</html>

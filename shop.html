@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Menu — Aurette by Mia</title>
+  <meta name="description" content="Browse Aurette's made-to-order cakes and book pickup or delivery across Melbourne.">
+  <meta name="theme-color" content="#fbf7ef">
+  <meta property="og:title" content="The Menu — Aurette by Mia">
+  <meta property="og:description" content="Made-to-order cakes in Melbourne — pickup &amp; delivery. Order in a minute.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://myatgthu.github.io/cakes/images/og.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8E%82%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    document.documentElement.classList.add("js");
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search).get("theme");
+        if (q === "default") { localStorage.removeItem("auretteTheme"); q = null; }
+        else if (q) { localStorage.setItem("auretteTheme", q); }
+        var t = q || localStorage.getItem("auretteTheme");
+        if (t && /^[a-z-]{1,30}$/.test(t)) {
+          document.write('<link rel="stylesheet" href="css/themes/' + t + '.css">');
+        }
+      } catch (e) { /* theming is optional */ }
+    })();
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="js/store.js"></script>
+  <script defer src="js/motion.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#menu">Skip to the menu</a>
+  <div class="announcement" id="announcement" hidden></div>
+
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="brand-name" id="shopName">Aurette by Mia</span>
+        <span class="tagline" id="shopTagline"></span>
+      </a>
+      <nav class="nav-links" aria-label="Site">
+        <a href="index.html">Home</a>
+        <a href="shop.html" aria-current="page">Menu</a>
+        <a href="about.html">About</a>
+      </nav>
+      <button class="cart-button" id="cartButton" aria-label="Open your order">
+        Your order<span class="count" id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="block" id="menu">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">The menu</p>
+          <h1>What’s in the oven</h1>
+          <p id="heroText">Every cake is baked fresh for your date — the little badge on each one tells you how much notice it needs.</p>
+        </div>
+        <div class="chips" id="categoryChips" role="group" aria-label="Filter by category"></div>
+        <div class="grid" id="productGrid"></div>
+        <p class="empty-note" id="emptyNote" hidden>Nothing here right now — check back soon!</p>
+      </div>
+    </section>
+
+    <section class="block" id="how">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">How it works</p>
+          <h2>From your idea to your table</h2>
+        </div>
+        <div class="how-stage">
+          <div class="how-cake" data-reveal>
+            <svg id="cakeSvg" viewBox="0 0 400 420" role="img" aria-label="A layered cake being assembled">
+              <ellipse id="cakeShadow" cx="200" cy="392" rx="150" ry="20" fill="#ebdfce"/>
+              <path id="cakePlate" d="M60 380 h280 l-14 14 h-252 z" fill="#d8c6ac"/>
+              <g id="cakeL1">
+                <rect x="90" y="300" width="220" height="80" rx="12" fill="#a5673f"/>
+                <path d="M90 300 h220 v12 q-27 22 -55 0 q-27 22 -55 0 q-27 22 -55 0 q-27 22 -55 0 z" fill="#fbf1e2"/>
+              </g>
+              <g id="cakeL2">
+                <rect x="115" y="228" width="170" height="72" rx="12" fill="#e79fb4"/>
+                <path d="M115 228 h170 v11 q-21 19 -42 0 q-21 19 -42 0 q-21 19 -43 0 q-21 19 -43 0 z" fill="#fbf1e2"/>
+              </g>
+              <g id="cakeL3">
+                <rect x="140" y="164" width="120" height="64" rx="12" fill="#f2d5a0"/>
+                <path d="M140 164 h120 v10 q-15 16 -30 0 q-15 16 -30 0 q-15 16 -30 0 q-15 16 -30 0 z" fill="#fbf1e2"/>
+              </g>
+              <g id="cakeDrip">
+                <path d="M140 164 h120 v6 q-10 20 -20 2 q-8 26 -18 3 q-9 18 -20 2 q-8 24 -19 3 q-9 16 -20 2 q-8 20 -23 4 z" fill="#b03052" opacity="0.92"/>
+              </g>
+              <g id="cakeTop">
+                <line x1="200" y1="118" x2="200" y2="160" stroke="#f2d95c" stroke-width="9" stroke-linecap="round"/>
+                <ellipse cx="200" cy="112" rx="7" ry="10" fill="#e8863f"/>
+                <circle cx="172" cy="152" r="9" fill="#8e2440"/>
+                <circle cx="228" cy="152" r="9" fill="#8e2440"/>
+              </g>
+              <g id="cakeSparkles" fill="#b03052">
+                <circle cx="96" cy="140" r="4"/><circle cx="310" cy="120" r="5"/><circle cx="330" cy="230" r="4"/><circle cx="72" cy="250" r="5"/>
+              </g>
+            </svg>
+          </div>
+          <div class="steps">
+            <div class="step" data-reveal data-step="0">
+              <div><h3>Pick your cake</h3><p>Choose from the menu, pick a size, and add a note — an inscription, a colour, a wild idea for a custom cake.</p></div>
+            </div>
+            <div class="step" data-reveal data-step="1">
+              <div><h3>We bake it for your day</h3><p>Each product shows the notice it needs. The site works out the earliest date you can have it — no guesswork, no disappointment.</p></div>
+            </div>
+            <div class="step" data-reveal data-step="2">
+              <div><h3>Pickup or delivery</h3><p>Send the order by WhatsApp — Mia confirms it personally, and you collect it fresh or have it delivered across Melbourne.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="follow">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="kicker">Fresh from the oven</p>
+          <h2 id="igTitle">This week’s bakes</h2>
+          <p id="igSub">The latest cakes, straight from the kitchen.</p>
+        </div>
+        <div class="ig-grid" id="igGrid"></div>
+        <div class="ig-actions" id="igActions" hidden>
+          <a class="btn btn-outline" id="igFollow" target="_blank" rel="noopener">Follow on Instagram</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><strong id="footerShopName"></strong></p>
+    <p id="footerPickup"></p>
+    <p id="footerContact"></p>
+  </footer>
+
+  <!-- Add-to-order modal -->
+  <div class="overlay" id="productOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle"></h3>
+          <span class="badge" id="modalBadge"></span>
+          <div><button type="button" class="share-link" id="modalShare">Copy link to this cake</button></div>
+        </div>
+        <button class="close" id="modalClose" aria-label="Close">×</button>
+      </div>
+      <p class="desc" id="modalDesc" style="color: var(--ink-soft); font-size: 14.5px;"></p>
+
+      <div class="field" id="variantField" hidden>
+        <label for="variantSelect">Size / option</label>
+        <select id="variantSelect"></select>
+      </div>
+
+      <div class="field">
+        <label>Quantity</label>
+        <div class="qty-row">
+          <div class="qty-stepper">
+            <button type="button" id="qtyMinus" aria-label="Decrease quantity">−</button>
+            <span class="qty" id="qtyValue">1</span>
+            <button type="button" id="qtyPlus" aria-label="Increase quantity">+</button>
+          </div>
+          <span class="price" id="modalPrice" style="font-weight:700;"></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="itemNote">Note for this item <span style="font-weight:400; color:var(--ink-soft);">(optional)</span></label>
+        <textarea id="itemNote" rows="2" placeholder="e.g. Write “Happy Birthday Mia!” on top…"></textarea>
+      </div>
+
+      <p class="pickup-note" id="modalPickup"></p>
+
+      <button class="btn btn-primary btn-block" id="modalAdd">Add to Order</button>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <div class="drawer-overlay" id="drawerOverlay" hidden></div>
+  <aside class="drawer" id="cartDrawer" aria-label="Your order">
+    <div class="drawer-head">
+      <h2>Your order</h2>
+      <button class="btn-quiet" id="drawerClose" aria-label="Close order panel">✕ Close</button>
+    </div>
+    <div class="drawer-body">
+      <div id="cartItems"></div>
+      <p class="empty-note" id="cartEmpty">Your order is empty — add something sweet!</p>
+
+      <div id="checkoutSection" hidden>
+        <div class="cart-summary">
+          <div class="total-row"><span>Total</span><span id="cartTotal"></span></div>
+          <p class="hint">Total to be confirmed — payment is arranged when we confirm your order.</p>
+        </div>
+
+        <div class="pickup-box" id="pickupBox"></div>
+
+        <div class="field" id="fulfillmentField" hidden>
+          <label>How would you like to get your order?</label>
+          <div class="radio-row" role="radiogroup" aria-label="Pickup or delivery">
+            <label class="radio-pill"><input type="radio" name="fulfillment" value="pickup" checked> 🧺 Pickup</label>
+            <label class="radio-pill"><input type="radio" name="fulfillment" value="delivery"> 🛵 Delivery</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="custName">Your name</label>
+          <input id="custName" type="text" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="custPhone">Your phone number</label>
+          <input id="custPhone" type="tel" name="phone" autocomplete="tel" inputmode="tel" required>
+        </div>
+        <div class="field" id="deliveryAddressField" hidden>
+          <label for="deliveryAddress">Delivery address</label>
+          <textarea id="deliveryAddress" rows="2" name="address" placeholder="Street, suburb…" autocomplete="street-address"></textarea>
+          <p class="hint" id="deliveryNoteHint"></p>
+        </div>
+        <div class="field">
+          <label for="pickupDate" id="pickupDateLabel">Pickup day</label>
+          <input id="pickupDate" type="date" name="pickup-date" required>
+          <p class="hint" id="pickupDateHint"></p>
+        </div>
+        <div class="field">
+          <label for="pickupSlot" id="pickupSlotLabel">Pickup time</label>
+          <select id="pickupSlot" name="pickup-slot"></select>
+        </div>
+        <div class="field">
+          <label for="orderNote">Anything else we should know? <span style="font-weight:400; color:var(--ink-soft);">(optional)</span></label>
+          <textarea id="orderNote" rows="2" placeholder="Allergies, colour preferences, special requests…"></textarea>
+        </div>
+
+        <div class="order-actions">
+          <button type="button" class="btn btn-whatsapp btn-block" id="sendWhatsApp">Send Order on WhatsApp</button>
+          <button type="button" class="btn btn-outline btn-block" id="sendEmail">Send Order by Email</button>
+          <button class="btn btn-quiet btn-block" id="copyOrder">Copy order text instead</button>
+          <button class="btn btn-quiet btn-block" id="clearCart">Clear order</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

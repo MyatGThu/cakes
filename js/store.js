@@ -290,7 +290,7 @@
       card.className = "card";
       card.style.setProperty("--cat-tint", categoryTint(p.category));
       card.innerHTML =
-        '<div class="photo-frame"><img class="photo" loading="lazy" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(p.image || "") + '"></div>' +
+        '<div class="photo-frame"><img class="photo" loading="lazy" width="800" height="800" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(p.image || "") + '"></div>' +
         '<div class="body">' +
           '<span class="badge ' + badge.cls + '">' + escapeHtml(badge.text) + "</span>" +
           "<h3>" + escapeHtml(p.name) + "</h3>" +
@@ -807,7 +807,7 @@
       el.className = "ig-tile";
       if (t.href) { el.href = t.href; el.target = "_blank"; el.rel = "noopener"; }
       el.innerHTML =
-        '<img loading="lazy" alt="' + escapeHtml(t.alt || "") + '" src="' + escapeHtml(t.image) + '">' +
+        '<img loading="lazy" width="400" height="400" alt="' + escapeHtml(t.alt || "") + '" src="' + escapeHtml(t.image) + '">' +
         (t.caption ? '<span class="veil"><span>' + escapeHtml(t.caption) + "</span></span>" : "");
       host.appendChild(el);
     });

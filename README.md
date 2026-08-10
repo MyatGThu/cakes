@@ -19,7 +19,11 @@ to maintain day-to-day:
 ## How it fits together
 
 ```
-index.html + js/store.js     ← the shop customers see
+index.html + js/landing.js   ← cinematic landing (scroll-driven 3D cake, parallax)
+shop.html + js/store.js      ← the menu, cart and ordering flow
+about.html                   ← Mia's story (parchment / torn-paper treatment)
+images/3d/                   ← product renders + hero turntable frames, generated
+                               with Three.js (scripts in the session scratchpad)
 js/motion.js                 ← GSAP/scroll animation layer (pure progressive enhancement)
 admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots
