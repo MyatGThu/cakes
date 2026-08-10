@@ -204,7 +204,8 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
 }
 @media (max-width: 640px) {
   .ing-fly.m-hide { display: none; }
-  .ing-fly { --w: 64px; }
+  /* inline style sets --w, so scale the derived width instead of the variable */
+  .ing-fly { width: calc(var(--w, 90px) * 0.62); }
 }
 
 /* ---------- Ingredients converging into the cake (story stage) ---------- */
@@ -238,7 +239,7 @@ html:not(.motion-on) .stage-ingredients { display: none; }
   white-space: nowrap;
   background: var(--accent);
   color: #fff;
-  padding: 14px 40px 18px;
+  padding: 14px 0 18px; /* no side padding: -50% must equal exactly one span for a seamless wrap */
   transform: rotate(-1.4deg);
   box-shadow: 0 10px 30px rgba(176, 48, 82, 0.25);
   will-change: transform;

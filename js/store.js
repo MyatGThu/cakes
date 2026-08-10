@@ -302,6 +302,10 @@
       img.loading = "lazy";
       img.width = 800; img.height = 800;
       img.alt = p.name;
+      img.addEventListener("error", function posterGone() {
+        img.removeEventListener("error", posterGone);
+        if (p.image && img.getAttribute("src") !== p.image) img.src = p.image;
+      });
       img.src = p.videoPoster || cardStill(p);
       vid.replaceWith(img);
     });
@@ -315,7 +319,7 @@
     } else if ("IntersectionObserver" in window) {
       videoWatcher = videoWatcher || new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
-          if (en.isIntersecting && en.intersectionRatio >= 0.5) {
+          if (en.isIntersecting && en.intersectionRatio >= 0.45) { // epsilon under the 0.5 threshold — ratios can land at 0.499…
             var pr = en.target.play(); if (pr && pr.catch) pr.catch(function () {});
           } else {
             en.target.pause();

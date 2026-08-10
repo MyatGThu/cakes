@@ -115,16 +115,23 @@
   }
 
   // Magnetic CTAs (same kit): buttons lean toward the cursor and spring back.
+  var magnetResets = [];
+  window.addEventListener("scroll", function () {
+    for (var mi = 0; mi < magnetResets.length; mi++) magnetResets[mi]();
+  }, { passive: true });
   if (window.matchMedia("(pointer: fine)").matches) {
     gsap.utils.toArray(".btn-primary, .btn-outline, .cart-button").forEach(function (el) {
       var xTo = gsap.quickTo(el, "x", { duration: 0.6, ease: "elastic.out(1, 0.3)" });
       var yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "elastic.out(1, 0.3)" });
+      var rect = null; // measured once per hover; scrolling invalidates it below
+      magnetResets.push(function () { rect = null; });
+      el.addEventListener("mouseenter", function () { rect = el.getBoundingClientRect(); });
       el.addEventListener("mousemove", function (e) {
-        var r = el.getBoundingClientRect();
-        xTo((e.clientX - (r.left + r.width / 2)) * 0.34);
-        yTo((e.clientY - (r.top + r.height / 2)) * 0.5);
+        if (!rect) rect = el.getBoundingClientRect();
+        xTo((e.clientX - (rect.left + rect.width / 2)) * 0.34);
+        yTo((e.clientY - (rect.top + rect.height / 2)) * 0.5);
       });
-      el.addEventListener("mouseleave", function () { xTo(0); yTo(0); });
+      el.addEventListener("mouseleave", function () { rect = null; xTo(0); yTo(0); });
     });
   }
 
@@ -316,6 +323,7 @@
   var track = document.querySelector(".marquee-track");
   if (track) {
     var loop = gsap.fromTo(track, { xPercent: 0 }, { xPercent: -50, ease: "none", duration: 24, repeat: -1 });
+    loop.totalTime(2400); // start deep into the infinite loop so rewinding never pins at time 0
     var boost = { v: 1 };
     ScrollTrigger.create({
       onUpdate: function (self) {
