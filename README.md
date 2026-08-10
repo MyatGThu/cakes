@@ -49,6 +49,8 @@ Open `data/settings.json` (on GitHub: press `.` or use the pencil icon) and set:
 | `whatsappNumber` | Digits only, international format, e.g. `15551234567` for +1 555 123 4567. Empty `""` hides the WhatsApp button |
 | `orderEmail` | Backup order channel. Empty `""` hides the email button |
 | `pickupAddress` | Shown in the footer — keep it vague if she prefers to share the exact address per order |
+| `deliveryAvailable` | `true` shows a Pickup / Delivery choice at checkout (delivery asks for an address); `false` = pickup only |
+| `deliveryNote` | Small print under the delivery address field, e.g. how the delivery fee works |
 | `orderCutoffHour` | 0–23. Orders placed after this hour count from tomorrow (e.g. `16` = 4 pm) |
 | `timezone` | Optional IANA zone (e.g. `"America/New_York"`) so the cutoff follows the *shop's* clock even for visitors in other time zones. Empty = each visitor's device clock |
 | `closedWeekdays` | Days with no pickups: `0`=Sunday … `6`=Saturday, e.g. `[0, 1]` |

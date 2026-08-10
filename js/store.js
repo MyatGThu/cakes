@@ -195,14 +195,25 @@
 
   /* ---------- Rendering ---------- */
 
+  function deliveryOn() {
+    return SETTINGS.deliveryAvailable === true;
+  }
+
+  function fulfillmentMethod() {
+    if (!deliveryOn()) return "pickup";
+    var checked = document.querySelector('input[name="fulfillment"]:checked');
+    return checked && checked.value === "delivery" ? "delivery" : "pickup";
+  }
+
   function renderShopInfo() {
-    document.title = SETTINGS.shopName + " — Order for Pickup";
+    document.title = SETTINGS.shopName + " — Cakes to Order";
     $("shopName").textContent = SETTINGS.shopName;
     $("shopTagline").textContent = SETTINGS.tagline || "";
     $("footerShopName").textContent = SETTINGS.shopName;
     $("footerPickup").textContent = SETTINGS.pickupAddress ? "Pickup: " + SETTINGS.pickupAddress : "";
 
     var contactBits = [];
+    if (deliveryOn()) contactBits.push("Pickup & delivery available");
     if (SETTINGS.whatsappNumber) contactBits.push("WhatsApp orders welcome");
     if (SETTINGS.orderEmail) contactBits.push(SETTINGS.orderEmail);
     $("footerContact").textContent = contactBits.join(" · ");
@@ -215,12 +226,12 @@
       ann.hidden = true;
     }
 
+    var getIt = deliveryOn() ? "choose pickup or delivery" : "choose a pickup day";
     var closed = closedWeekdays().map(weekdayName);
-    if (closed.length) {
-      $("heroText").textContent =
-        "Everything is baked to order — pick what you'd like, choose a pickup day, and send us your order. " +
-        "We'll confirm it personally. (No pickups on " + closed.join(" or ") + "s.)";
-    }
+    $("heroText").textContent =
+      "Everything is baked to order — pick what you'd like, " + getIt + ", and send us your order. " +
+      "We'll confirm it personally." +
+      (closed.length ? " (Closed on " + closed.join(" and ") + "s.)" : "");
   }
 
   function visibleProducts() {
@@ -486,14 +497,18 @@
       dateInput.value = toInputValue(earliest);
     }
 
+    var method = fulfillmentMethod();
+    var methodWord = method === "delivery" ? "delivery" : "pickup";
     $("pickupBox").innerHTML =
-      "🗓️ Your items are made to order — the earliest pickup for this order is <strong>" +
+      "🗓️ Your items are made to order — the earliest " + methodWord + " for this order is <strong>" +
       escapeHtml(humanDate(earliest)) + "</strong>.";
 
     var closed = closedWeekdays().map(weekdayName);
     $("pickupDateHint").textContent = closed.length
-      ? "No pickups on " + closed.join(" or ") + "s."
+      ? "We're closed on " + closed.join(" and ") + "s."
       : "";
+
+    updateFulfillmentUi();
 
     var slotSel = $("pickupSlot");
     var slots = Array.isArray(SETTINGS.pickupSlots) ? SETTINGS.pickupSlots : [];
@@ -507,6 +522,15 @@
       });
     }
     slotSel.parentElement.hidden = slots.length === 0;
+  }
+
+  function updateFulfillmentUi() {
+    var method = fulfillmentMethod();
+    $("fulfillmentField").hidden = !deliveryOn();
+    $("deliveryAddressField").hidden = method !== "delivery";
+    $("pickupDateLabel").textContent = method === "delivery" ? "Delivery day" : "Pickup day";
+    $("pickupSlotLabel").textContent = method === "delivery" ? "Preferred delivery time" : "Pickup time";
+    $("deliveryNoteHint").textContent = SETTINGS.deliveryNote || "";
   }
 
   function onPickupDateChange() {
@@ -535,19 +559,30 @@
     var earliest = cartEarliestPickup();
     if (!earliest) { toast("Sorry — " + PAUSED_MSG.charAt(0).toLowerCase() + PAUSED_MSG.slice(1)); return null; }
 
+    var method = fulfillmentMethod();
     var name = $("custName").value.trim();
     var phone = $("custPhone").value.trim();
     var date = fromInputValue($("pickupDate").value);
     if (!name) { toast("Please add your name so we know whose cake it is!"); $("custName").focus(); return null; }
     if (!phone) { toast("Please add a phone number so we can confirm your order."); $("custPhone").focus(); return null; }
-    if (!date) { toast("Please pick a pickup day."); $("pickupDate").focus(); return null; }
 
+    var address = "";
+    if (method === "delivery") {
+      address = $("deliveryAddress").value.trim();
+      if (!address) { toast("Please add your delivery address."); $("deliveryAddress").focus(); return null; }
+    }
+
+    if (!date) { toast("Please pick a day."); $("pickupDate").focus(); return null; }
     if (date < earliest || isClosedDay(date)) {
       onPickupDateChange();
-      toast("Please double-check your pickup day.");
+      toast("Please double-check your " + (method === "delivery" ? "delivery" : "pickup") + " day.");
       return null;
     }
-    return { name: name, phone: phone, date: date, slot: $("pickupSlot").value, note: $("orderNote").value.trim() };
+    return {
+      method: method, address: address,
+      name: name, phone: phone, date: date,
+      slot: $("pickupSlot").value, note: $("orderNote").value.trim()
+    };
   }
 
   function buildOrderText(form) {
@@ -566,7 +601,14 @@
     lines.push("");
     lines.push("Name: " + form.name);
     lines.push("Phone: " + form.phone);
-    lines.push("Pickup: " + humanDate(form.date) + (form.slot ? ", " + form.slot : ""));
+    var when = humanDate(form.date) + (form.slot ? ", " + form.slot : "");
+    if (form.method === "delivery") {
+      lines.push("Delivery on: " + when);
+      lines.push("Deliver to: " + form.address);
+      lines.push("(Delivery fee to be confirmed)");
+    } else {
+      lines.push("Pickup: " + when);
+    }
     if (form.note) lines.push("Note: " + form.note);
     return lines.join("\n");
   }
@@ -707,6 +749,14 @@
     $("variantSelect").addEventListener("change", updateModalPrice);
     $("modalAdd").addEventListener("click", addFromModal);
     $("pickupDate").addEventListener("change", onPickupDateChange);
+
+    var radios = document.querySelectorAll('input[name="fulfillment"]');
+    Array.prototype.forEach.call(radios, function (r) {
+      r.addEventListener("change", function () {
+        updateFulfillmentUi();
+        if (cart.length) refreshPickupControls();
+      });
+    });
 
     wireOrderActions();
   }

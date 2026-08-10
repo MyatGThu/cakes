@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Shop — Order for Pickup</title>
-  <meta name="description" content="Homemade cakes baked to order. Browse the menu and book your pickup.">
+  <title>Aurette by Mia — Cakes to Order</title>
+  <meta name="description" content="Homemade cakes baked to order. Browse the menu and book pickup or delivery.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8E%82%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -101,6 +101,13 @@
 
         <div class="pickup-box" id="pickupBox"></div>
 
+        <div class="field" id="fulfillmentField" hidden>
+          <label>How would you like to get your order?</label>
+          <div class="radio-row" role="radiogroup" aria-label="Pickup or delivery">
+            <label class="radio-pill"><input type="radio" name="fulfillment" value="pickup" checked> 🧺 Pickup</label>
+            <label class="radio-pill"><input type="radio" name="fulfillment" value="delivery"> 🛵 Delivery</label>
+          </div>
+        </div>
         <div class="field">
           <label for="custName">Your name</label>
           <input id="custName" type="text" autocomplete="name" required>
@@ -109,13 +116,18 @@
           <label for="custPhone">Your phone number</label>
           <input id="custPhone" type="tel" autocomplete="tel" required>
         </div>
+        <div class="field" id="deliveryAddressField" hidden>
+          <label for="deliveryAddress">Delivery address</label>
+          <textarea id="deliveryAddress" rows="2" placeholder="Street, building, area…" autocomplete="street-address"></textarea>
+          <p class="hint" id="deliveryNoteHint"></p>
+        </div>
         <div class="field">
-          <label for="pickupDate">Pickup day</label>
+          <label for="pickupDate" id="pickupDateLabel">Pickup day</label>
           <input id="pickupDate" type="date" required>
           <p class="hint" id="pickupDateHint"></p>
         </div>
         <div class="field">
-          <label for="pickupSlot">Pickup time</label>
+          <label for="pickupSlot" id="pickupSlotLabel">Pickup time</label>
           <select id="pickupSlot"></select>
         </div>
         <div class="field">

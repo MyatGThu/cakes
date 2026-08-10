@@ -40,6 +40,10 @@ different prices.
 **Change pickup days or times** — *Shop settings* → tick the days you're closed and edit
 the pickup time slots.
 
+**Delivery on or off** — *Shop settings* → tick or untick **Offer delivery**. When it's on,
+customers can choose delivery at checkout and their address arrives inside the order message;
+you agree the delivery fee with them when you confirm.
+
 ## How orders reach you
 
 Customers pick their items and a pickup day (the site automatically only lets them choose

@@ -454,11 +454,19 @@
     $("sWhatsapp").value = settings.whatsappNumber || "";
     $("sEmail").value = settings.orderEmail || "";
     $("sAddress").value = settings.pickupAddress || "";
+    $("sDelivery").checked = settings.deliveryAvailable === true;
+    $("sDeliveryNote").value = settings.deliveryNote || "";
+    $("deliveryNoteField").hidden = settings.deliveryAvailable !== true;
+    $("sDelivery").onchange = function () {
+      settings.deliveryAvailable = $("sDelivery").checked;
+      $("deliveryNoteField").hidden = !settings.deliveryAvailable;
+      markDirty("settings");
+    };
 
     var bindings = {
       sShopName: "shopName", sTagline: "tagline", sAnnouncement: "announcement",
       sCurrency: "currencySymbol", sTimezone: "timezone", sWhatsapp: "whatsappNumber",
-      sEmail: "orderEmail", sAddress: "pickupAddress"
+      sEmail: "orderEmail", sAddress: "pickupAddress", sDeliveryNote: "deliveryNote"
     };
     Object.keys(bindings).forEach(function (id) {
       var el = $(id);

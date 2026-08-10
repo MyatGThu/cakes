@@ -297,6 +297,22 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
 .cart-summary { padding: 12px 0; font-size: 15px; }
 .cart-summary .total-row { display: flex; justify-content: space-between; font-weight: 700; font-size: 17px; }
 
+.radio-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.radio-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+.radio-pill input { width: auto; accent-color: var(--accent); }
+.radio-pill:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-dark); }
+
 .pickup-box {
   background: var(--gold-soft);
   border-radius: 12px;
