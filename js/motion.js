@@ -11,10 +11,15 @@
   var hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
 
   if (motionOK && hasGsap) document.documentElement.classList.add("motion-on");
-  if (!motionOK) return;
+  if (!motionOK) {
+    try { sessionStorage.removeItem("auretteWipe"); } catch (e) {}
+    return;
+  }
 
   /* ---------- Fallback: IntersectionObserver + CSS ---------- */
   if (!hasGsap) {
+    document.documentElement.classList.remove("wipe-hold");
+    try { sessionStorage.removeItem("auretteWipe"); } catch (e) {}
     if (!("IntersectionObserver" in window)) return;
     document.documentElement.classList.add("io-anim");
     var io = new IntersectionObserver(function (entries) {
@@ -37,6 +42,90 @@
   /* ---------- Rich path ---------- */
   gsap.registerPlugin(ScrollTrigger);
   var rise = "power3.out";
+
+  /* ---------- The page wipe (Dennis Snellenberg's signature move) ----------
+     Internal navigation sweeps a curved ink sheet up over the page; the next
+     page arrives already covered (html.wipe-hold, set pre-paint) and the
+     sheet lifts away with the destination's name on it. */
+  var WIPE_COVER = "M 0 0 Q 50 0 100 0 L 100 100 Q 50 100 0 100 Z";
+  var WIPE_BELOW = "M 0 100 Q 50 100 100 100 L 100 100 Q 50 100 0 100 Z";
+  var WIPE_RISE = "M 0 55 Q 50 12 100 55 L 100 100 Q 50 100 0 100 Z";
+  var WIPE_LIFT = "M 0 0 Q 50 0 100 0 L 100 42 Q 50 92 0 42 Z";
+  var WIPE_GONE = "M 0 0 Q 50 0 100 0 L 100 0 Q 50 0 0 0 Z";
+  var wipe = document.querySelector(".page-wipe");
+  var wipePath = wipe && wipe.querySelector("path");
+  var wipeLabel = wipe && wipe.querySelector(".wipe-label");
+  var wiping = false;
+  var wipeArrived = null;
+  try {
+    wipeArrived = sessionStorage.getItem("auretteWipe");
+    sessionStorage.removeItem("auretteWipe");
+  } catch (e) {}
+
+  function hideWipe() {
+    wiping = false;
+    document.documentElement.classList.remove("wipe-hold");
+    if (wipe) gsap.set(wipe, { autoAlpha: 0 });
+  }
+
+  if (wipe && wipeArrived !== null) {
+    gsap.set(wipe, { autoAlpha: 1 });
+    gsap.set(wipePath, { attr: { d: WIPE_COVER } });
+    wipeLabel.textContent = wipeArrived;
+    gsap.set(wipeLabel, { opacity: 1 });
+    document.documentElement.classList.remove("wipe-hold");
+    gsap.timeline({ delay: 0.12, onComplete: hideWipe })
+      .to(wipeLabel, { opacity: 0, y: -26, duration: 0.3, ease: "power2.in" })
+      .to(wipePath, { attr: { d: WIPE_LIFT }, duration: 0.42, ease: "power2.in" }, 0.08)
+      .to(wipePath, { attr: { d: WIPE_GONE }, duration: 0.34, ease: "power2.out" }, ">");
+  } else {
+    hideWipe();
+  }
+  // Back/forward cache restores the old page with the sheet still up — drop it.
+  window.addEventListener("pageshow", function (e) { if (e.persisted) hideWipe(); });
+
+  if (wipe) {
+    var WIPE_LABELS = { "": "Aurette", "index.html": "Aurette", "shop.html": "The Menu", "about.html": "The Baker" };
+    document.addEventListener("click", function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest && e.target.closest("a[href]");
+      if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
+      var url = new URL(a.href, location.href);
+      if (url.origin !== location.origin) return;
+      var page = url.pathname.split("/").pop();
+      if (!Object.prototype.hasOwnProperty.call(WIPE_LABELS, page)) return;
+      if (url.pathname === location.pathname) return; // in-page anchors keep scrolling
+      e.preventDefault();
+      if (wiping) return;
+      wiping = true;
+      wipeLabel.textContent = WIPE_LABELS[page];
+      gsap.set(wipe, { autoAlpha: 1 });
+      gsap.set(wipeLabel, { opacity: 0, y: 30 });
+      gsap.timeline({
+        onComplete: function () {
+          try { sessionStorage.setItem("auretteWipe", WIPE_LABELS[page]); } catch (err) {}
+          window.location.href = url.href;
+        },
+      })
+        .fromTo(wipePath, { attr: { d: WIPE_BELOW } }, { attr: { d: WIPE_RISE }, duration: 0.4, ease: "power2.in" })
+        .to(wipePath, { attr: { d: WIPE_COVER }, duration: 0.34, ease: "power3.out" })
+        .to(wipeLabel, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, "-=0.4");
+    });
+  }
+
+  // Magnetic CTAs (same kit): buttons lean toward the cursor and spring back.
+  if (window.matchMedia("(pointer: fine)").matches) {
+    gsap.utils.toArray(".btn-primary, .btn-outline, .cart-button").forEach(function (el) {
+      var xTo = gsap.quickTo(el, "x", { duration: 0.6, ease: "elastic.out(1, 0.3)" });
+      var yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "elastic.out(1, 0.3)" });
+      el.addEventListener("mousemove", function (e) {
+        var r = el.getBoundingClientRect();
+        xTo((e.clientX - (r.left + r.width / 2)) * 0.34);
+        yTo((e.clientY - (r.top + r.height / 2)) * 0.5);
+      });
+      el.addEventListener("mouseleave", function () { xTo(0); yTo(0); });
+    });
+  }
 
   // Generic reveals — everything rises into place.
   function revealIn(els) {
@@ -81,11 +170,12 @@
     });
     heroTitle.innerHTML = "";
     heroTitle.appendChild(frag);
+    var heroDelay = wipeArrived !== null ? 0.55 : 0.1; // wait for the wipe to lift
     gsap.from(heroTitle.querySelectorAll(".word"), {
-      yPercent: 70, opacity: 0, duration: 1.0, stagger: 0.07, ease: rise, delay: 0.1,
+      yPercent: 70, opacity: 0, duration: 1.0, stagger: 0.07, ease: rise, delay: heroDelay,
     });
     gsap.from(".act-hero .eyebrow, .act-hero .sub, .act-hero .cta-row, .scroll-cue", {
-      opacity: 0, y: 20, duration: 0.9, stagger: 0.12, ease: "power2.out", delay: 0.4,
+      opacity: 0, y: 20, duration: 0.9, stagger: 0.12, ease: "power2.out", delay: heroDelay + 0.3,
     });
   }
 
