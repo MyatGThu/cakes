@@ -10,7 +10,9 @@
   <meta property="og:description" content="Every cake has a story — usually it starts with someone’s favourite person.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://myatgthu.github.io/cakes/images/og.png">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8E%82%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/brand/favicon-64.png">
+  <link rel="apple-touch-icon" href="images/brand/apple-touch.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&display=swap">
@@ -48,13 +50,17 @@
     <svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
       <path d="M 0 0 Q 50 0 100 0 L 100 100 Q 50 100 0 100 Z"></path>
     </svg>
-    <p class="wipe-label"></p>
+    <div class="wipe-center">
+      <img class="wipe-mark" src="images/brand/logo.png" alt="" width="512" height="512">
+      <p class="wipe-label"></p>
+    </div>
   </div>
   <div class="announcement" id="announcement" hidden></div>
 
   <header class="site-header">
     <div class="bar">
       <a class="brand" href="index.html">
+        <img class="brand-mark" src="images/brand/logo.png" alt="" width="512" height="512">
         <span class="brand-name" id="shopName">Aurette by Mia</span>
         <span class="tagline" id="shopTagline"></span>
       </a>
@@ -73,6 +79,7 @@
     <div class="paper-grain" aria-hidden="true"></div>
 
     <section class="sheet sheet-title" aria-label="Introduction">
+      <img class="sheet-mark" src="images/brand/logo.png" alt="Aurette monogram" width="512" height="512" data-reveal>
       <p class="stamp" data-reveal>Est. Melbourne · One Kitchen</p>
       <h1 data-reveal>The baker behind <em>Aurette</em></h1>
       <p class="lede" data-reveal>Aurette is not a factory, a franchise, or a “cloud bakery.”
@@ -126,6 +133,7 @@
   </main>
 
   <footer class="site-footer">
+    <img class="footer-mark" src="images/brand/logo.png" alt="" width="512" height="512">
     <p><strong id="footerShopName"></strong></p>
     <p id="footerPickup"></p>
     <p id="footerContact"></p>

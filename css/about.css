@@ -24,6 +24,14 @@ main { position: relative; z-index: 1; }
 
 /* ---------- Title sheet ---------- */
 .sheet-title { text-align: center; padding-bottom: clamp(40px, 6vh, 70px); }
+.sheet-mark {
+  display: block;
+  width: clamp(72px, 9vw, 96px);
+  height: clamp(72px, 9vw, 96px);
+  border-radius: 50%;
+  margin: 0 auto 22px;
+  box-shadow: 0 10px 28px rgba(74, 52, 34, 0.24);
+}
 .sheet-title .stamp { margin: 0 auto 26px; }
 .sheet-title h1 {
   font-family: var(--font-display);

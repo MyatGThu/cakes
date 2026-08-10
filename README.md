@@ -29,6 +29,11 @@ images/3d/anim/              ← 32-frame 360° turntable loops (animated WebP),
 images/video/                ← real footage: muted, chromeless clips the menu cards
                                play on hover (desktop) or while in view (mobile),
                                plus their poster frames; reduced-motion gets stills
+images/brand/                ← the monogram in every size: logo.png (header, hero,
+                               footer, page-wipe), favicons, apple-touch icon.
+                               images/og.png is the social-share card built from it
+                               — overwrite logo.png and re-run the brand script to
+                               refresh the whole set
 js/motion.js                 ← GSAP/scroll animation layer (pure progressive enhancement)
 admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots

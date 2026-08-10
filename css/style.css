@@ -160,7 +160,16 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
   justify-content: space-between;
   gap: 14px;
 }
-.brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; text-decoration: none; color: inherit; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; text-decoration: none; color: inherit; }
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(51, 36, 28, 0.18);
+  view-transition-name: aurette-mark;
+}
+.brand .tagline { align-self: center; }
 .brand-name, .brand h1 {
   font-family: var(--font-display);
   font-size: 23px;
@@ -450,6 +459,13 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
 
 /* ---------- Footer ---------- */
 .site-footer { padding: 36px 20px 48px; text-align: center; color: var(--ink-soft); font-size: 14px; }
+.footer-mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  box-shadow: 0 3px 12px rgba(51, 36, 28, 0.16);
+}
 .site-footer strong { color: var(--ink); font-family: var(--font-display); font-size: 17px; }
 .site-footer p { margin: 6px 0; }
 
@@ -585,11 +601,22 @@ html.io-anim [data-reveal].in { opacity: 1; transform: none; }
 html.wipe-hold .page-wipe { visibility: visible; }
 .page-wipe svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .page-wipe path { fill: var(--ink); }
-.page-wipe .wipe-label {
+.page-wipe .wipe-center {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center;
+  place-content: center;
+  justify-items: center;
+  gap: 20px;
+  opacity: 0;
+}
+.page-wipe .wipe-mark {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.page-wipe .wipe-label {
   margin: 0;
   color: var(--bg);
   font-family: var(--font-display);
@@ -597,7 +624,6 @@ html.wipe-hold .page-wipe { visibility: visible; }
   font-weight: 600;
   font-size: clamp(30px, 5.5vw, 56px);
   letter-spacing: 0.01em;
-  opacity: 0;
 }
 
 /* ---------- Utility ---------- */

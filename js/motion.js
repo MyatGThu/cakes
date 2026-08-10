@@ -55,6 +55,7 @@
   var wipe = document.querySelector(".page-wipe");
   var wipePath = wipe && wipe.querySelector("path");
   var wipeLabel = wipe && wipe.querySelector(".wipe-label");
+  var wipeCenter = wipe && wipe.querySelector(".wipe-center");
   var wiping = false;
   var wipeArrived = null;
   try {
@@ -72,10 +73,10 @@
     gsap.set(wipe, { autoAlpha: 1 });
     gsap.set(wipePath, { attr: { d: WIPE_COVER } });
     wipeLabel.textContent = wipeArrived;
-    gsap.set(wipeLabel, { opacity: 1 });
+    gsap.set(wipeCenter, { opacity: 1 });
     document.documentElement.classList.remove("wipe-hold");
     gsap.timeline({ delay: 0.12, onComplete: hideWipe })
-      .to(wipeLabel, { opacity: 0, y: -26, duration: 0.3, ease: "power2.in" })
+      .to(wipeCenter, { opacity: 0, y: -26, duration: 0.3, ease: "power2.in" })
       .to(wipePath, { attr: { d: WIPE_LIFT }, duration: 0.42, ease: "power2.in" }, 0.08)
       .to(wipePath, { attr: { d: WIPE_GONE }, duration: 0.34, ease: "power2.out" }, ">");
   } else {
@@ -100,7 +101,7 @@
       wiping = true;
       wipeLabel.textContent = WIPE_LABELS[page];
       gsap.set(wipe, { autoAlpha: 1 });
-      gsap.set(wipeLabel, { opacity: 0, y: 30 });
+      gsap.set(wipeCenter, { opacity: 0, y: 30 });
       gsap.timeline({
         onComplete: function () {
           try { sessionStorage.setItem("auretteWipe", WIPE_LABELS[page]); } catch (err) {}
@@ -109,7 +110,7 @@
       })
         .fromTo(wipePath, { attr: { d: WIPE_BELOW } }, { attr: { d: WIPE_RISE }, duration: 0.4, ease: "power2.in" })
         .to(wipePath, { attr: { d: WIPE_COVER }, duration: 0.34, ease: "power3.out" })
-        .to(wipeLabel, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, "-=0.4");
+        .to(wipeCenter, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, "-=0.4");
     });
   }
 
@@ -158,6 +159,12 @@
         node.textContent.split(/(\s+)/).forEach(function (piece) {
           if (!piece) return;
           if (/^\s+$/.test(piece)) { frag.appendChild(document.createTextNode(" ")); return; }
+          // Punctuation right after a word (e.g. the comma after an <em>)
+          // must stay glued to it, or it can wrap to the start of a line.
+          if (/^[,.;:!?)’”]/.test(piece) && frag.lastChild && frag.lastChild.nodeType === Node.ELEMENT_NODE) {
+            frag.lastChild.appendChild(document.createTextNode(piece));
+            return;
+          }
           var w = document.createElement("span");
           w.className = "word";
           w.textContent = piece;
@@ -174,7 +181,7 @@
     gsap.from(heroTitle.querySelectorAll(".word"), {
       yPercent: 70, opacity: 0, duration: 1.0, stagger: 0.07, ease: rise, delay: heroDelay,
     });
-    gsap.from(".act-hero .eyebrow, .act-hero .sub, .act-hero .cta-row, .scroll-cue", {
+    gsap.from(".act-hero .hero-mark, .act-hero .eyebrow, .act-hero .sub, .act-hero .cta-row, .scroll-cue", {
       opacity: 0, y: 20, duration: 0.9, stagger: 0.12, ease: "power2.out", delay: heroDelay + 0.3,
     });
   }
