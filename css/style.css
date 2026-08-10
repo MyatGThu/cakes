@@ -192,12 +192,21 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
 }
 .hero .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-.floret { position: absolute; pointer-events: none; opacity: 0.9; }
-.floret-1 { top: 10%; left: 4%; width: clamp(60px, 9vw, 130px); }
-.floret-2 { top: 16%; right: 5%; width: clamp(70px, 11vw, 150px); }
-.floret-3 { bottom: 6%; left: 10%; width: clamp(48px, 7vw, 100px); }
-.floret-4 { bottom: 12%; right: 12%; width: clamp(40px, 6vw, 84px); }
-@media (max-width: 640px) { .floret-3, .floret-4 { display: none; } }
+/* Paper cut-out artwork — the drop shadow sells the layered-paper depth. */
+.floret {
+  position: absolute;
+  pointer-events: none;
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(51, 36, 28, 0.22));
+}
+.floret-1 { top: 7%; left: 3%; width: clamp(90px, 13vw, 190px); transform: rotate(-8deg); }
+.floret-2 { top: 12%; right: 3%; width: clamp(80px, 11vw, 165px); transform: rotate(10deg); }
+.floret-3 { bottom: 4%; left: 8%; width: clamp(60px, 8vw, 120px); }
+.floret-4 { bottom: 7%; right: 7%; width: clamp(80px, 11vw, 160px); transform: rotate(-4deg); }
+@media (max-width: 640px) {
+  .floret-3, .floret-4 { display: none; }
+  .floret-1 { top: 3%; } .floret-2 { top: 5%; }
+}
 
 /* Gentle scroll drift on the hero decorations — compositor-thread CSS,
    Firefox (still flag-gated) simply skips it. */
@@ -207,8 +216,8 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
     .floret-2 { animation-name: floretDriftAlt; }
   }
 }
-@keyframes floretDrift { to { transform: translateY(-46px) rotate(8deg); } }
-@keyframes floretDriftAlt { to { transform: translateY(-70px) rotate(-10deg); } }
+@keyframes floretDrift { to { transform: translateY(-46px) rotate(-2deg); } }
+@keyframes floretDriftAlt { to { transform: translateY(-70px) rotate(16deg); } }
 
 /* ---------- Ribbon divider ---------- */
 .ribbon {
