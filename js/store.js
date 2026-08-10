@@ -274,12 +274,14 @@
     return money(p.price);
   }
 
-  /* The 3D renders have animated turntable twins in images/3d/anim/ — slow
-     360° loops that autoplay like GIFs. Cards use those, unless the visitor
-     prefers reduced motion or the product photo is a real upload. */
+  /* The tiered cakes have animated turntable twins in images/3d/anim/ — slow
+     360° loops that autoplay like GIFs. Only the showpiece cakes spin: a whole
+     grid of rotating loaves and cookie boxes reads as dizzying, so everything
+     else keeps its still. Reduced-motion visitors always get stills. */
+  var SPINNING = { "classic-vanilla": 1, "chocolate-fudge": 1, "custom-celebration": 1 };
   var PREFERS_STILL = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   function cardImage(p) {
-    if (!PREFERS_STILL && /^images\/3d\/[\w-]+\.webp$/.test(p.image || "")) {
+    if (!PREFERS_STILL && SPINNING[p.id] === 1 && /^images\/3d\/[\w-]+\.webp$/.test(p.image || "")) {
       return "images/3d/anim/" + p.image.split("/").pop();
     }
     return p.image || "";
