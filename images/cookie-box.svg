@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f7efdf"/>
+  <ellipse cx="400" cy="480" rx="240" ry="30" fill="#e6d9bd"/>
+  <circle cx="310" cy="330" r="95" fill="#deA968"/>
+  <circle cx="480" cy="290" r="80" fill="#e6b273"/>
+  <circle cx="430" cy="420" r="70" fill="#d9a25e"/>
+  <g fill="#5a3a22">
+    <circle cx="285" cy="305" r="11"/><circle cx="340" cy="345" r="11"/><circle cx="300" cy="375" r="9"/>
+    <circle cx="460" cy="270" r="10"/><circle cx="505" cy="310" r="10"/><circle cx="475" cy="255" r="7"/>
+    <circle cx="415" cy="405" r="9"/><circle cx="455" cy="440" r="9"/>
+  </g>
+  <text x="400" y="560" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#a1845c">Cookie Box</text>
+</svg>

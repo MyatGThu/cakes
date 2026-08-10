@@ -1,0 +1,122 @@
+# 🎂 Cake Shop — a free, no-backend ordering site for a home baker
+
+A tiny made-to-order cake shop website that costs **$0/month** to run and needs **zero coding**
+to maintain day-to-day:
+
+- **Storefront** (`index.html`) — customers browse the menu, add items to an order,
+  and get an **automatically calculated earliest pickup date** based on each product's
+  lead time, the shop's closed days, and a daily order cutoff.
+- **Orders arrive on WhatsApp or email** — checkout builds a neatly formatted order
+  message the customer sends with one tap. No payment processing to set up, no order
+  database to maintain; the baker confirms each order personally (which she'd want to
+  do anyway for made-to-order goods).
+- **Admin page** (`admin.html`) — the baker edits products, prices, photos, lead times,
+  closed days and pickup slots in a friendly form UI and presses **Publish**. It commits
+  straight to this repository; GitHub Pages redeploys the site in about a minute.
+- **No build step, no dependencies, no server.** Just static files. The whole "database"
+  is two small JSON files in [`data/`](data/).
+
+## How it fits together
+
+```
+index.html + js/store.js     ← the shop customers see
+admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
+data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots
+data/products.json           ← the menu: names, prices/sizes, photos, lead times
+images/                      ← product photos (admin uploads compressed JPEGs here)
+```
+
+## One-time setup (you, ~15 minutes)
+
+### 1. Put the site live on GitHub Pages
+
+1. Merge this branch into `main` (or make `main` from it).
+2. In the repo: **Settings → Pages → Build and deployment** → Source: **Deploy from a branch** →
+   Branch: **main**, folder **/(root)** → Save.
+3. After a minute the site is live at `https://<your-username>.github.io/cakes/`.
+
+> Optional: buy a custom domain (~$10–15/year, the only possible cost) and add it under
+> **Settings → Pages → Custom domain**.
+
+### 2. Set the real shop details
+
+Open `data/settings.json` (on GitHub: press `.` or use the pencil icon) and set:
+
+| Key | What it is |
+| --- | --- |
+| `shopName`, `tagline`, `announcement` | Text at the top of the shop |
+| `currencySymbol` | e.g. `"$"`, `"€"`, `"K"` |
+| `whatsappNumber` | Digits only, international format, e.g. `15551234567` for +1 555 123 4567. Empty `""` hides the WhatsApp button |
+| `orderEmail` | Backup order channel. Empty `""` hides the email button |
+| `pickupAddress` | Shown in the footer — keep it vague if she prefers to share the exact address per order |
+| `orderCutoffHour` | 0–23. Orders placed after this hour count from tomorrow (e.g. `16` = 4 pm) |
+| `closedWeekdays` | Days with no pickups: `0`=Sunday … `6`=Saturday, e.g. `[0, 1]` |
+| `pickupSlots` | Time windows customers choose from, e.g. `["10:00 – 12:00", "14:00 – 17:00"]` |
+
+(All of this is also editable later in the admin page — this is just the head start.)
+
+### 3. Create the baker's "access key" (a GitHub token)
+
+The admin page needs permission to save changes to this repository. Create a
+**fine-grained personal access token** that can touch *only this repo*:
+
+1. GitHub → your avatar → **Settings → Developer settings → Personal access tokens →
+   Fine-grained tokens → Generate new token**.
+2. Name: `cake-shop-admin`. Expiration: pick e.g. 1 year (put a reminder in your calendar —
+   she'll need a fresh key after it expires).
+3. **Repository access**: *Only select repositories* → this repo.
+4. **Permissions → Repository permissions → Contents: Read and write.** Nothing else.
+5. Generate, copy the `github_pat_…` string, and send it to the baker privately
+   (not in a public place — treat it like a password to the website, nothing more:
+   it cannot touch your account or other repos).
+
+### 4. Hand it over
+
+Send her two things:
+
+- The admin link: `https://<your-username>.github.io/cakes/admin.html`
+- The access key from step 3
+
+She opens the link, pastes the key once (it's remembered on her device), and from then on
+it's: *edit → Publish → live in a minute*. Her cheat-sheet is in [`GUIDE.md`](GUIDE.md).
+
+## How the pickup-date estimate works
+
+Each product has `leadTimeDays` ("days of notice needed"). At checkout:
+
+1. Take the **largest** lead time among the items in the order.
+2. If it's already past the daily cutoff hour, start counting from tomorrow.
+3. Skip over any closed weekdays.
+
+That date is shown as the earliest pickup, the date picker won't allow anything earlier,
+and picking a closed day politely bumps to the next open one. Each product card also shows
+its own earliest-pickup date up front, so there are no surprises at checkout.
+
+## Local preview
+
+Static files fetched with `fetch()` need a local server (opening `index.html` directly
+won't load the menu):
+
+```bash
+python3 -m http.server 8000
+# → http://localhost:8000
+```
+
+## Costs, limits & when to outgrow this
+
+- **Hosting: free** (GitHub Pages, public repo). Bandwidth limits are far beyond what a
+  home bakery will see.
+- **Orders: free** — they're just WhatsApp/email messages; there's no order backend.
+  If she ever wants online payments, inventory counts, or automated order management,
+  that's the point to move to a paid platform (Shopify Starter, Square Online, Ecwid —
+  roughly $5–30/month). This site's data is two JSON files, so migrating the menu is trivial.
+- **The token expires** (whatever expiry you chose) — recreate it and send her a new one.
+
+## Security notes
+
+- The access key lives only in the baker's browser (`localStorage`) and travels only to
+  `api.github.com`. Anyone can *view* `admin.html`, but without a key it can't change anything.
+- The token is scoped to this single repository's contents — worst case if leaked, someone
+  could edit this website (fixable via git history) but nothing else on the account.
+- Customer details (name, phone) never touch the site or the repo — they only travel
+  inside the WhatsApp/email message the customer themselves sends.

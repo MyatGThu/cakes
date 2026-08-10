@@ -1,0 +1,12 @@
+{
+  "shopName": "Mia's Cake Studio",
+  "tagline": "Homemade cakes, baked to order with love",
+  "announcement": "Now taking orders for the weekend — order by Thursday 4pm!",
+  "currencySymbol": "$",
+  "whatsappNumber": "15551234567",
+  "orderEmail": "orders@example.com",
+  "pickupAddress": "Maple Street area — exact address is shared when your order is confirmed",
+  "orderCutoffHour": 16,
+  "closedWeekdays": [1],
+  "pickupSlots": ["10:00 – 12:00", "14:00 – 17:00"]
+}

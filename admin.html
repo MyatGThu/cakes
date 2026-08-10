@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop Admin — Edit Menu</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%93%9D%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+  <header class="admin-topbar">
+    <div class="bar">
+      <h1>🎂 Shop Admin</h1>
+      <span class="status" id="statusText">Not connected</span>
+      <div style="display:flex; gap:8px;">
+        <a class="btn btn-quiet" href="index.html" style="color:#fff;">View shop ↗</a>
+        <button class="btn btn-primary publish-btn" id="publishBtn" disabled>Publish changes</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-wrap">
+    <!-- Setup screen (shown until connected) -->
+    <section class="panel" id="setupPanel" hidden>
+      <h2>Connect to your shop</h2>
+      <p>This admin page saves your menu straight to the website. You only need to set it up once on each device —
+         ask the person who built the site for your <strong>access key</strong> if you don't have it.</p>
+      <div class="row-2">
+        <div class="field">
+          <label for="cfgOwner">GitHub username</label>
+          <input id="cfgOwner" type="text" placeholder="e.g. myatgthu" autocapitalize="off" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="cfgRepo">Repository name</label>
+          <input id="cfgRepo" type="text" placeholder="e.g. cakes" autocapitalize="off" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label for="cfgBranch">Branch</label>
+        <input id="cfgBranch" type="text" value="main" autocapitalize="off" autocomplete="off">
+        <p class="hint">Leave as “main” unless the site builder tells you otherwise.</p>
+      </div>
+      <div class="field">
+        <label for="cfgToken">Access key</label>
+        <input id="cfgToken" type="password" placeholder="github_pat_…" autocomplete="off">
+        <p class="hint">Stays only in this browser. It's a GitHub “fine-grained personal access token” that can edit
+           just this one website — see the README for how to create one.</p>
+      </div>
+      <div id="setupError"></div>
+      <button class="btn btn-primary" id="connectBtn">Connect</button>
+    </section>
+
+    <!-- Main editor (shown when connected) -->
+    <section id="editorSection" hidden>
+      <div id="publishNotice"></div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab" id="tabProducts" role="tab" aria-selected="true">Menu &amp; products</button>
+        <button class="tab" id="tabSettings" role="tab" aria-selected="false">Shop settings</button>
+        <button class="tab" id="tabHelp" role="tab" aria-selected="false">Help</button>
+      </div>
+
+      <div id="productsPane">
+        <div class="notice notice-info">
+          Changes are <strong>not live</strong> until you press <strong>Publish changes</strong> at the top.
+          After publishing, the website updates in a minute or two.
+        </div>
+        <div id="productList"></div>
+        <button class="btn btn-outline" id="addProductBtn">＋ Add a new product</button>
+      </div>
+
+      <div id="settingsPane" hidden>
+        <div class="panel">
+          <h2>Shop details</h2>
+          <div class="row-2">
+            <div class="field">
+              <label for="sShopName">Shop name</label>
+              <input id="sShopName" type="text">
+            </div>
+            <div class="field">
+              <label for="sTagline">Tagline</label>
+              <input id="sTagline" type="text">
+            </div>
+          </div>
+          <div class="field">
+            <label for="sAnnouncement">Announcement banner <span style="font-weight:400;color:var(--ink-soft);">(optional — leave empty to hide)</span></label>
+            <input id="sAnnouncement" type="text" placeholder="e.g. Away next week — back taking orders on the 20th!">
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label for="sCurrency">Currency symbol</label>
+              <input id="sCurrency" type="text" placeholder="$">
+            </div>
+            <div class="field">
+              <label for="sCutoff">Daily order cutoff hour (0–23)</label>
+              <input id="sCutoff" type="number" min="0" max="23">
+              <p class="hint">Orders placed after this hour count from the next day. E.g. 16 = 4pm.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Orders &amp; pickup</h2>
+          <div class="row-2">
+            <div class="field">
+              <label for="sWhatsapp">WhatsApp number for orders</label>
+              <input id="sWhatsapp" type="text" placeholder="e.g. 15551234567">
+              <p class="hint">International format, digits only (country code + number, no + or spaces). Leave empty to hide the WhatsApp button.</p>
+            </div>
+            <div class="field">
+              <label for="sEmail">Email for orders</label>
+              <input id="sEmail" type="email" placeholder="orders@example.com">
+              <p class="hint">Leave empty to hide the email button.</p>
+            </div>
+          </div>
+          <div class="field">
+            <label for="sAddress">Pickup address / area</label>
+            <input id="sAddress" type="text">
+            <p class="hint">Tip: keep it vague here and share the exact address when you confirm each order.</p>
+          </div>
+          <div class="field">
+            <label>Days you're closed (no pickups)</label>
+            <div class="weekday-grid" id="weekdayGrid"></div>
+          </div>
+          <div class="field">
+            <label>Pickup time slots</label>
+            <div id="slotList"></div>
+            <button class="btn btn-quiet" id="addSlotBtn" style="padding-left:0;">＋ Add a time slot</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="helpPane" hidden>
+        <div class="panel">
+          <h2>Quick help</h2>
+          <ul>
+            <li><strong>Change a price or name:</strong> Menu &amp; products → edit the box → Publish changes.</li>
+            <li><strong>Sold out / taking a break:</strong> untick “Show on the website” on a product, or set an announcement in Shop settings.</li>
+            <li><strong>New photo:</strong> press “Upload photo” on a product. Bright, square-ish photos look best; it's resized automatically.</li>
+            <li><strong>“Needs X days” :</strong> that's the product's lead time — the website uses it to work out the earliest pickup date customers can choose.</li>
+            <li><strong>Nothing changed on the site?</strong> Publishing takes a minute or two, then refresh the shop page.</li>
+          </ul>
+          <p><button class="btn btn-quiet" id="logoutBtn" style="padding-left:0; text-decoration:underline;">Disconnect this device</button></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

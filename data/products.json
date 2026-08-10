@@ -1,0 +1,85 @@
+[
+  {
+    "id": "classic-vanilla",
+    "name": "Classic Vanilla Cake",
+    "description": "Light vanilla sponge layered with silky buttercream. A crowd-pleaser for any occasion.",
+    "category": "Cakes",
+    "image": "images/classic-vanilla.svg",
+    "leadTimeDays": 3,
+    "available": true,
+    "variants": [
+      { "name": "6\" (serves 8)", "price": 38 },
+      { "name": "8\" (serves 14)", "price": 52 }
+    ]
+  },
+  {
+    "id": "chocolate-fudge",
+    "name": "Chocolate Fudge Cake",
+    "description": "Rich, moist chocolate layers with dark chocolate ganache. For serious chocolate lovers.",
+    "category": "Cakes",
+    "image": "images/chocolate-fudge.svg",
+    "leadTimeDays": 3,
+    "available": true,
+    "variants": [
+      { "name": "6\" (serves 8)", "price": 42 },
+      { "name": "8\" (serves 14)", "price": 56 }
+    ]
+  },
+  {
+    "id": "custom-celebration",
+    "name": "Custom Celebration Cake",
+    "description": "Birthdays, anniversaries, baby showers — tell us your theme and we'll design something special. Add your ideas in the order note and we'll confirm the details with you.",
+    "category": "Cakes",
+    "image": "images/custom-celebration.svg",
+    "leadTimeDays": 5,
+    "available": true,
+    "variants": [
+      { "name": "6\" (serves 8)", "price": 55 },
+      { "name": "8\" (serves 14)", "price": 75 },
+      { "name": "Two tier (serves 25+)", "price": 130 }
+    ]
+  },
+  {
+    "id": "cupcake-box",
+    "name": "Cupcake Box",
+    "description": "Soft cupcakes with swirled buttercream — a mix of vanilla and chocolate unless you request otherwise in the note.",
+    "category": "Cupcakes",
+    "image": "images/cupcake-box.svg",
+    "leadTimeDays": 2,
+    "available": true,
+    "variants": [
+      { "name": "Box of 6", "price": 18 },
+      { "name": "Box of 12", "price": 33 }
+    ]
+  },
+  {
+    "id": "banana-bread",
+    "name": "Banana Bread Loaf",
+    "description": "Old-fashioned banana bread with walnuts, baked fresh the morning of your pickup.",
+    "category": "Bakes",
+    "image": "images/banana-bread.svg",
+    "leadTimeDays": 1,
+    "available": true,
+    "price": 14
+  },
+  {
+    "id": "cookie-box",
+    "name": "Chocolate Chip Cookie Box",
+    "description": "A dozen chewy, golden chocolate chip cookies. Great as a gift — or don't share at all.",
+    "category": "Bakes",
+    "image": "images/cookie-box.svg",
+    "leadTimeDays": 1,
+    "available": true,
+    "price": 16
+  },
+  {
+    "id": "lemon-drizzle",
+    "name": "Lemon Drizzle Cake (seasonal)",
+    "description": "Zesty lemon sponge soaked in tangy syrup. Back soon!",
+    "category": "Cakes",
+    "image": "images/lemon-drizzle.svg",
+    "leadTimeDays": 3,
+    "available": false,
+    "price": 34
+  }
+]

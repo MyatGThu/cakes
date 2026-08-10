@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#fbf3e2"/>
+  <ellipse cx="400" cy="470" rx="240" ry="32" fill="#e9dcc0"/>
+  <path d="M240 320 q0 -110 160 -110 q160 0 160 110 v100 q0 40 -40 40 h-240 q-40 0 -40 -40 z" fill="#b07b45"/>
+  <path d="M255 315 q0 -92 145 -92 q145 0 145 92 v20 h-290 z" fill="#c98f54"/>
+  <path d="M300 235 q100 -34 200 0" stroke="#8a5a2e" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <circle cx="340" cy="270" r="8" fill="#8a5a2e"/>
+  <circle cx="420" cy="255" r="8" fill="#8a5a2e"/>
+  <circle cx="470" cy="280" r="8" fill="#8a5a2e"/>
+  <text x="400" y="545" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#9c7a48">Banana Bread</text>
+</svg>

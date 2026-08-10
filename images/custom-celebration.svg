@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f3ecf7"/>
+  <ellipse cx="400" cy="490" rx="250" ry="32" fill="#ddd0e8"/>
+  <rect x="200" y="380" width="400" height="110" rx="14" fill="#c9a7e0"/>
+  <rect x="250" y="280" width="300" height="100" rx="14" fill="#e2c8f0"/>
+  <rect x="300" y="195" width="200" height="85" rx="14" fill="#f0dff8"/>
+  <path d="M200 380 h400 v14 q-33 30 -66 0 q-34 30 -67 0 q-34 30 -67 0 q-34 30 -67 0 q-34 30 -67 0 q-33 30 -66 0 z" fill="#fff" opacity="0.85"/>
+  <path d="M250 280 h300 v12 q-30 26 -60 0 q-30 26 -60 0 q-30 26 -60 0 q-30 26 -60 0 q-30 26 -60 0 z" fill="#fff" opacity="0.85"/>
+  <line x1="360" y1="150" x2="360" y2="195" stroke="#e7788a" stroke-width="7" stroke-linecap="round"/>
+  <line x1="400" y1="140" x2="400" y2="195" stroke="#79b4e0" stroke-width="7" stroke-linecap="round"/>
+  <line x1="440" y1="150" x2="440" y2="195" stroke="#e9c46a" stroke-width="7" stroke-linecap="round"/>
+  <ellipse cx="360" cy="142" rx="6" ry="9" fill="#f4a261"/>
+  <ellipse cx="400" cy="132" rx="6" ry="9" fill="#f4a261"/>
+  <ellipse cx="440" cy="142" rx="6" ry="9" fill="#f4a261"/>
+  <text x="400" y="560" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#8d6ba8">Custom Celebration</text>
+</svg>

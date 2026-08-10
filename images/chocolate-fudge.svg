@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#f6ece3"/>
+  <ellipse cx="400" cy="470" rx="230" ry="34" fill="#e0cdbb"/>
+  <rect x="220" y="330" width="360" height="130" rx="16" fill="#6b4226"/>
+  <rect x="250" y="230" width="300" height="110" rx="16" fill="#7d4e2d"/>
+  <path d="M220 330 q30 44 60 0 q30 44 60 0 q30 44 60 0 q30 44 60 0 q30 44 60 0 q30 44 60 0 v-16 h-360 z" fill="#4a2c17"/>
+  <path d="M250 230 q25 36 50 0 q25 36 50 0 q25 36 50 0 q25 36 50 0 q25 36 50 0 q25 36 50 0 v-14 h-300 z" fill="#4a2c17"/>
+  <circle cx="330" cy="212" r="11" fill="#3a2010"/>
+  <circle cx="400" cy="204" r="11" fill="#3a2010"/>
+  <circle cx="470" cy="212" r="11" fill="#3a2010"/>
+  <text x="400" y="545" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#8a6a4e">Chocolate Fudge</text>
+</svg>
