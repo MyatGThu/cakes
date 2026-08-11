@@ -150,10 +150,12 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
 }
 
 .site-header {
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
+  /* the nearest plane of the page's z-axis: translucent glass over the content */
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  box-shadow: 0 1px 14px rgba(51, 36, 28, 0.05);
   position: sticky;
   top: 0;
   z-index: 40;
@@ -374,6 +376,43 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
 .badge-ready { background: var(--green-soft); color: var(--green); }
 .pickup-note { font-size: 13px; color: var(--ink-soft); }
 .empty-note { text-align: center; color: var(--ink-soft); padding: 40px 0; }
+
+/* The rubber-stamp chip (shared: landing acts, about sheets, noscript panel). */
+.stamp {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent);
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  padding: 4px 10px;
+  width: fit-content;
+  margin-bottom: 10px;
+  transform: rotate(-1.5deg);
+}
+
+/* Shown only when scripts are off — the menu's designed fallback, not a gap. */
+.noscript-menu {
+  max-width: 480px;
+  margin: 8px auto 24px;
+  padding: 34px 30px 30px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.noscript-menu .stamp { margin: 0 auto 14px; }
+.noscript-menu h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  text-wrap: balance;
+}
+.noscript-menu p { color: var(--ink-soft); margin: 0 0 18px; }
+.noscript-menu .hint { margin: 14px 0 0; font-size: 13px; }
 
 /* ---------- How it works (scroll story) ---------- */
 .how-stage {

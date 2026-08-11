@@ -202,6 +202,21 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
   height: auto;
   filter: drop-shadow(0 14px 20px rgba(51, 36, 28, 0.2));
 }
+/* Depth of field along the hero's z-axis: far layers soft and quiet,
+   near layers crisp with heavier shadows — one legible space, less noise. */
+.parallax-layer[data-depth="0.2"] .ing,
+.parallax-layer[data-depth="0.2"] .floret {
+  filter: blur(1.6px) drop-shadow(0 8px 12px rgba(51, 36, 28, 0.12));
+  opacity: 0.72;
+}
+.parallax-layer[data-depth="0.35"] .ing,
+.parallax-layer[data-depth="0.35"] .floret {
+  filter: blur(0.7px) drop-shadow(0 10px 15px rgba(51, 36, 28, 0.16));
+  opacity: 0.88;
+}
+.parallax-layer[data-depth="0.75"] .ing {
+  filter: drop-shadow(0 20px 28px rgba(51, 36, 28, 0.28));
+}
 @media (max-width: 640px) {
   .ing-fly.m-hide { display: none; }
   /* inline style sets --w, so scale the derived width instead of the variable */
