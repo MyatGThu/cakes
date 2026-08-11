@@ -8,14 +8,22 @@ body.parchment {
     #f6eedd;
 }
 
-/* Subtle paper grain over everything, drawn with an SVG turbulence filter. */
+/* Subtle paper grain over everything, drawn with an SVG turbulence filter.
+   Blurred and quiet — it should read as paper at arm's length, never as
+   noise behind the words. */
 .paper-grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.3;
+  filter: blur(0.7px);
+  background-size: 340px 340px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.33 0 0 0 0 0.24 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (max-width: 819px) {
+  .paper-grain { opacity: 0.18; filter: blur(1.1px); }
+  .torn-divider { opacity: 0.55; }
 }
 
 main { position: relative; z-index: 1; }
@@ -42,7 +50,12 @@ main { position: relative; z-index: 1; }
   text-wrap: balance;
 }
 .sheet-title h1 em { color: var(--accent); font-style: italic; }
-.sheet-title .lede { color: var(--ink-soft); font-size: clamp(16px, 2.2vw, 19px); max-width: 56ch; margin: 0 auto; }
+.sheet-title .lede {
+  color: color-mix(in srgb, var(--ink) 72%, var(--ink-soft));
+  font-size: clamp(16px, 2.2vw, 19px);
+  max-width: 56ch;
+  margin: 0 auto;
+}
 
 /* ---------- Torn paper dividers ---------- */
 .torn-divider {
@@ -97,6 +110,24 @@ main { position: relative; z-index: 1; }
   line-height: 1.75;
   margin: 0 0 20px;
   max-width: 62ch;
+}
+
+/* On stacked mobile layouts the reading columns get a frosted sheet — the
+   same glass plane as the site header — so the words sit on calm paper
+   while the parchment stays blurry behind it. */
+@media (max-width: 819px) {
+  .sheet-title .lede,
+  .story-copy,
+  .pull-quote {
+    background: rgba(255, 253, 248, 0.62);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    border: 1px solid rgba(122, 104, 92, 0.1);
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+  .story-copy p:not(.stamp):last-child { margin-bottom: 0; }
+  .pull-quote { max-width: none; }
 }
 .story-copy em { color: var(--accent-dark); font-family: var(--font-display); font-style: italic; }
 .story-copy .stamp { margin-top: 34px; }
