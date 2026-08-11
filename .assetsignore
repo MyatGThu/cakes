@@ -5,3 +5,6 @@ GUIDE.md
 skills-lock.json
 wrangler.jsonc
 .assetsignore
+tools/
+CLAUDE.md
+.gitignore

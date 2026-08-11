@@ -1,49 +1,58 @@
-# 🎂 Cake Shop — a free, no-backend ordering site for a home baker
+# 🎂 Aurette by Mia — a cinematic, $0/month cake shop
 
-A tiny made-to-order cake shop website that costs **$0/month** to run and needs **zero coding**
-to maintain day-to-day:
+The website for a Melbourne home bakery: a three-page experience with real
+craft — and still **no build step, no server, no monthly bill, zero coding**
+for the owner to maintain day-to-day.
 
-- **Storefront** (`index.html`) — customers browse the menu, add items to an order,
-  and get an **automatically calculated earliest pickup date** based on each product's
-  lead time, the shop's closed days, and a daily order cutoff.
-- **Orders arrive on WhatsApp or email** — checkout builds a neatly formatted order
-  message the customer sends with one tap. No payment processing to set up, no order
-  database to maintain; the baker confirms each order personally (which she'd want to
-  do anyway for made-to-order goods).
-- **Admin page** (`admin.html`) — the baker edits products, prices, photos, lead times,
-  closed days and pickup slots in a friendly form UI and presses **Publish**. It commits
-  straight to this repository; GitHub Pages redeploys the site in about a minute.
-- **No build step, no dependencies, no server.** Just static files. The whole "database"
-  is two small JSON files in [`data/`](data/).
+- **The landing** (`index.html`) — 3D ingredient sprites fly in around the
+  headline, drift with pointer and scroll parallax, and converge into a
+  scroll-driven spinning cake; a scroll-speed-reactive marquee ribbon runs
+  between acts. Navigation sweeps a curved ink "page wipe" carrying the
+  monogram; primary buttons are magnetic with a rising hover-fill.
+- **The menu** (`shop.html`) — the ordering flow. The tiered cakes play real
+  footage on hover (desktop) or while in view (mobile), chromeless and muted;
+  other products show 3D renders. Checkout computes the **earliest honest
+  pickup date** from each product's lead time, closed days and the daily
+  cutoff (in the shop's own timezone), then hands the order to **WhatsApp or
+  email** as a tidy message — no payment backend to run; Mia confirms each
+  order personally.
+- **The story** (`about.html`) — parchment, torn paper, stamps, and the
+  polaroid that straightens as you read.
+- **Admin** (`admin.html`) — Mia edits products, prices, photos, lead times,
+  closed days and slots in a form and presses **Publish**; it commits straight
+  to this repo and the host redeploys in about a minute. The whole "database"
+  is two JSON files in [`data/`](data/).
+- **Everything degrades gracefully** — reduced motion, JS disabled, or a
+  blocked CDN all get a complete, calm, static site.
+- **Themes** (`themes.html`) — a picker that previews alternate palettes via
+  `?theme=` (persisted per device) for choosing Aurette's look.
 
 ## How it fits together
 
 ```
-index.html + js/landing.js   ← cinematic landing (scroll-driven 3D cake, parallax)
+index.html + js/landing.js   ← cinematic landing (flying ingredients, scroll cake)
 shop.html + js/store.js      ← the menu, cart and ordering flow
 about.html                   ← Mia's story (parchment / torn-paper treatment)
-images/3d/                   ← product renders + hero turntable frames, generated
-                               with Three.js (scripts in the session scratchpad)
-images/3d/anim/              ← 32-frame 360° turntable loops (animated WebP), the
-                               fallback card animation when a product has no video
-images/ingredients/          ← transparent 3D ingredient sprites (Three.js) that fly
-                               through the landing hero, converge into the scroll
-                               cake, and drift through sections
-images/video/                ← real footage: muted, chromeless clips the menu cards
-                               play on hover (desktop) or while in view (mobile),
-                               plus their poster frames; reduced-motion gets stills
-images/brand/                ← Mia's monogram in every size: logo.png (header, hero,
-                               footer, page-wipe), favicons, apple-touch icon —
-                               all resampled from logo-original-150.png, the
-                               untouched original. images/og.png is the
-                               social-share card built around it
-js/motion.js                 ← GSAP/scroll animation layer (pure progressive enhancement)
-admin.html + js/admin.js     ← the editor the baker uses (commits via GitHub API)
-data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, pickup slots
-data/products.json           ← the menu: names, prices/sizes, photos, lead times
-images/                      ← product photos (admin uploads compressed JPEGs here)
-src/worker.js + wrangler.jsonc ← Cloudflare Worker: serves the site, /api/instagram feed
-                               cache + daily token refresh, /api/checkout Stripe stub
+js/motion.js                 ← the whole GSAP layer: reveals, parallax, turntable,
+                               ingredient choreography, page wipe, magnetic buttons,
+                               marquee — pure progressive enhancement behind
+                               html.motion-on (IntersectionObserver fallback: io-anim)
+admin.html + js/admin.js     ← the owner's editor (commits via GitHub API)
+data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, slots
+data/products.json           ← the menu: names, prices/sizes, media, lead times
+images/3d/                   ← product renders + 24-frame hero turntable (Three.js)
+images/3d/anim/              ← 32-frame turntable loops (animated WebP) — the card
+                               animation when a cake has no real footage
+images/video/                ← real clips the cake cards hover-play + poster frames
+images/ingredients/          ← transparent 3D ingredient sprites for the landing
+images/brand/                ← the monogram in every size, resampled from
+                               logo-original-150.png (the untouched original);
+                               images/og.png is the share card built around it
+tools/                       ← the Three.js render studio + Playwright test suites
+                               that generate and verify all of the above (see
+                               tools/README.md — not served in production)
+src/worker.js + wrangler.jsonc ← Cloudflare Worker: serves the site, /api/instagram
+                               feed cache + token refresh, /api/checkout Stripe stub
 ```
 
 ## Deploying on Cloudflare (recommended)
@@ -197,6 +206,9 @@ won't load the menu):
 python3 -m http.server 8000
 # → http://localhost:8000
 ```
+
+Browser tests and the 3D render studio live in [`tools/`](tools/) —
+`cd tools && npm install && npm test` (details in `tools/README.md`).
 
 ## Costs, limits & when to outgrow this
 

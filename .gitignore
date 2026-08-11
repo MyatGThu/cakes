@@ -1,0 +1,4 @@
+node_modules/
+tools/out/*
+!tools/out/.gitkeep
+tools/testmedia/
