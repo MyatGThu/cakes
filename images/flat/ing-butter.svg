@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Two pats of butter, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="70" y="224" width="280" height="118" rx="18"/>
+    <rect x="70" y="124" width="260" height="110" rx="16" transform="translate(18 12) rotate(-8 200 179)"/>
+  </g>
+  <!-- bottom pat -->
+  <rect x="58" y="212" width="280" height="118" rx="18" fill="#d9a94e"/>
+  <rect x="72" y="224" width="252" height="28" rx="10" fill="#f6ecdc"/>
+  <!-- top pat, tilted -->
+  <g transform="translate(6 0) rotate(-8 200 179)">
+    <rect x="70" y="124" width="260" height="110" rx="16" fill="#d9a94e"/>
+    <rect x="84" y="135" width="232" height="26" rx="9" fill="#f6ecdc"/>
+  </g>
+</svg>

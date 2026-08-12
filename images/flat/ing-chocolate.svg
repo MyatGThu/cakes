@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Chocolate chunks, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc" transform="translate(12 12)">
+    <rect x="70" y="65" width="140" height="110" rx="20" transform="rotate(-7 140 120)"/>
+    <rect x="235" y="84" width="114" height="96" rx="18" transform="rotate(8 292 132)"/>
+    <rect x="108" y="195" width="200" height="150" rx="24" transform="rotate(-5 208 270)"/>
+  </g>
+  <!-- upper-left chunk -->
+  <rect x="70" y="65" width="140" height="110" rx="20" fill="#2e1a0c" transform="rotate(-7 140 120)"/>
+  <!-- upper-right chunk -->
+  <rect x="235" y="84" width="114" height="96" rx="18" fill="#2e1a0c" transform="rotate(8 292 132)"/>
+  <!-- largest chunk -->
+  <rect x="108" y="195" width="200" height="150" rx="24" fill="#4a2f1c" transform="rotate(-5 208 270)"/>
+  <!-- flat cream glint -->
+  <rect x="140" y="222" width="26" height="26" rx="6" fill="#f6ecdc" transform="rotate(-5 208 270)"/>
+</svg>

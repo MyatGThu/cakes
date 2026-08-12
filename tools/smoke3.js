@@ -41,9 +41,9 @@ async function withGsap(page) {
     '| words:', await land.locator('#heroTitle .word').count(),
     '| announcement:', (await land.locator('#announcement').textContent()).slice(0, 30) + '…');
   await land.waitForTimeout(2200); // ingredient fly-in settles
-  console.log('landing ingredients:', await land.evaluate(() => ({
+  console.log('landing flat art:', await land.evaluate(() => ({
     flyers: document.querySelectorAll('.act-hero .ing-fly').length,
-    loaded: Array.from(document.querySelectorAll('.ing, .stage-ing')).every(i => i.complete && i.naturalWidth > 0),
+    loaded: Array.from(document.querySelectorAll('.ing, .stage-ing, .hero-cake')).every(i => i.complete && i.naturalWidth > 0),
     marquee: !!document.querySelector('.marquee-track'),
   })));
   await land.screenshot({ path: OUT + '/v4-landing-hero.png' });
@@ -52,12 +52,11 @@ async function withGsap(page) {
   await land.evaluate(() => document.querySelector('.cake-stage').scrollIntoView());
   for (let i = 0; i < 10; i++) { await land.mouse.wheel(0, 400); await land.waitForTimeout(120); }
   const stageState = await land.evaluate(() => {
-    const c = document.getElementById('turntable');
+    const tier = document.querySelector('#sTier1');
     const visibleCaptions = Array.from(document.querySelectorAll('.stage-caption')).filter(el => parseFloat(getComputedStyle(el).opacity) > 0.5).length;
-    const px = c.getContext('2d').getImageData(320, 320, 1, 1).data;
-    return { canvasPainted: px[3] > 0, visibleCaptions };
+    return { cakeBuilding: parseFloat(getComputedStyle(tier).opacity) > 0, visibleCaptions };
   });
-  console.log('landing turntable:', JSON.stringify(stageState), '(canvasPainted true, 1 caption)');
+  console.log('landing stage:', JSON.stringify(stageState), '(cakeBuilding true, 1 caption)');
   await land.screenshot({ path: OUT + '/v4-turntable.png' });
 
   // teaser floats + footer
@@ -114,7 +113,7 @@ async function withGsap(page) {
   const fb = await nofx.evaluate(() => ({
     motionOn: document.documentElement.classList.contains('motion-on'),
     stageAuto: getComputedStyle(document.querySelector('.cake-stage')).height,
-    fallbackImgVisible: getComputedStyle(document.getElementById('turntableFallback')).display !== 'none',
+    cakeComplete: Array.from(document.querySelectorAll('#stageCake g, #stageCake rect')).every(el => parseFloat(getComputedStyle(el).opacity) === 1),
     captionsVisible: Array.from(document.querySelectorAll('.stage-caption')).every(el => parseFloat(getComputedStyle(el).opacity) === 1),
     heroVisible: parseFloat(getComputedStyle(document.getElementById('heroTitle')).opacity) === 1,
   }));

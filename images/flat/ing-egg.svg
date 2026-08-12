@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Egg, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <ellipse cx="212" cy="342" rx="145" ry="24"/>
+    <ellipse cx="212" cy="252" rx="100" ry="98"/>
+    <ellipse cx="212" cy="177" rx="72" ry="95"/>
+  </g>
+  <!-- blush nest ring -->
+  <ellipse cx="200" cy="330" rx="145" ry="24" fill="#f3d7de"/>
+  <!-- egg: wide base + narrower top, overlapping -->
+  <ellipse cx="200" cy="240" rx="100" ry="98" fill="#f6ecdc"/>
+  <ellipse cx="200" cy="165" rx="72" ry="95" fill="#f6ecdc"/>
+</svg>

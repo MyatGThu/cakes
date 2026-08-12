@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Lemon wheel, flat illustration">
+  <!-- paper shadow -->
+  <circle cx="212" cy="212" r="165" fill="#e9ddcc"/>
+  <!-- rind -->
+  <circle cx="200" cy="200" r="165" fill="#d9a94e"/>
+  <!-- pith -->
+  <circle cx="200" cy="200" r="140" fill="#f6ecdc"/>
+  <!-- segments -->
+  <g fill="#d9a94e">
+    <path d="M200 184 L148 83 A128 128 0 0 1 252 83 Z"/>
+    <path d="M214 192 L275 96 A128 128 0 0 1 327 187 Z"/>
+    <path d="M214 208 L327 213 A128 128 0 0 1 275 304 Z"/>
+    <path d="M200 216 L252 317 A128 128 0 0 1 148 317 Z"/>
+    <path d="M186 208 L125 304 A128 128 0 0 1 73 213 Z"/>
+    <path d="M186 192 L73 187 A128 128 0 0 1 125 96 Z"/>
+  </g>
+</svg>

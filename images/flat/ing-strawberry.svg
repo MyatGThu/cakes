@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Strawberry, flat illustration">
+  <!-- paper shadow -->
+  <path d="M212 364 C142 312 84 257 84 192 C84 130 140 108 212 108 C284 108 340 130 340 192 C340 257 282 312 212 364 Z" fill="#e9ddcc"/>
+  <!-- leaf crown -->
+  <g fill="#356b44">
+    <path d="M132 60 L196 92 L172 116 Z"/>
+    <path d="M200 36 L222 100 L178 100 Z"/>
+    <path d="M268 60 L228 116 L204 92 Z"/>
+  </g>
+  <!-- body -->
+  <path d="M200 352 C130 300 72 245 72 180 C72 118 128 96 200 96 C272 96 328 118 328 180 C328 245 270 300 200 352 Z" fill="#b03052"/>
+  <!-- seeds -->
+  <g fill="#f6ecdc">
+    <circle cx="148" cy="156" r="9"/>
+    <circle cx="252" cy="156" r="9"/>
+    <circle cx="108" cy="205" r="9"/>
+    <circle cx="200" cy="196" r="9"/>
+    <circle cx="292" cy="205" r="9"/>
+    <circle cx="152" cy="258" r="9"/>
+    <circle cx="248" cy="258" r="9"/>
+    <circle cx="200" cy="305" r="9"/>
+  </g>
+</svg>

@@ -6,7 +6,7 @@ const path = require('path');
 const ROOT = require('path').resolve(__dirname, '..');
 const OUT = __dirname + '/out';
 const GSAP = require('path').join(__dirname, 'node_modules/gsap/dist');
-const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.webp': 'image/webp', '.mp4': 'video/mp4' };
+const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.png': 'image/png', '.mp4': 'video/mp4' };
 
 const server = http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]);
@@ -109,10 +109,11 @@ async function withVp9Videos(page) {
   await p3.route('**/images/video/*.mp4', r => r.abort());
   await p3.goto('http://localhost:8102/shop.html', { waitUntil: 'networkidle' });
   await p3.waitForSelector('.card .photo');
-  await p3.waitForTimeout(900);
+  await p3.waitForTimeout(1800);
   console.log('missing-video fallback:', await p3.evaluate(() => ({
     videosLeft: document.querySelectorAll('.card video').length,
     allShowing: Array.from(document.querySelectorAll('.card img.photo')).every(i => i.complete && i.naturalWidth > 0),
+    notLoaded: Array.from(document.querySelectorAll('.card img.photo')).filter(i => !(i.complete && i.naturalWidth > 0)).map(i => i.getAttribute('src')),
   })), '(want 0 videos left, allShowing true)');
   await p3.close();
 

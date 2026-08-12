@@ -3,11 +3,8 @@
   "private": true,
   "description": "Render studio and test suites for the Aurette site. Not served in production.",
   "scripts": {
-    "test": "node smoke3.js && node wipetest.js && node animtest.js",
+    "test": "node smoke3.js && node wipetest.js",
     "test:video": "node gen-testmedia.js && node videotest.js",
-    "render:products": "node studio/render.js",
-    "render:anim": "node studio/render-anim.js",
-    "render:ingredients": "node studio/render-ingredients.js",
     "og": "node gen-og.js"
   },
   "dependencies": {

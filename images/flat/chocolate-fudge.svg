@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Chocolate fudge cake, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="82" y="238" width="252" height="94" rx="14"/>
+    <rect x="118" y="150" width="180" height="92" rx="12"/>
+    <rect x="66" y="330" width="284" height="12" rx="6"/>
+  </g>
+  <!-- plate -->
+  <rect x="54" y="320" width="284" height="12" rx="6" fill="#241a14"/>
+  <!-- bottom tier -->
+  <rect x="70" y="228" width="252" height="94" rx="14" fill="#4a2f1c"/>
+  <!-- fudge drip -->
+  <path d="M70 240 h252 v10 q-15 26 -31 0 q-16 26 -32 0 q-15 26 -31 0 q-16 26 -32 0 q-15 26 -31 0 q-16 26 -32 0 q-15 26 -31 0 q-16 22 -32 0 z" fill="#2e1a0c"/>
+  <!-- top tier -->
+  <rect x="106" y="140" width="180" height="92" rx="12" fill="#2e1a0c"/>
+  <!-- chocolate shards -->
+  <g fill="#4a2f1c">
+    <rect x="138" y="88" width="13" height="58" rx="2" transform="rotate(-8 144.5 117)"/>
+    <rect x="196" y="78" width="13" height="64" rx="2" transform="rotate(5 202.5 110)"/>
+    <rect x="246" y="90" width="13" height="56" rx="2" transform="rotate(9 252.5 118)"/>
+  </g>
+  <!-- cherry -->
+  <circle cx="200" cy="112" r="17" fill="#8e2440"/>
+  <path d="M200 86 l9 13 h-18 z" fill="#356b44"/>
+</svg>

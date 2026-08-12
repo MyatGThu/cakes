@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Banana bread loaf with a cut slice, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="60" y="326" width="300" height="16" rx="8"/>
+    <rect x="82" y="202" width="180" height="124" rx="18"/>
+    <rect x="272" y="240" width="92" height="86" rx="14"/>
+  </g>
+  <!-- gold board -->
+  <rect x="48" y="314" width="300" height="16" rx="8" fill="#d9a94e"/>
+  <!-- loaf body -->
+  <rect x="70" y="190" width="180" height="124" rx="18" fill="#4a2f1c"/>
+  <!-- cream crown with wavy underside -->
+  <path d="M70 240 v-30 q0 -20 20 -20 h140 q20 0 20 20 v30 q-15 24 -30 0 q-15 24 -30 0 q-15 24 -30 0 q-15 24 -30 0 q-15 24 -30 0 q-15 24 -30 0 z" fill="#f6ecdc"/>
+  <!-- banana chips on the crown -->
+  <g fill="#d9a94e">
+    <circle cx="118" cy="186" r="9"/>
+    <circle cx="160" cy="182" r="10"/>
+    <circle cx="202" cy="186" r="9"/>
+  </g>
+  <!-- slice: crust ring -->
+  <rect x="260" y="228" width="92" height="86" rx="14" fill="#4a2f1c"/>
+  <!-- slice: cream face -->
+  <rect x="268" y="236" width="76" height="70" rx="10" fill="#f6ecdc"/>
+  <!-- walnuts in the crumb -->
+  <g fill="#2e1a0c">
+    <circle cx="290" cy="258" r="7"/>
+    <circle cx="322" cy="270" r="7"/>
+    <circle cx="300" cy="290" r="7"/>
+  </g>
+</svg>

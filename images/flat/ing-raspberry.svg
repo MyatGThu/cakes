@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Fresh raspberry, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <path d="M110 124 H314 Q354 124 336 162 L240 348 Q212 388 184 348 L88 162 Q70 124 110 124 Z"/>
+    <path d="M208 138 L162 64 L130 138 z"/>
+    <path d="M216 138 L262 64 L294 138 z"/>
+  </g>
+  <!-- leaf crown, two wedges -->
+  <g fill="#356b44">
+    <path d="M196 126 L150 52 L118 126 z"/>
+    <path d="M204 126 L250 52 L282 126 z"/>
+  </g>
+  <!-- drupelet cluster, rounded triangle point down -->
+  <g fill="#b03052">
+    <circle cx="96" cy="150" r="38"/>
+    <circle cx="165" cy="150" r="38"/>
+    <circle cx="235" cy="150" r="38"/>
+    <circle cx="131" cy="212" r="38"/>
+    <circle cx="200" cy="212" r="38"/>
+    <circle cx="166" cy="272" r="38"/>
+  </g>
+  <g fill="#8e2440">
+    <circle cx="304" cy="150" r="38"/>
+    <circle cx="269" cy="212" r="38"/>
+    <circle cx="234" cy="272" r="38"/>
+    <circle cx="200" cy="324" r="34"/>
+  </g>
+  <!-- blush glints -->
+  <g fill="#f3d7de">
+    <circle cx="86" cy="140" r="8"/>
+    <circle cx="155" cy="140" r="8"/>
+    <circle cx="190" cy="202" r="8"/>
+  </g>
+</svg>

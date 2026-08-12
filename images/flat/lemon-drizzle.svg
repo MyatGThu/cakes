@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Lemon drizzle loaf cake with a lemon wheel, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="80" y="188" width="168" height="144" rx="22"/>
+    <circle cx="302" cy="280" r="52"/>
+    <rect x="64" y="332" width="296" height="12" rx="6"/>
+  </g>
+  <!-- plate -->
+  <rect x="52" y="320" width="296" height="12" rx="6" fill="#241a14"/>
+  <!-- loaf body -->
+  <rect x="68" y="176" width="168" height="144" rx="22" fill="#d9a94e"/>
+  <!-- glaze with drips -->
+  <path d="M68 196 q0 -20 20 -20 h128 q20 0 20 20 v20 q-8 10 -16 8 q0 34 -10 34 q-10 0 -10 -30 q-8 -6 -16 -4 q0 48 -11 48 q-11 0 -11 -44 q-8 -8 -16 -6 q0 26 -10 26 q-10 0 -10 -24 q-30 -10 -58 -8 z" fill="#f6ecdc"/>
+  <!-- lemon wheel -->
+  <circle cx="290" cy="268" r="52" fill="#d9a94e"/>
+  <circle cx="290" cy="268" r="42" fill="#f6ecdc"/>
+  <!-- segment wedges -->
+  <g fill="#d9a94e">
+    <path d="M290 268 L302 234 L278 234 Z"/>
+    <path d="M290 268 L326 262 L313 240 Z"/>
+    <path d="M290 268 L267 240 L254 262 Z"/>
+    <path d="M290 268 L254 274 L267 296 Z"/>
+    <path d="M290 268 L278 302 L302 302 Z"/>
+    <path d="M290 268 L313 296 L326 274 Z"/>
+  </g>
+</svg>

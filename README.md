@@ -4,14 +4,15 @@ The website for a Melbourne home bakery: a three-page experience with real
 craft — and still **no build step, no server, no monthly bill, zero coding**
 for the owner to maintain day-to-day.
 
-- **The landing** (`index.html`) — 3D ingredient sprites fly in around the
-  headline, drift with pointer and scroll parallax, and converge into a
-  scroll-driven spinning cake; a scroll-speed-reactive marquee ribbon runs
-  between acts. Navigation sweeps a curved ink "page wipe" carrying the
-  monogram; primary buttons are magnetic with a rising hover-fill.
+- **The landing** (`index.html`) — a Swiss-grid, editorial layout: flat 2D
+  ingredient illustrations fly in beside the headline and converge into a
+  scroll-driven cake that assembles layer by layer; a scroll-speed-reactive
+  marquee ribbon runs between acts. Navigation sweeps a curved ink "page
+  wipe" carrying the monogram; primary buttons are magnetic with a rising
+  hover-fill.
 - **The menu** (`shop.html`) — the ordering flow. The tiered cakes play real
   footage on hover (desktop) or while in view (mobile), chromeless and muted;
-  other products show 3D renders. Checkout computes the **earliest honest
+  other products show flat 2D illustrations. Checkout computes the **earliest honest
   pickup date** from each product's lead time, closed days and the daily
   cutoff (in the shop's own timezone), then hands the order to **WhatsApp or
   email** as a tidy message — no payment backend to run; Mia confirms each
@@ -40,16 +41,13 @@ js/motion.js                 ← the whole GSAP layer: reveals, parallax, turnta
 admin.html + js/admin.js     ← the owner's editor (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, slots
 data/products.json           ← the menu: names, prices/sizes, media, lead times
-images/3d/                   ← product renders + 24-frame hero turntable (Three.js)
-images/3d/anim/              ← 32-frame turntable loops (animated WebP) — the card
-                               animation when a cake has no real footage
+images/flat/                 ← the flat 2D illustration set (products, ingredients,
+                               hero cake) — hand-authored SVG per _spec.md
 images/video/                ← real clips the cake cards hover-play + poster frames
-images/ingredients/          ← transparent 3D ingredient sprites for the landing
 images/brand/                ← the monogram in every size, resampled from
                                logo-original-150.png (the untouched original);
                                images/og.png is the share card built around it
-tools/                       ← the Three.js render studio + Playwright test suites
-                               that generate and verify all of the above (see
+tools/                       ← Playwright test suites + og-card generator (see
                                tools/README.md — not served in production)
 src/worker.js + wrangler.jsonc ← Cloudflare Worker: serves the site, /api/instagram
                                feed cache + token refresh, /api/checkout Stripe stub

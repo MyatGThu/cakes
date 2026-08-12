@@ -277,28 +277,20 @@
   /* Card media, calmest-first: a product with real footage (p.video) shows a
      chromeless muted <video> that sits on its poster frame until hover plays
      it (desktop) or until it scrolls into view (touch, Instagram-style).
-     Without footage, the tiered cakes fall back to their 3D turntable loop in
-     images/3d/anim/, and everything else keeps its still. Reduced-motion
-     visitors always get stills. */
-  var SPINNING = { "classic-vanilla": 1, "chocolate-fudge": 1, "custom-celebration": 1 };
+     Everything else shows its flat 2D illustration. Reduced-motion visitors
+     always get stills. */
   var PREFERS_STILL = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var CAN_HOVER = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   var videoWatcher = null;
-  function cardImage(p) {
-    if (!PREFERS_STILL && SPINNING[p.id] === 1 && /^images\/3d\/[\w-]+\.webp$/.test(p.image || "")) {
-      return "images/3d/anim/" + p.image.split("/").pop();
-    }
-    return p.image || "";
-  }
   function cardStill(p) {
-    return (PREFERS_STILL && p.videoPoster) ? p.videoPoster : cardImage(p);
+    return (PREFERS_STILL && p.videoPoster) ? p.videoPoster : (p.image || "");
   }
 
   function attachCardVideo(card, p, vid) {
     vid.muted = true; // the attribute alone isn't trusted on dynamically built DOM
     vid.addEventListener("error", function () {
       var img = document.createElement("img");
-      img.className = "photo";
+      img.className = p.videoPoster ? "photo photo--real" : "photo";
       img.loading = "lazy";
       img.width = 800; img.height = 800;
       img.alt = p.name;
@@ -348,7 +340,7 @@
       card.style.setProperty("--cat-tint", categoryTint(p.category));
       var media = (p.video && !PREFERS_STILL)
         ? '<video class="photo" width="720" height="540" muted loop playsinline disablepictureinpicture preload="metadata" poster="' + escapeHtml(p.videoPoster || p.image || "") + '" src="' + escapeHtml(p.video) + '" aria-label="' + escapeHtml(p.name) + '"></video>'
-        : '<img class="photo" loading="lazy" width="800" height="800" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(cardStill(p)) + '">';
+        : '<img class="photo' + (cardStill(p).indexOf("images/video/") === 0 ? " photo--real" : "") + '" loading="lazy" width="800" height="800" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(cardStill(p)) + '">';
       card.innerHTML =
         '<div class="photo-frame">' + media + "</div>" +
         '<div class="body">' +

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Three-tier cake with cherry and strawberries, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="68" y="272" width="280" height="92" rx="14"/>
+    <rect x="100" y="190" width="204" height="86" rx="12"/>
+    <rect x="136" y="114" width="136" height="80" rx="12"/>
+    <rect x="60" y="364" width="300" height="12" rx="6"/>
+  </g>
+  <!-- plate -->
+  <rect x="48" y="354" width="300" height="12" rx="6" fill="#241a14"/>
+  <!-- bottom tier -->
+  <rect x="56" y="262" width="280" height="92" rx="14" fill="#f6ecdc"/>
+  <!-- bottom drip -->
+  <path d="M56 274 h280 v10 q-17 26 -35 0 q-18 26 -35 0 q-17 26 -35 0 q-18 26 -35 0 q-17 26 -35 0 q-18 26 -35 0 q-17 26 -35 0 q-18 22 -35 0 z" fill="#b03052"/>
+  <!-- middle tier -->
+  <rect x="88" y="180" width="204" height="86" rx="12" fill="#f3d7de"/>
+  <!-- top tier -->
+  <rect x="124" y="104" width="136" height="80" rx="12" fill="#f6ecdc"/>
+  <!-- top drip -->
+  <path d="M124 114 h136 v9 q-16 22 -34 0 q-17 22 -34 0 q-16 22 -34 0 q-17 19 -34 0 z" fill="#8e2440"/>
+  <!-- summit cherry -->
+  <circle cx="180" cy="76" r="19" fill="#8e2440"/>
+  <path d="M182 58 q4 -18 24 -20 q-4 17 -24 20 z" fill="#356b44"/>
+  <!-- strawberries on top tier -->
+  <g>
+    <circle cx="234" cy="90" r="17" fill="#b03052"/>
+    <path d="M234 68 l11 15 h-22 z" fill="#356b44"/>
+    <circle cx="142" cy="96" r="13" fill="#b03052"/>
+    <path d="M142 79 l9 12 h-18 z" fill="#356b44"/>
+  </g>
+  <!-- gold dragées on middle tier -->
+  <g fill="#d9a94e">
+    <circle cx="118" cy="226" r="7"/>
+    <circle cx="160" cy="240" r="7"/>
+    <circle cx="206" cy="224" r="7"/>
+    <circle cx="250" cy="238" r="7"/>
+  </g>
+</svg>

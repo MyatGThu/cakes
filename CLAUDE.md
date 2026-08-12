@@ -25,12 +25,9 @@ Everything runs from `tools/` (the only npm package in the repo):
 
 ```bash
 cd tools && npm install          # once; set CHROMIUM_PATH if Playwright's browser lives elsewhere
-npm test                         # smoke3 (3 pages) + wipetest + animtest — assert zero page errors
+npm test                         # smoke3 (3 pages) + wipetest — assert zero page errors
 npm run test:video               # hover-video behaviour (generates VP9 twins first — see below)
 node smoke3.js                   # a single suite; screenshots land in tools/out/
-npm run render:products          # re-render 7 product stills + 24 hero turntable frames
-npm run render:anim              # 32-frame animated-WebP loops for the tiered cakes
-npm run render:ingredients       # transparent ingredient sprites for the landing
 npm run og                       # rebuild images/og.png from images/brand/logo.png
 ```
 
@@ -46,8 +43,6 @@ Test quirks worth knowing:
   site uses H.264 on purpose — every real browser plays it; do not switch the
   production files to VP9 (old iPhones) or conclude from a headless failure that
   the videos are broken.
-- Renders run headless via SwiftShader (`--use-angle=swiftshader
-  --enable-unsafe-swiftshader`); no GPU needed.
 
 ## Architecture
 
@@ -83,13 +78,11 @@ restore) must clear the flag/class — that cleanup already exists in
 
 ### Card media ladder (shop)
 
-`store.js` picks each product card's media, calmest-wins: real footage
-(`p.video`, chromeless muted `<video>`, hover-play on desktop / in-view on
-touch) → 3D turntable loop (`images/3d/anim/`, only ids in the `SPINNING`
-allowlist — the owner found a fully animated grid dizzying, keep it limited) →
-static still. Reduced motion always gets stills; every rung falls back to the
-next on a missing file. Cart thumbnails and the IG-fallback gallery always use
-the static `p.image`.
+`store.js` picks each product card's media: real footage (`p.video`,
+chromeless muted `<video>`, hover-play on desktop / in-view on touch) →
+the product's flat 2D illustration (`p.image`). Reduced motion always gets
+stills; a missing video (or poster) falls back down the ladder. Cart
+thumbnails and the IG-fallback gallery always use the static `p.image`.
 
 ### Ordering without a backend
 
@@ -101,15 +94,17 @@ daily cutoff hour evaluated in `settings.timezone` (Intl), and
 → ordering pauses. Cart lines snapshot `variantName` and are dropped on
 mismatch after menu edits — prices are never trusted from stale storage.
 
-### Generated imagery
+### Flat 2D imagery (the Swiss/editorial direction)
 
-All 3D imagery (product stills, hero turntable frames, card loops, ingredient
-sprites) comes from `tools/studio/scene.html` — one Three.js scene with
-procedural canvas textures and per-product builder functions. To change how a
-cake looks, edit its builder and re-run the driver; outputs overwrite the same
-filenames so no markup changes. `images/brand/logo-original-150.png` is the
-owner's untouched logo — every other brand asset is a Lanczos resample of it;
-never redraw or "enhance" it.
+All product and ingredient art is hand-authored flat SVG in `images/flat/`,
+governed by `images/flat/_spec.md` (10-hex palette, no gradients/strokes/
+filters, single paper-shadow shape). Keep new art inside that spec so the set
+reads as one system. The design pairs Archivo (structure: headlines, labels,
+nav — via `--font-display`/`--font-body`) with Fraunces (`--font-serif`) used
+ONLY as the editorial voice: pull quotes, italic accents, the wipe label, the
+brand wordmark. `images/brand/logo-original-150.png` is the owner's untouched
+logo — every other brand asset is a Lanczos resample of it; never redraw or
+"enhance" it.
 
 ### Theming
 

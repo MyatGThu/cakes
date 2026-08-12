@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Classic vanilla cake, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="82" y="238" width="252" height="94" rx="14"/>
+    <rect x="118" y="150" width="180" height="92" rx="12"/>
+    <rect x="66" y="330" width="284" height="12" rx="6"/>
+  </g>
+  <!-- plate -->
+  <rect x="54" y="320" width="284" height="12" rx="6" fill="#241a14"/>
+  <!-- bottom tier -->
+  <rect x="70" y="228" width="252" height="94" rx="14" fill="#f6ecdc"/>
+  <!-- bottom drip -->
+  <path d="M70 240 h252 v10 q-15 26 -31 0 q-16 26 -32 0 q-15 26 -31 0 q-16 26 -32 0 q-15 26 -31 0 q-16 26 -32 0 q-15 26 -31 0 q-16 22 -32 0 z" fill="#b03052"/>
+  <!-- top tier -->
+  <rect x="106" y="140" width="180" height="92" rx="12" fill="#f3d7de"/>
+  <!-- top drip -->
+  <path d="M106 150 h180 v9 q-13 23 -26 0 q-13 23 -26 0 q-12 23 -25 0 q-13 23 -26 0 q-12 23 -25 0 q-13 20 -26 0 z" fill="#8e2440"/>
+  <!-- strawberries on top -->
+  <g>
+    <circle cx="160" cy="122" r="20" fill="#b03052"/>
+    <path d="M160 96 l10 14 h-20 z" fill="#356b44"/>
+    <circle cx="204" cy="114" r="24" fill="#8e2440"/>
+    <path d="M204 84 l12 16 h-24 z" fill="#356b44"/>
+    <circle cx="248" cy="124" r="18" fill="#b03052"/>
+    <path d="M248 100 l9 13 h-18 z" fill="#356b44"/>
+  </g>
+  <!-- gold dragées -->
+  <g fill="#d9a94e">
+    <circle cx="130" cy="205" r="7"/>
+    <circle cx="200" cy="212" r="7"/>
+    <circle cx="268" cy="205" r="7"/>
+  </g>
+</svg>

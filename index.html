@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="images/brand/apple-touch.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&display=swap">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/landing.css">
   <script>
@@ -76,49 +76,28 @@
   </header>
 
   <main id="main">
-    <!-- Act 1 · Arrival -->
+    <!-- Act 1 · Arrival: asymmetric Swiss grid, flat illustration column -->
     <section class="act act-hero" aria-label="Welcome">
-      <div class="parallax-layer" data-depth="0.35" aria-hidden="true">
-        <img class="floret floret-1" src="images/decor/peony.webp" alt="" width="360" height="360" fetchpriority="high">
-        <span class="ing-fly" style="top:15%; left:13%; --w:96px" data-fx="-320" data-fy="-80" data-rot="-140">
-          <img class="ing" src="images/ingredients/strawberry.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly" style="top:11%; left:80%; --w:104px" data-fx="340" data-fy="-120" data-rot="160">
-          <img class="ing" src="images/ingredients/lemon.webp" alt="" width="380" height="380"></span>
-      </div>
-      <div class="parallax-layer" data-depth="0.2" aria-hidden="true">
-        <img class="floret floret-2" src="images/decor/sprig.webp" alt="" width="360" height="360">
-        <span class="ing-fly" style="top:60%; left:4%; --w:112px" data-fx="-380" data-fy="60" data-rot="-60">
-          <img class="ing" src="images/ingredients/whisk.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly m-hide" style="top:6%; left:42%; --w:96px" data-fx="0" data-fy="-260" data-rot="120">
-          <img class="ing" src="images/ingredients/vanilla.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly m-hide" style="top:76%; left:87%; --w:84px" data-fx="300" data-fy="180" data-rot="90">
-          <img class="ing" src="images/ingredients/sugar.webp" alt="" width="380" height="380"></span>
-      </div>
-      <div class="parallax-layer" data-depth="0.5" aria-hidden="true">
-        <span class="ing-fly m-hide" style="top:68%; left:15%; --w:60px" data-fx="-260" data-fy="200" data-rot="-220">
-          <img class="ing" src="images/ingredients/blueberry.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly" style="top:64%; left:79%; --w:108px" data-fx="320" data-fy="160" data-rot="140">
-          <img class="ing" src="images/ingredients/chocolate.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly" style="top:32%; left:5%; --w:70px" data-fx="-340" data-fy="-40" data-rot="-180">
-          <img class="ing" src="images/ingredients/raspberry.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly" style="top:28%; left:90%; --w:82px" data-fx="360" data-fy="-60" data-rot="200">
-          <img class="ing" src="images/ingredients/cherry.webp" alt="" width="380" height="380"></span>
-      </div>
-      <div class="parallax-layer" data-depth="0.75" aria-hidden="true">
-        <span class="ing-fly m-hide" style="top:80%; left:36%; --w:76px" data-fx="-80" data-fy="280" data-rot="-100">
-          <img class="ing" src="images/ingredients/egg.webp" alt="" width="380" height="380"></span>
-        <span class="ing-fly m-hide" style="top:7%; left:62%; --w:86px" data-fx="140" data-fy="-240" data-rot="80">
-          <img class="ing" src="images/ingredients/butter.webp" alt="" width="380" height="380"></span>
-      </div>
-
-      <div class="hero-inner">
-        <img class="hero-mark" src="images/brand/logo.png" alt="Aurette monogram" width="512" height="512">
-        <p class="eyebrow">Melbourne · Made to Order · Pickup &amp; Delivery</p>
-        <h1 id="heroTitle">Cakes made <em class="accent">slowly</em>, for moments that matter.</h1>
-        <p class="sub">Real butter, real fruit, and a date with your name on it — every cake leaves Mia’s kitchen baked fresh for your day.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary btn-lg" href="shop.html">Browse the Menu</a>
-          <a class="btn btn-outline btn-lg" href="about.html">Meet the Baker</a>
+      <div class="hero-grid">
+        <div class="hero-inner">
+          <p class="hero-meta"><img class="hero-mark" src="images/brand/logo.png" alt="Aurette monogram" width="512" height="512"><span>Melbourne · Made to Order · Pickup &amp; Delivery</span></p>
+          <h1 id="heroTitle">Cakes made <em class="accent">slowly,</em> for moments that matter.</h1>
+          <p class="sub">Real butter, real fruit, and a date with your name on it — every cake leaves Mia’s kitchen baked fresh for your day.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href="shop.html">Browse the Menu</a>
+            <a class="btn btn-outline btn-lg" href="about.html">Meet the Baker</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <img class="hero-cake" src="images/flat/hero-cake.svg" alt="" width="400" height="400" fetchpriority="high">
+          <span class="ing-fly" style="top:2%; left:-4%; --w:88px" data-fx="-240" data-fy="-120" data-rot="-60">
+            <img class="ing" src="images/flat/ing-strawberry.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly" style="top:64%; left:-10%; --w:104px" data-fx="-280" data-fy="140" data-rot="-40">
+            <img class="ing" src="images/flat/ing-whisk.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly" style="top:8%; right:-4%; --w:96px" data-fx="260" data-fy="-140" data-rot="70">
+            <img class="ing" src="images/flat/ing-lemon.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly m-hide" style="top:72%; right:-8%; --w:80px" data-fx="280" data-fy="160" data-rot="50">
+            <img class="ing" src="images/flat/ing-cherry.svg" alt="" width="400" height="400"></span>
         </div>
       </div>
 
@@ -128,22 +107,40 @@
       </a>
     </section>
 
-    <!-- Act 2 · The cake builds itself as you scroll -->
+    <!-- Act 2 · The cake assembles, flat, as you scroll -->
     <section class="act cake-stage" id="story" aria-label="Our promise">
       <div class="stage-sticky">
         <div class="stage-ingredients" aria-hidden="true">
-          <img class="stage-ing" src="images/ingredients/butter.webp" alt="" width="380" height="380" loading="lazy" style="--w:86px" data-sx="-430" data-sy="-120" data-srot="-160">
-          <img class="stage-ing" src="images/ingredients/egg.webp" alt="" width="380" height="380" loading="lazy" style="--w:74px" data-sx="400" data-sy="-170" data-srot="140">
-          <img class="stage-ing" src="images/ingredients/sugar.webp" alt="" width="380" height="380" loading="lazy" style="--w:78px" data-sx="-360" data-sy="180" data-srot="-120">
-          <img class="stage-ing" src="images/ingredients/strawberry.webp" alt="" width="380" height="380" loading="lazy" style="--w:92px" data-sx="430" data-sy="120" data-srot="180">
-          <img class="stage-ing" src="images/ingredients/chocolate.webp" alt="" width="380" height="380" loading="lazy" style="--w:96px" data-sx="-420" data-sy="40" data-srot="-90">
-          <img class="stage-ing" src="images/ingredients/raspberry.webp" alt="" width="380" height="380" loading="lazy" style="--w:66px" data-sx="390" data-sy="-40" data-srot="220">
-          <img class="stage-ing" src="images/ingredients/lemon.webp" alt="" width="380" height="380" loading="lazy" style="--w:88px" data-sx="-300" data-sy="-230" data-srot="160">
-          <img class="stage-ing" src="images/ingredients/cherry.webp" alt="" width="380" height="380" loading="lazy" style="--w:72px" data-sx="330" data-sy="230" data-srot="-200">
+          <img class="stage-ing" src="images/flat/ing-butter.svg" alt="" width="400" height="400" loading="lazy" style="--w:84px" data-sx="-420" data-sy="-120" data-srot="-120">
+          <img class="stage-ing" src="images/flat/ing-egg.svg" alt="" width="400" height="400" loading="lazy" style="--w:76px" data-sx="400" data-sy="-170" data-srot="100">
+          <img class="stage-ing" src="images/flat/ing-strawberry.svg" alt="" width="400" height="400" loading="lazy" style="--w:88px" data-sx="430" data-sy="120" data-srot="140">
+          <img class="stage-ing" src="images/flat/ing-chocolate.svg" alt="" width="400" height="400" loading="lazy" style="--w:92px" data-sx="-420" data-sy="40" data-srot="-80">
+          <img class="stage-ing" src="images/flat/ing-raspberry.svg" alt="" width="400" height="400" loading="lazy" style="--w:68px" data-sx="390" data-sy="-40" data-srot="160">
+          <img class="stage-ing" src="images/flat/ing-lemon.svg" alt="" width="400" height="400" loading="lazy" style="--w:84px" data-sx="-300" data-sy="-230" data-srot="120">
+          <img class="stage-ing" src="images/flat/ing-cherry.svg" alt="" width="400" height="400" loading="lazy" style="--w:72px" data-sx="330" data-sy="230" data-srot="-150">
         </div>
         <div class="stage-cake">
-          <canvas id="turntable" width="640" height="640" aria-hidden="true"></canvas>
-          <img id="turntableFallback" src="images/3d/hero/frame-00.webp" alt="A three-tier cream and raspberry celebration cake" width="640" height="640" loading="lazy">
+          <svg id="stageCake" viewBox="0 0 400 400" role="img" aria-label="A three-tier celebration cake assembling layer by layer">
+            <rect id="sPlate" x="46" y="352" width="308" height="12" rx="6" fill="#241a14"/>
+            <g id="sTier1">
+              <rect x="62" y="262" width="276" height="92" rx="14" fill="#f6ecdc"/>
+              <path d="M62 274 h276 v10 q-16 28 -34 0 q-17 28 -35 0 q-17 28 -34 0 q-17 28 -35 0 q-17 28 -34 0 q-17 28 -35 0 q-17 28 -34 0 q-17 24 -35 0 z" fill="#b03052"/>
+            </g>
+            <g id="sTier2">
+              <rect x="98" y="180" width="204" height="84" rx="12" fill="#f3d7de"/>
+            </g>
+            <g id="sTier3">
+              <rect x="132" y="102" width="136" height="80" rx="11" fill="#f6ecdc"/>
+              <path d="M132 112 h136 v9 q-11 22 -23 0 q-11 22 -22 0 q-11 22 -23 0 q-11 22 -22 0 q-12 22 -23 0 q-11 19 -23 0 z" fill="#8e2440"/>
+            </g>
+            <g id="sCherry">
+              <circle cx="200" cy="84" r="17" fill="#8e2440"/>
+              <path d="M200 66 q4 -18 20 -22 q-8 14 -14 24 z" fill="#356b44"/>
+            </g>
+            <g id="sDots" fill="#d9a94e">
+              <circle cx="130" cy="222" r="7"/><circle cx="200" cy="230" r="7"/><circle cx="270" cy="222" r="7"/>
+            </g>
+          </svg>
         </div>
         <div class="stage-captions">
           <p class="stage-caption" data-at="0"><span class="stamp">01 · The promise</span>Real butter. Real fruit. <em>Nothing from a mix.</em></p>
@@ -155,12 +152,6 @@
 
     <!-- Act 3 · Why made-to-order -->
     <section class="act block" aria-label="Why Aurette">
-      <div class="drift-field" aria-hidden="true">
-        <img class="drift" src="images/decor/petals.webp" alt="" width="360" height="360" loading="lazy" style="top:-4%; left:6%; width:110px;">
-        <img class="drift" src="images/decor/sprig.webp" alt="" width="360" height="360" loading="lazy" style="top:10%; right:4%; width:90px;">
-        <img class="drift" src="images/ingredients/raspberry.webp" alt="" width="380" height="380" loading="lazy" style="top:32%; left:3%; width:58px;">
-        <img class="drift" src="images/ingredients/lemon.webp" alt="" width="380" height="380" loading="lazy" style="top:52%; right:7%; width:74px;">
-      </div>
       <div class="wrap">
         <div class="section-head" data-reveal>
           <p class="kicker">Why made to order</p>
@@ -200,20 +191,17 @@
           <a class="btn btn-primary btn-lg" href="shop.html">See the Full Menu</a>
         </div>
         <div class="teaser-float">
-          <img class="float-img float-a" src="images/3d/classic-vanilla.webp" alt="Classic vanilla two-tier cake" width="800" height="800" loading="lazy">
-          <img class="float-img float-b" src="images/3d/cupcake-box.webp" alt="Cupcake box with swirled buttercream" width="800" height="800" loading="lazy">
-          <img class="float-img float-c" src="images/3d/chocolate-fudge.webp" alt="Chocolate fudge cake" width="800" height="800" loading="lazy">
-          <img class="float-img float-d" src="images/ingredients/strawberry.webp" alt="" aria-hidden="true" width="380" height="380" loading="lazy">
-          <img class="float-img float-e" src="images/ingredients/cherry.webp" alt="" aria-hidden="true" width="380" height="380" loading="lazy">
+          <img class="float-img float-a" src="images/flat/classic-vanilla.svg" alt="Classic vanilla two-tier cake, flat illustration" width="400" height="400" loading="lazy">
+          <img class="float-img float-b" src="images/flat/cupcake-box.svg" alt="Cupcake box, flat illustration" width="400" height="400" loading="lazy">
+          <img class="float-img float-c" src="images/flat/chocolate-fudge.svg" alt="Chocolate fudge cake, flat illustration" width="400" height="400" loading="lazy">
+          <img class="float-img float-d" src="images/flat/ing-strawberry.svg" alt="" aria-hidden="true" width="400" height="400" loading="lazy">
+          <img class="float-img float-e" src="images/flat/ing-cherry.svg" alt="" aria-hidden="true" width="400" height="400" loading="lazy">
         </div>
       </div>
     </section>
 
     <!-- Act 5 · About tease -->
     <section class="act about-tease" aria-label="About Aurette">
-      <div class="drift-field" aria-hidden="true">
-        <img class="drift" src="images/decor/petals.webp" alt="" width="360" height="360" loading="lazy" style="top:8%; right:10%; width:95px;">
-      </div>
       <div class="torn-top" aria-hidden="true"></div>
       <div class="about-tease-inner" data-reveal>
         <p class="stamp">Est. Melbourne</p>

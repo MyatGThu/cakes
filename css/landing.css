@@ -6,8 +6,6 @@ body { overflow-x: clip; }
 
 .act { position: relative; }
 
-.drift-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-.drift { position: absolute; height: auto; opacity: 0.85; filter: drop-shadow(0 8px 14px rgba(51, 36, 28, 0.16)); }
 .act > .wrap, .about-tease-inner { position: relative; z-index: 1; }
 
 /* ---------- Act 1 · Hero ---------- */
@@ -15,42 +13,60 @@ body { overflow-x: clip; }
   min-height: calc(100svh - 120px);
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  text-align: center;
   overflow: hidden;
-  padding: 48px 20px 72px;
+  padding: 48px 20px 84px;
 }
-.hero-inner { position: relative; z-index: 2; max-width: 880px; }
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 44px;
+  align-items: center;
+  max-width: 1120px;
+  margin: 0 auto;
+  width: 100%;
+}
+@media (min-width: 880px) { .hero-grid { grid-template-columns: 7fr 5fr; gap: 56px; } }
+.hero-inner { position: relative; z-index: 2; }
+.hero-meta {
+  display: flex; align-items: center; gap: 12px;
+  border-top: 2px solid var(--ink);
+  padding-top: 14px;
+  margin: 0 0 26px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+}
 .hero-mark {
-  display: block;
-  width: clamp(64px, 8vw, 88px);
-  height: clamp(64px, 8vw, 88px);
+  width: 34px;
+  height: 34px;
+  flex: none;
   border-radius: 50%;
-  margin: 0 auto 20px;
-  box-shadow: 0 8px 24px rgba(51, 36, 28, 0.22);
-}
-.act-hero .eyebrow {
-  font-size: 12.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--accent); margin: 0 0 20px;
+  box-shadow: 0 4px 12px rgba(51, 36, 28, 0.2);
 }
 .act-hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(42px, 8vw, 88px);
-  line-height: 1.04;
-  font-weight: 600;
-  margin: 0 0 22px;
-  max-width: 18ch;
-  margin-inline: auto;
+  font-size: clamp(44px, 7.4vw, 92px);
+  line-height: 0.98;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 0 0 24px;
   text-wrap: balance;
 }
-.act-hero h1 .accent, .act-hero h1 em { color: var(--accent); font-style: italic; }
+.hero-art {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+  margin: 0 auto;
+  width: min(72vw, 420px);
+}
+.hero-cake { width: 100%; height: auto; }
+.hero-art .ing-fly { z-index: 2; }
+.act-hero h1 .accent, .act-hero h1 em { color: var(--accent); font-family: var(--font-serif); font-style: italic; font-weight: 600; letter-spacing: 0; text-transform: none; }
 .act-hero h1 .word { display: inline-block; }
-.act-hero .sub { color: var(--ink-soft); font-size: clamp(16px, 2.2vw, 19px); max-width: 52ch; margin: 0 auto 32px; }
-.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.act-hero .sub { color: var(--ink-soft); font-size: clamp(16px, 2.2vw, 19px); max-width: 52ch; margin: 0 0 32px; }
+.cta-row { display: flex; gap: 12px; justify-content: flex-start; flex-wrap: wrap; }
 .btn-lg { padding: 15px 30px; font-size: 17px; }
-
-.parallax-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 
 .scroll-cue {
   position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
@@ -83,11 +99,8 @@ html:not(.motion-on) .cake-stage { height: auto; }
 }
 html:not(.motion-on) .stage-sticky { position: relative; height: auto; padding: 72px 20px; gap: 32px; }
 
-.stage-cake { position: relative; width: min(74vw, 520px); aspect-ratio: 1; z-index: 1; }
-.stage-cake canvas { width: 100%; height: 100%; display: block; }
-.stage-cake img { width: 100%; height: 100%; display: none; }
-html:not(.motion-on) .stage-cake canvas { display: none; }
-html:not(.motion-on) .stage-cake img { display: block; }
+.stage-cake { position: relative; width: min(74vw, 480px); aspect-ratio: 1; z-index: 1; }
+.stage-cake svg { width: 100%; height: 100%; display: block; }
 
 .stage-captions { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 html:not(.motion-on) .stage-captions { position: static; display: grid; gap: 18px; }
@@ -101,7 +114,7 @@ html:not(.motion-on) .stage-captions { position: static; display: grid; gap: 18p
   margin: 0;
   text-wrap: balance;
 }
-.stage-caption em { color: var(--accent); }
+.stage-caption em { color: var(--accent); font-family: var(--font-serif); font-style: italic; }
 html.motion-on .stage-caption { opacity: 0; }
 .stage-caption[data-at="0"] { top: 16%; left: 6%; }
 .stage-caption[data-at="1"] { top: 40%; right: 5%; text-align: right; }
@@ -181,7 +194,8 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
 .about-tease-inner { max-width: 640px; margin: 0 auto; padding-top: clamp(48px, 8vh, 80px); }
 .about-tease .stamp { margin: 0 auto 22px; }
 .tease-quote {
-  font-family: var(--font-display);
+  font-family: var(--font-serif);
+  font-style: italic;
   font-size: clamp(22px, 3.4vw, 33px);
   line-height: 1.35;
   margin: 0 0 28px;
@@ -201,21 +215,6 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
   width: 100%;
   height: auto;
   filter: drop-shadow(0 14px 20px rgba(51, 36, 28, 0.2));
-}
-/* Depth of field along the hero's z-axis: far layers soft and quiet,
-   near layers crisp with heavier shadows — one legible space, less noise. */
-.parallax-layer[data-depth="0.2"] .ing,
-.parallax-layer[data-depth="0.2"] .floret {
-  filter: blur(1.6px) drop-shadow(0 8px 12px rgba(51, 36, 28, 0.12));
-  opacity: 0.72;
-}
-.parallax-layer[data-depth="0.35"] .ing,
-.parallax-layer[data-depth="0.35"] .floret {
-  filter: blur(0.7px) drop-shadow(0 10px 15px rgba(51, 36, 28, 0.16));
-  opacity: 0.88;
-}
-.parallax-layer[data-depth="0.75"] .ing {
-  filter: drop-shadow(0 20px 28px rgba(51, 36, 28, 0.28));
 }
 @media (max-width: 640px) {
   .ing-fly.m-hide { display: none; }
@@ -261,9 +260,9 @@ html:not(.motion-on) .stage-ingredients { display: none; }
 }
 .marquee-track span {
   font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 600;
-  font-size: clamp(22px, 3.4vw, 42px);
-  letter-spacing: 0.03em;
+  font-weight: 900;
+  font-size: clamp(20px, 3vw, 38px);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   line-height: 1.2;
 }

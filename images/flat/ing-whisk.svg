@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Balloon whisk, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <rect x="193" y="46" width="38" height="132" rx="19"/>
+    <rect x="185" y="174" width="54" height="20" rx="5"/>
+    <path d="M212 196 Q96 272 212 368 Q328 272 212 196 Z"/>
+  </g>
+  <!-- side loops -->
+  <path d="M194 186 Q104 248 144 350 Q188 268 194 186 Z" fill="#241a14"/>
+  <path d="M206 186 Q296 248 256 350 Q212 268 206 186 Z" fill="#241a14"/>
+  <!-- centre loop -->
+  <path d="M200 184 Q156 271 200 358 Q244 271 200 184 Z" fill="#d9a94e"/>
+  <!-- handle -->
+  <rect x="181" y="36" width="38" height="132" rx="19" fill="#4a2f1c"/>
+  <rect x="181" y="142" width="38" height="14" fill="#2e1a0c"/>
+  <!-- collar -->
+  <rect x="173" y="164" width="54" height="20" rx="5" fill="#241a14"/>
+</svg>

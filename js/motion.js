@@ -248,28 +248,19 @@
     });
   }
 
-  // The turntable: the 3D cake spins and rises as you scroll.
+  // The stage: the flat cake assembles layer by layer as you scroll,
+  // while ingredients fly in from the edges and disappear into it.
   var stage = document.querySelector(".cake-stage");
   if (stage) {
-    var canvas = document.getElementById("turntable");
-    var ctx = canvas.getContext("2d");
-    var FRAMES = 24, imgs = [], current = -1, pending = 0;
-    for (var i = 0; i < FRAMES; i++) {
-      var im = new Image();
-      im.src = "images/3d/hero/frame-" + String(i).padStart(2, "0") + ".webp";
-      im.onload = (function (idx) { return function () { if (idx === pending) draw(idx); }; })(i);
-      imgs.push(im);
-    }
-    function draw(idx) {
-      pending = idx;
-      var im = imgs[idx];
-      if (!im || !im.complete || !im.naturalWidth) return;
-      if (idx === current) return;
-      current = idx;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(im, 0, 0, canvas.width, canvas.height);
-    }
-    draw(0);
+    var layers = ["#sPlate", "#sTier1", "#sTier2", "#sTier3", "#sDots", "#sCherry"];
+    gsap.set(layers, { opacity: 0, y: -64 });
+    var build = gsap.timeline({
+      scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.4 },
+    });
+    layers.forEach(function (sel, i) {
+      build.to(sel, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2 + i * 0.3);
+    });
+    build.to({}, { duration: 1.2 }); // dwell on the finished cake
 
     var captions = gsap.utils.toArray(".stage-caption");
     gsap.set(captions, { autoAlpha: 0, y: 26 });
@@ -280,9 +271,7 @@
       end: "bottom bottom",
       scrub: true,
       onUpdate: function (self) {
-        var p = self.progress;
-        draw(Math.round(p * FRAMES * 1.5) % FRAMES);
-        var want = Math.min(2, Math.floor(p * 3.15));
+        var want = Math.min(2, Math.floor(self.progress * 3.15));
         if (want !== shown) {
           if (shown >= 0) gsap.to(captions[shown], { autoAlpha: 0, y: -20, duration: 0.35, ease: "power2.in", overwrite: true });
           gsap.to(captions[want], { autoAlpha: 1, y: 0, duration: 0.5, ease: rise, overwrite: true });
@@ -290,14 +279,13 @@
         }
       },
     });
-    gsap.fromTo(".stage-cake", { scale: 0.78, y: 46 }, {
+    gsap.fromTo(".stage-cake", { scale: 0.88, y: 30 }, {
       scale: 1.0, y: 0, ease: "none",
       scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.4 },
     });
 
-    // The recipe plays out: ingredients fly in from the edges and disappear
-    // INTO the spinning cake, one after another, during the first half of
-    // the scroll story.
+    // The recipe plays out: flat ingredients fly in and vanish into the cake
+    // during the first half of the scroll story.
     var stageIngs = gsap.utils.toArray(".stage-ing");
     if (stageIngs.length) {
       var squeeze = window.innerWidth < 700 ? 0.42 : 1;
@@ -314,7 +302,7 @@
           { x: sx * 0.16, y: sy * 0.16, rotation: rot * 0.25, opacity: 1, scale: 0.72, duration: 0.5, ease: "power1.in", immediateRender: true }, at)
           .to(el, { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 0.2, ease: "power2.in" }, at + 0.5);
       });
-      conv.to({}, { duration: 1.9 }); // hold: convergence owns only the first half of the stage
+      conv.to({}, { duration: 1.9 });
     }
   }
 

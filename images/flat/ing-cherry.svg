@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Cherry, flat illustration">
+  <!-- paper shadow -->
+  <g fill="#e9ddcc">
+    <circle cx="212" cy="262" r="112"/>
+    <path d="M260 78 l52 -26 -14 46 z"/>
+  </g>
+  <!-- stem (6px filled ribbon, tucks behind the cherry) -->
+  <path d="M197 150 Q193 82 251 59 L253 65 Q199 84 203 150 Z" fill="#4a2f1c"/>
+  <!-- cherry -->
+  <circle cx="200" cy="250" r="112" fill="#8e2440"/>
+  <!-- leaf wedge at stem top -->
+  <path d="M248 66 l52 -26 -14 46 z" fill="#356b44"/>
+</svg>
