@@ -441,7 +441,10 @@
           '<p class="pickup-note">' + pickupHtml + "</p>" +
           '<div class="meta">' +
             '<span class="price">' + escapeHtml(priceLabel(p)) + "</span>" +
-            '<button class="btn btn-primary" data-add>Add' +
+            /* "Order", not "Add": pressing this opens the cake so size,
+               quantity and the note can be chosen — the button that actually
+               adds is "Add to Order" inside the modal. */
+            '<button class="btn btn-primary" data-add>Order' +
               '<span class="sr-only"> ' + escapeHtml(p.name) + "</span>" +
             "</button>" +
           "</div>" +
