@@ -5,7 +5,8 @@
   "scripts": {
     "test": "node smoke3.js && node wipetest.js",
     "test:video": "node gen-testmedia.js && node videotest.js",
-    "og": "node gen-og.js"
+    "og": "node gen-og.js",
+    "test:nav": "node navtest.js"
   },
   "dependencies": {
     "ffmpeg-static": "^5.2.0",
