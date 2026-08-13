@@ -15,9 +15,10 @@
   <link rel="apple-touch-icon" href="images/brand/apple-touch.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Caveat:wght@500;700&family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&display=swap">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/landing.css">
+  <link rel="stylesheet" href="css/collage.css">
   <script>
     document.documentElement.classList.add("js");
     (function () {
@@ -80,8 +81,9 @@
     <section class="act act-hero" aria-label="Welcome">
       <div class="hero-grid">
         <div class="hero-inner">
-          <p class="hero-meta"><img class="hero-mark" src="images/brand/logo.png" alt="Aurette monogram" width="512" height="512"><span>Melbourne · Made to Order · Pickup &amp; Delivery</span></p>
+          <p class="hero-meta"><img class="hero-mark" src="images/brand/logo.png" alt="Aurette monogram" width="512" height="512"><span class="clipping">Melbourne · Made to Order</span></p>
           <h1 id="heroTitle">Cakes made <em class="accent">slowly,</em> for moments that matter.</h1>
+          <p class="scribble">baked the day it’s yours ✎</p>
           <p class="sub">Real butter, real fruit, and a date with your name on it — every cake leaves Mia’s kitchen baked fresh for your day.</p>
           <div class="cta-row">
             <a class="btn btn-primary btn-lg" href="shop.html">Browse the Menu</a>
@@ -89,15 +91,17 @@
           </div>
         </div>
         <div class="hero-art" aria-hidden="true">
-          <img class="hero-cake" src="images/flat/hero-cake.svg" alt="" width="400" height="400" fetchpriority="high">
-          <span class="ing-fly" style="top:2%; left:-4%; --w:88px" data-fx="-240" data-fy="-120" data-rot="-60">
-            <img class="ing" src="images/flat/ing-strawberry.svg" alt="" width="400" height="400"></span>
-          <span class="ing-fly" style="top:64%; left:-10%; --w:104px" data-fx="-280" data-fy="140" data-rot="-40">
-            <img class="ing" src="images/flat/ing-whisk.svg" alt="" width="400" height="400"></span>
-          <span class="ing-fly" style="top:8%; right:-4%; --w:96px" data-fx="260" data-fy="-140" data-rot="70">
-            <img class="ing" src="images/flat/ing-lemon.svg" alt="" width="400" height="400"></span>
-          <span class="ing-fly m-hide" style="top:72%; right:-8%; --w:80px" data-fx="280" data-fy="160" data-rot="50">
-            <img class="ing" src="images/flat/ing-cherry.svg" alt="" width="400" height="400"></span>
+          <img class="hero-cake cutout" src="images/cutout/classic-vanilla.svg" alt="" width="400" height="400" fetchpriority="high">
+          <span class="ing-fly" style="top:-2%; left:-8%; --w:104px" data-fx="-240" data-fy="-120" data-rot="-60">
+            <img class="ing cutout" src="images/cutout/kit-whisk.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly" style="top:62%; left:-12%; --w:118px" data-fx="-280" data-fy="140" data-rot="-40">
+            <img class="ing cutout" src="images/cutout/kit-rollingpin.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly" style="top:4%; right:-8%; --w:96px" data-fx="260" data-fy="-140" data-rot="70">
+            <img class="ing cutout" src="images/cutout/ing-strawberry.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly" style="top:70%; right:-10%; --w:104px" data-fx="280" data-fy="160" data-rot="50">
+            <img class="ing cutout" src="images/cutout/kit-pipingbag.svg" alt="" width="400" height="400"></span>
+          <span class="ing-fly m-hide" style="top:34%; right:-16%; --w:78px" data-fx="300" data-fy="20" data-rot="120">
+            <img class="ing cutout" src="images/cutout/ing-lemon.svg" alt="" width="400" height="400"></span>
         </div>
       </div>
 
@@ -111,13 +115,14 @@
     <section class="act cake-stage" id="story" aria-label="Our promise">
       <div class="stage-sticky">
         <div class="stage-ingredients" aria-hidden="true">
-          <img class="stage-ing" src="images/flat/ing-butter.svg" alt="" width="400" height="400" loading="lazy" style="--w:84px" data-sx="-420" data-sy="-120" data-srot="-120">
-          <img class="stage-ing" src="images/flat/ing-egg.svg" alt="" width="400" height="400" loading="lazy" style="--w:76px" data-sx="400" data-sy="-170" data-srot="100">
-          <img class="stage-ing" src="images/flat/ing-strawberry.svg" alt="" width="400" height="400" loading="lazy" style="--w:88px" data-sx="430" data-sy="120" data-srot="140">
-          <img class="stage-ing" src="images/flat/ing-chocolate.svg" alt="" width="400" height="400" loading="lazy" style="--w:92px" data-sx="-420" data-sy="40" data-srot="-80">
-          <img class="stage-ing" src="images/flat/ing-raspberry.svg" alt="" width="400" height="400" loading="lazy" style="--w:68px" data-sx="390" data-sy="-40" data-srot="160">
-          <img class="stage-ing" src="images/flat/ing-lemon.svg" alt="" width="400" height="400" loading="lazy" style="--w:84px" data-sx="-300" data-sy="-230" data-srot="120">
-          <img class="stage-ing" src="images/flat/ing-cherry.svg" alt="" width="400" height="400" loading="lazy" style="--w:72px" data-sx="330" data-sy="230" data-srot="-150">
+          <img class="stage-ing cutout" src="images/cutout/kit-flour.svg" alt="" width="400" height="400" loading="lazy" style="--w:92px" data-sx="-420" data-sy="-120" data-srot="-120">
+          <img class="stage-ing cutout" src="images/cutout/ing-egg.svg" alt="" width="400" height="400" loading="lazy" style="--w:82px" data-sx="400" data-sy="-170" data-srot="100">
+          <img class="stage-ing cutout" src="images/cutout/kit-bowl.svg" alt="" width="400" height="400" loading="lazy" style="--w:104px" data-sx="-360" data-sy="180" data-srot="-90">
+          <img class="stage-ing cutout" src="images/cutout/ing-strawberry.svg" alt="" width="400" height="400" loading="lazy" style="--w:86px" data-sx="430" data-sy="120" data-srot="140">
+          <img class="stage-ing cutout" src="images/cutout/kit-whisk.svg" alt="" width="400" height="400" loading="lazy" style="--w:96px" data-sx="-420" data-sy="40" data-srot="-80">
+          <img class="stage-ing cutout" src="images/cutout/ing-cherry.svg" alt="" width="400" height="400" loading="lazy" style="--w:70px" data-sx="390" data-sy="-40" data-srot="160">
+          <img class="stage-ing cutout" src="images/cutout/kit-caketin.svg" alt="" width="400" height="400" loading="lazy" style="--w:98px" data-sx="-300" data-sy="-230" data-srot="120">
+          <img class="stage-ing cutout" src="images/cutout/ing-lemon.svg" alt="" width="400" height="400" loading="lazy" style="--w:78px" data-sx="330" data-sy="230" data-srot="-150">
         </div>
         <div class="stage-cake">
           <svg id="stageCake" viewBox="0 0 400 400" role="img" aria-label="A three-tier celebration cake assembling layer by layer">
@@ -158,15 +163,15 @@
           <h2>Slow is a feature</h2>
         </div>
         <div class="feature-row">
-          <article class="feature-card" data-reveal style="--tint: var(--accent-soft)">
+          <article class="feature-card scrap scrap--tilt-l" data-reveal><span class="tape tape--tl" aria-hidden="true"></span>
             <h3>Baked for Your Date</h3>
             <p>Nothing waits around. Your cake goes in the oven because <em>you</em> ordered it.</p>
           </article>
-          <article class="feature-card" data-reveal style="--tint: var(--gold-soft)">
+          <article class="feature-card scrap" data-reveal><span class="tape tape--tr" aria-hidden="true"></span>
             <h3>An Honest Calendar</h3>
             <p>Every cake shows the notice it needs, and the site only offers dates Mia can truly deliver.</p>
           </article>
-          <article class="feature-card" data-reveal style="--tint: var(--green-soft)">
+          <article class="feature-card scrap scrap--tilt-r" data-reveal><span class="tape tape--tl" aria-hidden="true"></span>
             <h3>Confirmed by a Human</h3>
             <p>Your order lands in Mia’s WhatsApp and she replies personally — flavours, colours, the lot.</p>
           </article>
@@ -191,11 +196,11 @@
           <a class="btn btn-primary btn-lg" href="shop.html">See the Full Menu</a>
         </div>
         <div class="teaser-float">
-          <img class="float-img float-a" src="images/flat/classic-vanilla.svg" alt="Classic vanilla two-tier cake, flat illustration" width="400" height="400" loading="lazy">
-          <img class="float-img float-b" src="images/flat/cupcake-box.svg" alt="Cupcake box, flat illustration" width="400" height="400" loading="lazy">
-          <img class="float-img float-c" src="images/flat/chocolate-fudge.svg" alt="Chocolate fudge cake, flat illustration" width="400" height="400" loading="lazy">
-          <img class="float-img float-d" src="images/flat/ing-strawberry.svg" alt="" aria-hidden="true" width="400" height="400" loading="lazy">
-          <img class="float-img float-e" src="images/flat/ing-cherry.svg" alt="" aria-hidden="true" width="400" height="400" loading="lazy">
+          <img class="float-img float-a cutout" src="images/cutout/classic-vanilla.svg" alt="Classic vanilla cake, magazine cutout" width="400" height="400" loading="lazy">
+          <img class="float-img float-b cutout" src="images/cutout/cupcake-box.svg" alt="Cupcake box, magazine cutout" width="400" height="400" loading="lazy">
+          <img class="float-img float-c cutout" src="images/cutout/chocolate-fudge.svg" alt="Chocolate fudge cake, magazine cutout" width="400" height="400" loading="lazy">
+          <img class="float-img float-d cutout" src="images/cutout/kit-mitt.svg" alt="" aria-hidden="true" width="400" height="400" loading="lazy">
+          <img class="float-img float-e cutout" src="images/cutout/kit-scale.svg" alt="" aria-hidden="true" width="400" height="400" loading="lazy">
         </div>
       </div>
     </section>
@@ -206,6 +211,7 @@
       <div class="about-tease-inner" data-reveal>
         <p class="stamp">Est. Melbourne</p>
         <p class="tease-quote">“Every cake has a story — usually it starts with someone’s favourite person.”</p>
+        <p class="scribble scribble--right">— Mia</p>
         <a class="btn btn-outline" href="about.html">Read Mia’s Story</a>
       </div>
     </section>

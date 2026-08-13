@@ -1,0 +1,220 @@
+/* Aurette — the collage layer.
+   Everything here is paper: the page is a pasted-up spread, sections are
+   scraps torn from it, cards are cutouts held down with tape. Loaded after
+   style.css on every page; all colour comes from the tokens so themes work. */
+
+:root {
+  --paper: #fffdf8;
+  --kraft: #e6dcc8;
+  --tape: rgba(226, 205, 138, 0.55);
+  --tape-edge: rgba(198, 172, 102, 0.5);
+  --print-shadow: #d9cbb6;
+  --font-hand: "Caveat", "Bradley Hand", cursive;
+}
+
+/* ---------- The ground: newsprint, faintly halftoned ---------- */
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(36, 26, 20, 0.045) 1px, transparent 0),
+    radial-gradient(ellipse 90% 60% at 15% 0%, rgba(176, 48, 82, 0.05), transparent 60%),
+    radial-gradient(ellipse 80% 50% at 85% 100%, rgba(154, 123, 51, 0.06), transparent 60%);
+  background-size: 7px 7px, 100% 100%, 100% 100%;
+}
+
+/* One fixed paper-tooth overlay for the entire page (cheapest grain there is). */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Scraps: a torn sheet of paper pasted on the ground ---------- */
+.scrap {
+  position: relative;
+  background: var(--paper);
+  /* drop-shadow (not box-shadow): it follows the torn clip-path silhouette */
+  filter: drop-shadow(5px 7px 0 var(--print-shadow));
+  padding: clamp(28px, 5vw, 56px) clamp(22px, 4vw, 48px);
+}
+/* Torn top and bottom edges, cut with a jagged polygon. */
+.scrap--torn {
+  clip-path: polygon(
+    0% 2.2%, 6% 0.6%, 13% 2.4%, 21% 0.9%, 29% 2.6%, 37% 1.0%, 45% 2.7%, 53% 0.8%,
+    61% 2.5%, 69% 1.1%, 77% 2.8%, 85% 1.0%, 92% 2.4%, 100% 1.2%,
+    100% 98.2%, 93% 99.6%, 85% 97.6%, 77% 99.2%, 69% 97.4%, 61% 99.0%, 53% 97.3%,
+    45% 99.3%, 37% 97.5%, 29% 99.1%, 21% 97.4%, 13% 99.2%, 6% 97.6%, 0% 99.0%
+  );
+}
+.scrap--tilt-l { transform: rotate(-0.8deg); }
+.scrap--tilt-r { transform: rotate(0.7deg); }
+
+/* ---------- Tape: the strip that holds a scrap down ---------- */
+.tape {
+  position: absolute;
+  z-index: 3;
+  width: clamp(84px, 12vw, 132px);
+  height: 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%),
+    var(--tape);
+  border-left: 1px solid var(--tape-edge);
+  border-right: 1px solid var(--tape-edge);
+  mix-blend-mode: multiply;
+  box-shadow: 0 1px 2px rgba(60, 45, 20, 0.16);
+  /* torn ends, straight sides */
+  clip-path: polygon(
+    4% 0%, 96% 0%, 100% 22%, 96% 44%, 100% 66%, 96% 88%, 100% 100%,
+    4% 100%, 0% 82%, 4% 60%, 0% 38%, 4% 16%, 0% 4%
+  );
+  pointer-events: none;
+}
+.tape--tl { top: -13px; left: 6%; transform: rotate(-6deg); }
+.tape--tr { top: -13px; right: 8%; transform: rotate(5deg); }
+.tape--bl { bottom: -13px; left: 12%; transform: rotate(4deg); }
+
+/* ---------- Handwritten margin notes ---------- */
+.scribble {
+  font-family: var(--font-hand);
+  font-size: clamp(20px, 2.6vw, 28px);
+  line-height: 1.15;
+  color: var(--accent);
+  transform: rotate(-3deg);
+  margin: 0;
+}
+.scribble--right { transform: rotate(2.5deg); text-align: right; }
+
+/* ---------- Cutout images: they sit ON the page, never in a box ---------- */
+.cutout {
+  display: block;
+  height: auto;
+  filter: drop-shadow(4px 6px 0 rgba(217, 203, 182, 0.85));
+}
+
+/* ---------- Clipping labels (the "torn from a magazine" caption) ---------- */
+.clipping {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 5px 12px 6px;
+  transform: rotate(-1.4deg);
+  clip-path: polygon(0% 6%, 100% 0%, 99% 94%, 1% 100%);
+}
+.clipping--accent { background: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .scrap--tilt-l, .scrap--tilt-r { transform: none; }
+}
+
+/* ---------- Re-skin: the shared furniture becomes paper ---------- */
+
+/* Header: a strip of pasted paper, not glass. */
+.site-header {
+  background: var(--paper);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: none;
+  box-shadow: 0 6px 0 var(--print-shadow);
+}
+
+/* Cards: cutouts on a scrap, each tilted a hair differently. */
+.card {
+  background: var(--paper);
+  border: none;
+  border-radius: 0;
+  box-shadow: 6px 8px 0 var(--print-shadow),
+              0 14px 28px -12px rgba(41, 29, 16, 0.18);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+}
+.card:nth-child(3n+1) { transform: rotate(-0.9deg); }
+.card:nth-child(3n+2) { transform: rotate(0.6deg); }
+.card:nth-child(3n)   { transform: rotate(-0.3deg); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 10px 14px 0 var(--print-shadow), 0 22px 40px -14px rgba(41, 29, 16, 0.22); }
+  .card:hover .photo { transform: none; }
+}
+.card .photo-frame { background: var(--cat-tint, var(--blush, #f3d7de)); }
+
+/* Badges + prices read as rubber stamps and price stickers. */
+.badge {
+  border-radius: 0;
+  clip-path: polygon(0% 8%, 100% 0%, 98% 92%, 2% 100%);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 4px 10px;
+}
+.card .price {
+  font-family: var(--font-hand);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Section heads: the rule becomes a torn strip, the kicker a clipping. */
+.section-head { border-top: none; }
+.section-head .kicker {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5px 12px 6px;
+  transform: rotate(-1.4deg);
+  clip-path: polygon(0% 6%, 100% 0%, 99% 94%, 1% 100%);
+  letter-spacing: 0.18em;
+}
+
+/* Buttons: cut rectangles with a printed drop, not pills. */
+.btn { border-radius: 0; clip-path: polygon(1% 4%, 100% 0%, 99% 96%, 0% 100%); }
+.btn-primary { box-shadow: 5px 6px 0 var(--print-shadow); }
+.cart-button {
+  border-radius: 0;
+  clip-path: polygon(1% 5%, 100% 0%, 99% 95%, 0% 100%);
+  box-shadow: 4px 5px 0 var(--print-shadow);
+}
+
+/* Category tabs sit on a torn baseline. */
+.chips { border-bottom: 2px dashed color-mix(in srgb, var(--ink) 25%, transparent); }
+
+/* The drawer + modal are sheets of paper too. */
+.modal, .drawer { border-radius: 0; background: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  .card:nth-child(3n+1), .card:nth-child(3n+2), .card:nth-child(3n) { transform: none; }
+}
+
+/* ---------- Collage-specific layout fixes ---------- */
+
+/* Scraps used as text blocks need their padding to stay modest inline. */
+.feature-card.scrap, .step.scrap { padding: 26px 24px 28px; }
+.pull-quote.scrap { padding: 30px 28px; }
+.lede.scrap { padding: 22px 24px; display: block; }
+.noscript-menu.scrap { border: none; }
+
+/* Tape needs a positioned parent — every scrap already is, but polaroids
+   and steps must opt in. */
+.polaroid, .step { position: relative; }
+
+/* Cutouts keep their own drawn shadow; the CSS drop is doubled otherwise. */
+.hero-cake.cutout, .stage-ing.cutout, .float-img.cutout, .ing.cutout { filter: none; }
+
+/* Handwriting: research says Caveat runs small — bump it, never below 1.1rem. */
+.card .price { font-size: 27px; line-height: 1; }
+.pull-quote cite.scribble { font-size: 22px; display: block; margin-top: 10px; }
+
+/* Mobile: fewer, calmer tilts — a phone screen has no room for scatter. */
+@media (max-width: 640px) {
+  .scrap--tilt-l, .scrap--tilt-r { transform: rotate(0deg); }
+  .card:nth-child(3n+1), .card:nth-child(3n+2), .card:nth-child(3n) { transform: none; }
+  .tape { width: 76px; height: 24px; }
+  .scribble { font-size: 21px; }
+}

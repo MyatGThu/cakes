@@ -1,18 +1,21 @@
-# 🎂 Aurette by Mia — a cinematic, $0/month cake shop
+# ✂️ Aurette by Mia — a magazine-cutout cake shop, $0/month
 
-The website for a Melbourne home bakery: a three-page experience with real
-craft — and still **no build step, no server, no monthly bill, zero coding**
+The website for a Melbourne home bakery, built as a **paper collage**: the
+page is a pasted-up spread, sections are torn scraps held down with tape, and
+every cake, ingredient and kitchen tool is a magazine cutout with a scissored
+white rim. Still **no build step, no server, no monthly bill, zero coding**
 for the owner to maintain day-to-day.
 
-- **The landing** (`index.html`) — a Swiss-grid, editorial layout: flat 2D
-  ingredient illustrations fly in beside the headline and converge into a
-  scroll-driven cake that assembles layer by layer; a scroll-speed-reactive
-  marquee ribbon runs between acts. Navigation sweeps a curved ink "page
-  wipe" carrying the monogram; primary buttons are magnetic with a rising
-  hover-fill.
+- **The landing** (`index.html`) — cutout kitchenware and fruit fly in around
+  the headline; scraps are *dealt* onto the page as you scroll, each landing
+  from its own direction at its own angle; a cake assembles layer by layer
+  while ingredients converge into it; a scroll-speed-reactive marquee ribbon
+  runs between acts. Navigation tears a sheet of paper across the screen (the
+  page wipe) carrying the monogram; primary buttons are magnetic with a
+  rising hover-fill, and scraps wobble under the cursor.
 - **The menu** (`shop.html`) — the ordering flow. The tiered cakes play real
   footage on hover (desktop) or while in view (mobile), chromeless and muted;
-  other products show flat 2D illustrations. Checkout computes the **earliest honest
+  other products show their magazine cutout. Checkout computes the **earliest honest
   pickup date** from each product's lead time, closed days and the daily
   cutoff (in the shop's own timezone), then hands the order to **WhatsApp or
   email** as a tidy message — no payment backend to run; Mia confirms each
@@ -28,21 +31,34 @@ for the owner to maintain day-to-day.
 - **Themes** (`themes.html`) — a picker that previews alternate palettes via
   `?theme=` (persisted per device) for choosing Aurette's look.
 
+### The type system
+
+Three voices, each with one job: **Archivo** carries structure (headlines,
+labels, nav, prices), **Fraunces** is the editorial voice (pull quotes, italic
+accents, the wordmark), and **Caveat** is the annotation layer only — margin
+notes and signatures, always slightly rotated, never anything you must read to
+place an order.
+
 ## How it fits together
 
 ```
 index.html + js/landing.js   ← cinematic landing (flying ingredients, scroll cake)
 shop.html + js/store.js      ← the menu, cart and ordering flow
 about.html                   ← Mia's story (parchment / torn-paper treatment)
-js/motion.js                 ← the whole GSAP layer: reveals, parallax, turntable,
-                               ingredient choreography, page wipe, magnetic buttons,
-                               marquee — pure progressive enhancement behind
-                               html.motion-on (IntersectionObserver fallback: io-anim)
+js/motion.js                 ← the whole GSAP layer: deal-in scatter, wobble,
+                               parallax, cake assembly, torn page wipe, magnetic
+                               buttons, marquee — pure progressive enhancement
+                               behind html.motion-on (fallback: io-anim)
+css/collage.css              ← the paper layer: torn scraps, tape, halftone ground,
+                               clippings, handwriting — loaded last on every page
 admin.html + js/admin.js     ← the owner's editor (commits via GitHub API)
 data/settings.json           ← shop name, WhatsApp number, closed days, cutoff, slots
 data/products.json           ← the menu: names, prices/sizes, media, lead times
-images/flat/                 ← the flat 2D illustration set (products, ingredients,
-                               hero cake) — hand-authored SVG per _spec.md
+images/cutout/               ← the magazine-cutout set (products, kitchenware,
+                               ingredients) — hand-authored SVG per _spec.md:
+                               print shadow + ragged sticker rim + flat art
+images/flat/                 ← the previous flat set, kept as the plain-art
+                               fallback and for any product without a cutout
 images/video/                ← real clips the cake cards hover-play + poster frames
 images/brand/                ← the monogram in every size, resampled from
                                logo-original-150.png (the untouched original);

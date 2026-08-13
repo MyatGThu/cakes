@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Chocolate fudge cake, magazine cutout">
+  <!-- print shadow -->
+  <path d="M59 157 L73 139 L132 131 L140 100 L204 81 L231 95 L281 95 L302 83 L318 87 L329 129 L346 145 L351 207 L348 337 L335 353 L75 353 L61 337 L58 266 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M54 150 L68 132 L100 128 L127 124 L135 93 L166 85 L199 74 L226 88 L276 88 L297 76 L313 80 L324 122 L341 138 L346 200 L343 330 L330 346 L265 348 L200 349 L135 348 L70 346 L56 330 L53 259 L55 200 Z" fill="#fffdf8"/>
+  <!-- plate -->
+  <rect x="64" y="316" width="272" height="16" rx="8" fill="#241a14"/>
+  <!-- bottom tier -->
+  <rect x="76" y="228" width="248" height="92" rx="10" fill="#4a2f1c"/>
+  <path d="M76 238 h248 v11 q-15 27 -31 0 q-16 27 -31 0 q-15 27 -31 0 q-16 27 -31 0 q-15 27 -31 0 q-16 27 -31 0 q-15 27 -31 0 q-16 23 -31 0 z" fill="#2e1a0c"/>
+  <!-- halftone on the shaded right of the bottom tier -->
+  <g fill="#2e1a0c">
+    <circle cx="313" cy="268" r="2.5"/><circle cx="301" cy="278" r="3"/>
+    <circle cx="312" cy="290" r="3"/><circle cx="300" cy="301" r="3"/>
+    <circle cx="313" cy="310" r="2.5"/>
+  </g>
+  <!-- top tier -->
+  <rect x="112" y="140" width="176" height="90" rx="9" fill="#2e1a0c"/>
+  <path d="M112 150 h176 v10 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 21 -22 0 z" fill="#4a2f1c"/>
+  <!-- upright chocolate shards -->
+  <rect x="146" y="96" width="20" height="48" fill="#4a2f1c" transform="rotate(-11 156 120)"/>
+  <rect x="186" y="86" width="22" height="58" fill="#4a2f1c" transform="rotate(6 197 115)"/>
+  <rect x="232" y="98" width="19" height="46" fill="#4a2f1c" transform="rotate(14 241.5 121)"/>
+  <!-- cherry -->
+  <circle cx="277" cy="121" r="18" fill="#8e2440"/>
+  <path d="M277 105 q10 -22 27 -21 q0 19 -19 25 z" fill="#356b44"/>
+</svg>

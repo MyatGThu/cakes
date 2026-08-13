@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Classic vanilla cake, magazine cutout">
+  <!-- print shadow -->
+  <path d="M63 152 L79 137 L141 129 L156 113 L253 113 L266 130 L327 138 L343 153 L347 336 L336 350 L69 350 L58 335 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M56 145 L71 129 L104 125 L134 122 L149 105 L182 101 L214 102 L247 105 L259 122 L292 126 L327 131 L340 146 L343 200 L341 258 L340 328 L327 343 L262 345 L198 346 L133 345 L69 343 L55 327 L53 258 L55 200 Z" fill="#fffdf8"/>
+  <!-- plate -->
+  <rect x="64" y="316" width="272" height="16" rx="8" fill="#241a14"/>
+  <!-- bottom tier -->
+  <rect x="76" y="228" width="248" height="92" rx="10" fill="#f6ecdc"/>
+  <path d="M76 238 h248 v11 q-15 27 -31 0 q-16 27 -31 0 q-15 27 -31 0 q-16 27 -31 0 q-15 27 -31 0 q-16 27 -31 0 q-15 27 -31 0 q-16 23 -31 0 z" fill="#b03052"/>
+  <!-- halftone on the shaded right of the bottom tier -->
+  <g fill="#d9cbb6">
+    <circle cx="300" cy="272" r="3"/><circle cx="310" cy="284" r="3"/><circle cx="300" cy="296" r="3"/>
+    <circle cx="312" cy="262" r="2.5"/><circle cx="314" cy="304" r="2.5"/>
+  </g>
+  <!-- top tier -->
+  <rect x="112" y="140" width="176" height="90" rx="9" fill="#f3d7de"/>
+  <path d="M112 150 h176 v10 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 24 -22 0 q-11 21 -22 0 z" fill="#8e2440"/>
+  <!-- strawberries -->
+  <g>
+    <path d="M136 112 h34 q6 20 -17 34 q-23 -14 -17 -34 z" fill="#b03052"/>
+    <path d="M133 110 l12 9 l8 -11 l9 11 l12 -9 l-4 8 h-33 z" fill="#356b44"/>
+    <path d="M182 102 h40 q7 24 -20 40 q-27 -16 -20 -40 z" fill="#8e2440"/>
+    <path d="M179 100 l14 10 l9 -12 l10 12 l14 -10 l-4 9 h-39 z" fill="#356b44"/>
+    <path d="M236 114 h32 q6 19 -16 32 q-22 -13 -16 -32 z" fill="#b03052"/>
+    <path d="M233 112 l11 8 l8 -10 l8 10 l11 -8 l-3 7 h-32 z" fill="#356b44"/>
+  </g>
+  <!-- gold dragées -->
+  <g fill="#d9a94e">
+    <circle cx="136" cy="204" r="7"/><circle cx="200" cy="211" r="7"/><circle cx="264" cy="204" r="7"/>
+  </g>
+</svg>

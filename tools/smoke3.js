@@ -41,10 +41,13 @@ async function withGsap(page) {
     '| words:', await land.locator('#heroTitle .word').count(),
     '| announcement:', (await land.locator('#announcement').textContent()).slice(0, 30) + '…');
   await land.waitForTimeout(2200); // ingredient fly-in settles
-  console.log('landing flat art:', await land.evaluate(() => ({
+  console.log('landing collage:', await land.evaluate(() => ({
     flyers: document.querySelectorAll('.act-hero .ing-fly').length,
     loaded: Array.from(document.querySelectorAll('.ing, .stage-ing, .hero-cake')).every(i => i.complete && i.naturalWidth > 0),
     marquee: !!document.querySelector('.marquee-track'),
+    scraps: document.querySelectorAll('.scrap').length,
+    tape: document.querySelectorAll('.tape').length,
+    hand: getComputedStyle(document.querySelector('.scribble')).fontFamily.includes('Caveat'),
   })));
   await land.screenshot({ path: OUT + '/v4-landing-hero.png' });
 

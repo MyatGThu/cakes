@@ -1,3 +1,28 @@
+(function () {
+  "use strict";
+  /* Collage safety net: any cutout that fails to load (missing file, bad
+     deploy) quietly falls back to its plainer flat twin. Capture phase —
+     img error events do not bubble. */
+  document.addEventListener("error", function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== "IMG" || el.dataset.fellBack === "done") return;
+    var src = el.getAttribute("src") || "";
+    if (src.indexOf("/cutout/") !== -1) {
+      // first hop: try the plainer flat twin (kitchenware has none — that's
+      // what the second hop is for)
+      el.dataset.fellBack = "flat";
+      el.setAttribute("src", src.replace("/cutout/", "/flat/"));
+      return;
+    }
+    if (el.dataset.fellBack === "flat") {
+      // no twin either: it is decorative, so remove it rather than show a
+      // broken-image glyph in the middle of the collage
+      el.dataset.fellBack = "done";
+      el.style.display = "none";
+    }
+  }, true);
+})();
+
 /* Landing & About pages — light shop-context loader (no cart machinery here;
    ordering lives on shop.html). */
 

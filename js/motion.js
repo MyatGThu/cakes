@@ -47,11 +47,28 @@
      Internal navigation sweeps a curved ink sheet up over the page; the next
      page arrives already covered (html.wipe-hold, set pre-paint) and the
      sheet lifts away with the destination's name on it. */
-  var WIPE_COVER = "M 0 0 Q 50 0 100 0 L 100 100 Q 50 100 0 100 Z";
-  var WIPE_BELOW = "M 0 100 Q 50 100 100 100 L 100 100 Q 50 100 0 100 Z";
-  var WIPE_RISE = "M 0 55 Q 50 12 100 55 L 100 100 Q 50 100 0 100 Z";
-  var WIPE_LIFT = "M 0 0 Q 50 0 100 0 L 100 42 Q 50 92 0 42 Z";
-  var WIPE_GONE = "M 0 0 Q 50 0 100 0 L 100 0 Q 50 0 0 0 Z";
+  /* A torn strip of paper, not a smooth curve. Every state is built by the
+     same function, so all five paths share one point structure and morph
+     cleanly: a torn top edge (left to right) and a torn bottom edge (right
+     to left). Whichever edge is leading gets the jagged amplitude. */
+  function sheet(topY, topAmp, botY, botAmp) {
+    var d = "M 0 " + topY;
+    var i, jag;
+    for (i = 1; i <= 20; i++) {
+      jag = (i % 2 ? -1 : 1) * topAmp * (0.55 + (i % 3) * 0.22);
+      d += " L " + (i * 5) + " " + (topY + jag);
+    }
+    for (i = 20; i >= 0; i--) {
+      jag = (i % 2 ? 1 : -1) * botAmp * (0.55 + (i % 3) * 0.22);
+      d += " L " + (i * 5) + " " + (botY + jag);
+    }
+    return d + " Z";
+  }
+  var WIPE_BELOW = sheet(100, 0, 100, 0);
+  var WIPE_RISE = sheet(52, 4.5, 100, 0);
+  var WIPE_COVER = sheet(0, 0, 100, 0);
+  var WIPE_LIFT = sheet(0, 0, 45, 4.5);
+  var WIPE_GONE = sheet(0, 0, 0, 0);
   var wipe = document.querySelector(".page-wipe");
   var wipePath = wipe && wipe.querySelector("path");
   var wipeLabel = wipe && wipe.querySelector(".wipe-label");
@@ -135,6 +152,34 @@
     });
   }
 
+  /* Hover wobble: a scrap lifts and re-settles at a new angle, like a card
+     nudged on a table. Desktop pointers only; the resting tilt is CSS. */
+  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    function wobble(el) {
+      el.addEventListener("mouseenter", function () {
+        gsap.to(el, {
+          rotation: gsap.utils.random(-2.6, 2.6),
+          duration: 0.45, ease: "elastic.out(1, 0.45)", overwrite: "auto",
+        });
+      });
+      el.addEventListener("mouseleave", function () {
+        gsap.to(el, { rotation: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" });
+      });
+    }
+    gsap.utils.toArray(".scrap").forEach(wobble);
+    document.addEventListener("aurette:menu-rendered", function () {
+      gsap.utils.toArray("#productGrid .card").forEach(wobble);
+    });
+  }
+
+  /* Three webfonts (Archivo, Fraunces, Caveat) land after first paint and
+     reflow the page — without a refresh, ScrollTrigger keeps its stale
+     measurements and reveal batches below the fold never fire. */
+  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+  }
+
   // Generic reveals — everything rises into place.
   function revealIn(els) {
     if (!els.length) return;
@@ -147,9 +192,35 @@
       },
     });
   }
-  revealIn(gsap.utils.toArray("[data-reveal]"));
+
+  /* Collage entrance: cards and scraps are DEALT onto the page — each one
+     arrives from its own direction with its own spin, settling into the
+     resting tilt CSS already gives it. */
+  function dealIn(els) {
+    if (!els.length) return;
+    ScrollTrigger.batch(els, {
+      start: "top 90%",
+      once: true,
+      onEnter: function (batch) {
+        gsap.from(batch, {
+          opacity: 0,
+          x: function () { return gsap.utils.random(-130, 130); },
+          y: 90,
+          rotation: function () { return gsap.utils.random(-14, 14); },
+          scale: 0.92,
+          duration: 0.8,
+          ease: "back.out(1.4)",
+          stagger: { each: 0.07, from: "random" },
+          clearProps: "transform",
+          overwrite: true,
+        });
+      },
+    });
+  }
+  revealIn(gsap.utils.toArray("[data-reveal]:not(.scrap)"));
+  dealIn(gsap.utils.toArray(".scrap"));
   document.addEventListener("aurette:menu-rendered", function () {
-    revealIn(gsap.utils.toArray("#productGrid .card"));
+    dealIn(gsap.utils.toArray("#productGrid .card"));
     ScrollTrigger.refresh();
   });
   document.addEventListener("aurette:ig-rendered", function () {

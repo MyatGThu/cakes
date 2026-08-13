@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Three-tier celebration cake with candles, magazine cutout">
+  <!-- print shadow -->
+  <path d="M137 113 L159 108 L158 52 L205 32 L253 52 L253 108 L275 112 L302 185 L328 257 L358 336 L356 355 L342 362 L68 362 L54 355 L52 336 L83 257 L107 185 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M132 106 L154 101 L155 72 L153 45 L167 35 L190 31 L200 25 L212 32 L235 36 L248 45 L246 72 L248 101 L270 105 L297 178 L323 250 L353 329 L351 348 L337 355 L150 356 L63 355 L49 348 L47 329 L78 250 L102 178 Z" fill="#fffdf8"/>
+  <!-- plate -->
+  <rect x="56" y="330" width="288" height="16" rx="8" fill="#241a14"/>
+  <!-- bottom tier (cream) -->
+  <rect x="84" y="252" width="232" height="80" rx="10" fill="#f6ecdc"/>
+  <!-- halftone on the shaded right of the bottom tier -->
+  <g fill="#d9cbb6">
+    <circle cx="298" cy="276" r="3"/><circle cx="308" cy="290" r="3"/><circle cx="298" cy="304" r="3"/>
+    <circle cx="309" cy="264" r="2.5"/><circle cx="307" cy="316" r="2.5"/>
+  </g>
+  <!-- middle tier (blush) -->
+  <rect x="112" y="180" width="176" height="76" rx="9" fill="#f3d7de"/>
+  <!-- gold dragées on the middle tier -->
+  <g fill="#d9a94e">
+    <circle cx="140" cy="218" r="6"/><circle cx="170" cy="218" r="6"/><circle cx="200" cy="218" r="6"/>
+    <circle cx="230" cy="218" r="6"/><circle cx="260" cy="218" r="6"/>
+  </g>
+  <!-- top tier (cream) -->
+  <rect x="140" y="112" width="120" height="72" rx="8" fill="#f6ecdc"/>
+  <!-- raspberry scalloped drip, full width of the top tier -->
+  <path d="M140 121 h120 v10 q-7.5 24 -15 0 q-7.5 24 -15 0 q-7.5 24 -15 0 q-7.5 24 -15 0 q-7.5 24 -15 0 q-7.5 24 -15 0 q-7.5 24 -15 0 q-7.5 21 -15 0 z" fill="#b03052"/>
+  <!-- candles -->
+  <rect x="162" y="62" width="12" height="54" rx="6" fill="#f3d7de"/>
+  <rect x="194" y="52" width="12" height="64" rx="6" fill="#d9a94e"/>
+  <rect x="226" y="62" width="12" height="54" rx="6" fill="#f6ecdc"/>
+  <!-- flames -->
+  <g fill="#d9a94e">
+    <path d="M168 42 q7 8 0 16 q-7 -8 0 -16 z"/>
+    <path d="M200 32 q7 8 0 16 q-7 -8 0 -16 z"/>
+    <path d="M232 42 q7 8 0 16 q-7 -8 0 -16 z"/>
+  </g>
+</svg>

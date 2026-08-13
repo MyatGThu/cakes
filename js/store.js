@@ -360,7 +360,9 @@
       } else {
         photo.addEventListener("error", function fallBack() {
           photo.removeEventListener("error", fallBack);
-          if (p.image && photo.getAttribute("src") !== p.image) photo.src = p.image;
+          // a missing cutout falls back to the plainer flat illustration
+          var flat = String(p.image || "").replace("/cutout/", "/flat/");
+          if (flat && photo.getAttribute("src") !== flat) photo.src = flat;
         });
       }
       host.appendChild(card);
