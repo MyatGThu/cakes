@@ -197,17 +197,24 @@ a.brand:hover .brand-name { color: var(--accent-dark); }
 .brand .tagline { color: var(--ink-soft); font-size: 13.5px; display: none; }
 @media (min-width: 900px) { .brand .tagline { display: inline; } }
 
-.nav-links { display: none; gap: 4px; }
-@media (min-width: 720px) { .nav-links { display: flex; } }
+/* Three destinations do not need a hamburger — they need to not be hidden.
+   The nav stays visible at every width; below 600px the wordmark folds down to
+   the monogram to pay for it (it was truncating to "Aurette by…" anyway). */
+.nav-links { display: flex; gap: 2px; }
 .nav-links a {
   color: var(--ink-soft);
   text-decoration: none;
-  font-weight: 600;
-  font-size: 14.5px;
-  padding: 8px 14px;
-  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px;
+  border-bottom: 2px solid transparent;
 }
-.nav-links a:hover { color: var(--accent-dark); background: var(--accent-soft); }
+.nav-links a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+@media (hover: hover) {
+  .nav-links a:hover { color: var(--accent-dark); border-bottom-color: var(--ink); }
+}
 
 .cart-button {
   position: relative;
@@ -221,7 +228,8 @@ a.brand:hover .brand-name { color: var(--accent-dark); }
   white-space: nowrap;
   flex: none;
 }
-.cart-button:hover { background: var(--accent-dark); }
+/* Ungated, this stuck in its hover colour after a tap on a touch screen. */
+@media (hover: hover) { .cart-button:hover { background: var(--accent-dark); } }
 .cart-button .count {
   background: var(--accent);
   color: #fff;
@@ -229,6 +237,21 @@ a.brand:hover .brand-name { color: var(--accent-dark); }
   padding: 1px 8px;
   font-size: 12.5px;
   margin-left: 7px;
+}
+
+/* Phone: the monogram carries the brand so all three links fit on one row —
+   the wordmark was truncating to "Aurette by…" at these widths anyway, and the
+   <a> keeps its accessible name from the aria-label in the markup.
+   This block has to sit after the rules it tunes: media queries add no
+   specificity, so an earlier one would simply lose. */
+@media (max-width: 599px) {
+  .site-header .bar { padding: 8px 10px; gap: 2px; }
+  .brand-name { display: none; }
+  .brand-mark { width: 34px; height: 34px; }
+  .nav-links { gap: 0; }
+  .nav-links a { padding: 13px 6px; font-size: 11.5px; letter-spacing: 0.02em; }
+  .cart-button { padding: 10px 11px; font-size: 13px; }
+  .cart-button .count { margin-left: 5px; padding: 1px 6px; font-size: 12px; }
 }
 
 /* ---------- Hero ---------- */
@@ -307,28 +330,43 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
 }
 .section-head p { color: var(--ink-soft); max-width: 58ch; margin: 0; }
 
-/* ---------- Category tabs (Swiss text tabs on a hairline) ---------- */
+/* ---------- Category tabs ----------
+   The 26px gutters used to be dead space around 34x42px word-sized targets —
+   under every touch-target minimum, and "All" (the one people reach for to undo
+   a filter) was the smallest of them. That gutter is hit area now, so the
+   rhythm survives and each target clears 44px in both directions.
+   The active tab is a filled stamp rather than an underline: the header nav
+   already speaks in underlines, and one flavour of "you are here" per component
+   stops the two rows reading as the same control. */
 .chips {
-  display: flex; gap: 26px; flex-wrap: wrap;
+  display: flex; gap: 2px; flex-wrap: wrap;
   justify-content: flex-start;
   border-bottom: var(--hairline);
-  padding: 0 0 0; margin-bottom: 30px;
+  margin-bottom: 30px;
 }
+.chips[hidden] { display: none; }
 .chip {
+  min-height: 44px;
   border: none;
   background: none;
   color: var(--ink-soft);
   border-radius: 0;
-  border-bottom: 3px solid transparent;
-  padding: 6px 2px 12px;
+  padding: 11px 14px;
   font-weight: 700;
   font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
-.chip:hover { color: var(--accent-dark); }
-.chip[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+@media (hover: hover) { .chip:hover { color: var(--accent-dark); } }
+.chip:active { color: var(--accent-dark); }
+.chip[aria-pressed="true"] { color: var(--paper, #fffdf8); background: var(--ink); }
+/* Tightened just enough to keep four categories on one row at 375px while the
+   targets stay over 44px. A fifth category wraps rather than scrolling out of
+   sight — a second row is visible, a horizontal scroller is not. */
+@media (max-width: 599px) {
+  .chip { padding: 11px 11px; font-size: 12px; letter-spacing: 0.06em; }
+}
 
 /* ---------- Product grid ---------- */
 .grid {
@@ -514,6 +552,31 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
 }
 .site-footer strong { color: var(--ink); font-family: var(--font-serif); font-size: 17px; }
 .site-footer p { margin: 6px 0; }
+
+/* The footer is the one place the site SHOULD repeat its navigation: it is
+   where people look once they have read to the end, and on a phone it is the
+   second guaranteed route to every page. Targets are sized for thumbs. */
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 6px;
+  margin: 12px 0 16px;
+}
+.footer-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 13px 14px;
+  border-bottom: 2px solid transparent;
+}
+.footer-nav a[aria-current="page"] { color: var(--accent-dark); border-bottom-color: var(--accent); }
+@media (hover: hover) { .footer-nav a:hover { border-bottom-color: var(--ink); } }
+.site-footer #footerContact a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+@media (hover: hover) { .site-footer #footerContact a:hover { color: var(--accent-dark); } }
 
 /* ---------- Modal ---------- */
 .overlay {

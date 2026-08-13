@@ -43,12 +43,7 @@
       if (fName) fName.textContent = s.shopName || "";
       var fPickup = $("footerPickup");
       if (fPickup) fPickup.textContent = s.pickupAddress ? "Pickup: " + s.pickupAddress : "";
-      var bits = [];
-      if (s.deliveryAvailable === true) bits.push("Pickup & delivery available");
-      if (s.whatsappNumber) bits.push("WhatsApp orders welcome");
-      if (s.orderEmail) bits.push(s.orderEmail);
-      var fContact = $("footerContact");
-      if (fContact) fContact.textContent = bits.join(" · ");
+      window.Aurette.renderFooterContact($("footerContact"), s);
       var handle = String(s.instagramHandle || "").replace(/^@/, "");
       var igAbout = $("igFollowAbout");
       if (igAbout && handle) {
@@ -68,6 +63,11 @@
       chip.textContent = String(n);
       chip.hidden = false;
       btn.childNodes[0].nodeValue = "Your Order";
+      /* Once there is an order in progress this button is the order, not a
+         second route to the menu — so send it to the drawer, not the top of
+         the page. Empty, it stays a plain "Order Now" call to action. */
+      btn.setAttribute("href", "shop.html#order");
+      btn.setAttribute("aria-label", "Your order, " + n + (n === 1 ? " item" : " items"));
     }
   } catch (e) { /* fresh visitor */ }
 })();

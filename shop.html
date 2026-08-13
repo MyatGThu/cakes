@@ -41,6 +41,7 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="js/site.js"></script>
   <script defer src="js/store.js"></script>
   <script defer src="js/motion.js"></script>
 </head>
@@ -59,12 +60,12 @@
 
   <header class="site-header">
     <div class="bar">
-      <a class="brand" href="index.html">
+      <a class="brand" href="index.html" aria-label="Aurette by Mia — home">
         <img class="brand-mark" src="images/brand/logo.png" alt="" width="512" height="512">
         <span class="brand-name" id="shopName" translate="no">Aurette by Mia</span>
         <span class="tagline" id="shopTagline">Made-to-order cakes, Melbourne</span>
       </a>
-      <nav class="nav-links" aria-label="Site">
+      <nav class="nav-links" aria-label="Main">
         <a href="index.html">Home</a>
         <a href="shop.html" aria-current="page">Menu</a>
         <a href="about.html">About</a>
@@ -97,6 +98,7 @@
           </div>
         </noscript>
         <div class="chips" id="categoryChips" role="group" aria-label="Filter by category"></div>
+        <p class="sr-only" id="gridStatus" role="status" aria-live="polite"></p>
         <div class="grid" id="productGrid"></div>
         <p class="empty-note" id="emptyNote" hidden>Nothing here right now — check back soon!</p>
       </div>
@@ -175,8 +177,13 @@
   <footer class="site-footer">
     <img class="footer-mark" src="images/brand/logo.png" alt="" width="512" height="512">
     <p><strong id="footerShopName">Aurette by Mia</strong></p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="index.html">Home</a>
+      <a href="shop.html" aria-current="page">Menu</a>
+      <a href="about.html">About</a>
+    </nav>
     <p id="footerPickup">Pickup &amp; delivery across Melbourne — details confirmed with every order</p>
-    <p id="footerContact">Instagram @aurette_by_mia</p>
+    <p id="footerContact"><a href="https://instagram.com/aurette_by_mia" rel="noopener">Instagram @aurette_by_mia</a></p>
   </footer>
 
   <!-- Add-to-order modal -->

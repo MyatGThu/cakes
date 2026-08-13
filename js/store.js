@@ -206,17 +206,14 @@
   }
 
   function renderShopInfo() {
-    document.title = SETTINGS.shopName + " — Cakes to Order";
+    /* The nav calls this page "Menu", so the tab has to say Menu too. */
+    document.title = "The Menu — " + SETTINGS.shopName;
     $("shopName").textContent = SETTINGS.shopName;
     $("shopTagline").textContent = SETTINGS.tagline || "";
     $("footerShopName").textContent = SETTINGS.shopName;
     $("footerPickup").textContent = SETTINGS.pickupAddress ? "Pickup: " + SETTINGS.pickupAddress : "";
 
-    var contactBits = [];
-    if (deliveryOn()) contactBits.push("Pickup & delivery available");
-    if (SETTINGS.whatsappNumber) contactBits.push("WhatsApp orders welcome");
-    if (SETTINGS.orderEmail) contactBits.push(SETTINGS.orderEmail);
-    $("footerContact").textContent = contactBits.join(" · ");
+    window.Aurette.renderFooterContact($("footerContact"), SETTINGS);
 
     var ann = $("announcement");
     if (SETTINGS.announcement) {
@@ -241,27 +238,64 @@
     });
   }
 
+  /* The filter lives in the URL so "here are the cupcakes" is a shareable link
+     and Back undoes a filter. ?theme= must survive alongside it. */
+  function readCategoryFromUrl() {
+    try {
+      return new URLSearchParams(location.search).get("category") || "All";
+    } catch (e) { return "All"; }
+  }
+  function writeCategoryToUrl() {
+    if (!history.replaceState) return;
+    try {
+      var params = new URLSearchParams(location.search);
+      if (activeCategory === "All") params.delete("category");
+      else params.set("category", activeCategory);
+      var q = params.toString();
+      history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash);
+    } catch (e) { /* older browser — the filter simply stays off the URL */ }
+  }
+
+  /* The row is built once and afterwards only re-labelled. Rebuilding it with
+     innerHTML on every change destroyed the very button the visitor had just
+     pressed, throwing keyboard focus back to <body> — so a keyboard or screen
+     reader user had to tab in from the top of the page after each filter. */
   function renderChips() {
     var cats = ["All"];
     PRODUCTS.forEach(function (p) {
       if (p.available === false) return;
       if (p.category && cats.indexOf(p.category) === -1) cats.push(p.category);
     });
+    if (cats.indexOf(activeCategory) === -1) activeCategory = "All";
     var host = $("categoryChips");
     host.innerHTML = "";
-    if (cats.length <= 2) return; // only "All" plus one — no point filtering
+    /* Hide the container, not just its children: emptied, it still painted a
+       dashed rule and 30px of margin above the grid. */
+    host.hidden = cats.length <= 2; // only "All" plus one — no point filtering
+    if (host.hidden) return;
     cats.forEach(function (c) {
       var b = document.createElement("button");
+      b.type = "button";
       b.className = "chip";
       b.textContent = c;
+      b.setAttribute("data-cat", c);
       b.setAttribute("aria-pressed", String(c === activeCategory));
       b.addEventListener("click", function () {
+        if (activeCategory === c) return;
         activeCategory = c;
-        renderChips();
+        syncChips();
         renderGrid();
+        writeCategoryToUrl();
       });
       host.appendChild(b);
     });
+  }
+
+  function syncChips() {
+    var chips = $("categoryChips").querySelectorAll(".chip");
+    for (var i = 0; i < chips.length; i++) {
+      chips[i].setAttribute("aria-pressed", String(chips[i].getAttribute("data-cat") === activeCategory));
+    }
   }
 
   function priceLabel(p) {
@@ -328,6 +362,15 @@
     if (videoWatcher) { videoWatcher.disconnect(); videoWatcher = null; }
     host.innerHTML = "";
     $("emptyNote").hidden = items.length > 0;
+
+    /* Filtering silently swaps the grid; without this a screen reader user gets
+       no confirmation that pressing a category did anything. */
+    var live = $("gridStatus");
+    if (live) {
+      live.textContent = items.length +
+        (items.length === 1 ? " item" : " items") +
+        (activeCategory === "All" ? " on the menu" : " in " + activeCategory);
+    }
 
     items.forEach(function (p) {
       var badge = leadBadge(p);
@@ -437,6 +480,9 @@
   }
 
   function openFromHash() {
+    /* The header slot on the landing and about pages says "Your Order" and
+       points here — so it has to land on the order, not just on the page. */
+    if (location.hash === "#order") { renderCart(); openDrawer(); return; }
     var m = location.hash.match(/^#cake-(.+)$/);
     if (!m) return;
     var p = findProduct(decodeURIComponent(m[1]));
@@ -520,7 +566,13 @@
       toast("The menu changed since your last visit — some items were removed from your order.");
     }
 
-    $("cartCount").textContent = String(cartCount());
+    var n = cartCount();
+    $("cartCount").textContent = String(n);
+    /* A static aria-label hid the count from the accessible name — a screen
+       reader heard "Open your order" whether the order held nothing or six
+       cakes. Keep the name and the badge in step instead. */
+    $("cartButton").setAttribute("aria-label",
+      n === 0 ? "Your order, empty" : "Your order, " + n + (n === 1 ? " item" : " items"));
     var host = $("cartItems");
     host.innerHTML = "";
     $("cartEmpty").hidden = cart.length > 0;
@@ -925,6 +977,7 @@
       SETTINGS = results[0];
       PRODUCTS = Array.isArray(results[1]) ? results[1] : [];
       renderShopInfo();
+      activeCategory = readCategoryFromUrl();
       renderChips();
       renderGrid();
       renderCart();
