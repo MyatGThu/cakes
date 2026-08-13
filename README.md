@@ -31,8 +31,13 @@ for the owner to maintain day-to-day.
 - **Navigation that is actually there on a phone** — three destinations do not
   need a hamburger, so Home / Menu / About stay visible at every width down to
   320px (the wordmark folds to the monogram to make room) and repeat in the
-  footer. Category tabs are thumb-sized, live in `?category=` so a filtered
-  menu can be shared, and keep keyboard focus when you switch them.
+  footer. Category tabs are thumb-sized, dock under the header as you scroll,
+  live in `?category=` so a filtered menu can be shared, and keep keyboard
+  focus when you switch them.
+- **Back does what you expect** — the cake modal and the order drawer each take
+  a history entry, so the Android Back key and the iOS back-swipe close them
+  instead of dumping you out of the site with a half-built order. Whole cards
+  are tappable, and every cake is a shareable `#cake-…` link.
 - **Themes** (`themes.html`) — a picker that previews alternate palettes via
   `?theme=` (persisted per device) for choosing Aurette's look.
 

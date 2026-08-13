@@ -169,10 +169,12 @@ Two "you are here" languages, one per component, so the two horizontal rows of
 words on `shop.html` can't be mistaken for each other: the site nav underlines
 the current page, the category tabs fill the active one as a stamp.
 
-The category filter lives in **`?category=`** (not the hash — `closeModal()`
+The category filter lives in **`?category=`** (not the hash — `clearOverlayUrl()`
 resets the URL to `pathname + search`, so a query param survives closing a cake
 and a hash would not), written with `replaceState` so a filter never costs a
-Back press to leave the site. `renderChips()` builds the row once and afterwards
+Back press to leave the site. `writeCategoryToUrl()` must pass `history.state`
+through: it runs at init *before* `openFromHash()`, so a `null` state there
+would wipe the overlay marker off a reloaded `#cake-…` entry. `renderChips()` builds the row once and afterwards
 only re-labels it; rebuilding with `innerHTML` destroyed the button being
 pressed and threw keyboard focus to `<body>`. An unknown category falls back to
 All rather than an empty grid, and `#gridStatus` announces the new count.
@@ -187,6 +189,50 @@ stuck row off-screen with it, leaving nothing visible after a filter — so
 `keepResultsInView()` re-anchors the strip and the first result afterwards.
 Read its comment before touching it: the `requestAnimationFrame` and the
 one-frame `position: static` are both load-bearing measurements.
+
+### Overlays are history, and the card is a link
+
+On a phone the product modal and the cart drawer cover the whole screen, so they
+read as a new page and Back — or the iOS back-swipe — has to close them. They
+used to create no history entry at all, so Back left the site and took the
+half-built order with it.
+
+Opening one from an in-page tap pushes **exactly one** entry, marked in
+`history.state.aurette = { view, id, pushed }`. Three rules hold it together:
+
+- **`popstate` only reconciles.** `syncOverlayToState()` makes the DOM agree with
+  the entry; it never pushes, replaces, or decides to close on its own, so a
+  close and a back-press cannot fire each other. It is idempotent, and it
+  deliberately skips re-opening a cake that is already showing — otherwise a
+  duplicate popstate would wipe the quantity and note the visitor has typed.
+- **`dismissOverlay()` is the only close path** — behind ×, Escape, the backdrop
+  and Add to Order. It shuts the DOM *first* and releases the entry *after*, so
+  the tap lands immediately and it fails safe in a webview that swallows the
+  traversal (a stale entry, never an overlay stuck on screen).
+- **Arrived overlays are adopted, not pushed.** A shared `#cake-…` link, or the
+  header CTA's `shop.html#order`, gets `pushed: false`, so closing consumes
+  nothing and Back returns to whoever sent the visitor here instead of costing a
+  press to leave a page they entered once.
+
+The marker lives in the entry rather than a variable so it survives a reload and
+the WhatsApp hand-off. `pushState` runs only from an unmarked entry — that
+invariant is why one Back press is always enough.
+
+The whole product card opens its cake: the `<h3>` holds a real
+`<a class="card-link" href="#cake-…">` whose stretched `::after` covers the card,
+so middle-click and copy-link work while a plain click opens the modal (nothing
+listens for `hashchange`). The Add button is a **sibling** of that anchor and is
+raised above the sheet, so no click on it can reach the link — no
+`stopPropagation`, no guard to remember. `.card { position: relative }` is
+load-bearing: the collage tilts make a card a containing block on desktop, but
+not below 640px, not under reduced motion, and not after `dealIn()` strips the
+transform — without it the sheet escapes and covers the viewport. The focus ring
+goes on the whole card via `:has()`, since a ring around the title alone would
+misdescribe the target. A press that travelled more than 6px is treated as a
+text selection, not a tap. Note the Add button opens the same modal rather than
+adding directly — size, quantity and the note are all chosen there.
+
+`tools/navtest.js` (`npm run test:nav`) asserts all of this.
 
 ### Theming
 
@@ -203,5 +249,5 @@ working. `themes.html` is the picker.
   `aria-hidden` on decorative layers, transform/opacity-only animation.
 - `git push` to `claude/cake-shop-ordering-site-y3eogf` **and** `main` (Pages
   deploys from `main`; the owner has authorized pushing there).
-- After UI changes, run `npm test` in `tools/` and treat any page error or
-  horizontal-scroll report as a failure.
+- After UI changes, run `npm test` and `npm run test:nav` in `tools/` and treat
+  any page error or horizontal-scroll report as a failure.

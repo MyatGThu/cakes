@@ -254,7 +254,9 @@
       if (activeCategory === "All") params.delete("category");
       else params.set("category", activeCategory);
       var q = params.toString();
-      history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash);
+      /* history.state carries the open-overlay marker. Passing null here would
+         wipe it off a reloaded #cake-… entry before openFromHash() reads it. */
+      history.replaceState(history.state, "", location.pathname + (q ? "?" + q : "") + location.hash);
     } catch (e) { /* older browser — the filter simply stays off the URL */ }
   }
 
@@ -433,15 +435,42 @@
         '<div class="photo-frame">' + media + "</div>" +
         '<div class="body">' +
           '<span class="badge ' + badge.cls + '">' + escapeHtml(badge.text) + "</span>" +
-          "<h3>" + escapeHtml(p.name) + "</h3>" +
+          '<h3><a class="card-link" href="#cake-' + escapeHtml(encodeURIComponent(p.id)) + '">' +
+            escapeHtml(p.name) + "</a></h3>" +
           '<p class="desc">' + escapeHtml(p.description || "") + "</p>" +
           '<p class="pickup-note">' + pickupHtml + "</p>" +
           '<div class="meta">' +
             '<span class="price">' + escapeHtml(priceLabel(p)) + "</span>" +
-            '<button class="btn btn-primary" data-add>Add</button>' +
+            '<button class="btn btn-primary" data-add>Add' +
+              '<span class="sr-only"> ' + escapeHtml(p.name) + "</span>" +
+            "</button>" +
           "</div>" +
         "</div>";
-      card.querySelector("[data-add]").addEventListener("click", function () { openModal(p); });
+
+      /* The whole card opens the cake. On a phone the photo is the most
+         natural thing to tap and it was the one dead part of the card — only
+         the Add button was ever bound. The covering is done by a stretched
+         ::after on the title, so this stays ONE real <a> with a real href:
+         middle-click, copy-link and open-in-new-tab all land on the cake
+         through openFromHash(). A plain click opens the modal here rather than
+         reloading, because nothing listens for hashchange — the same reason
+         the IG tiles do it by hand. Modified clicks are left alone so the
+         browser can open its own tab. */
+      var cardLink = card.querySelector(".card-link");
+      var pressX = 0, pressY = 0;
+      cardLink.addEventListener("mousedown", function (e) { pressX = e.clientX; pressY = e.clientY; });
+      cardLink.addEventListener("click", function (e) {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault(); // even on a drag, or the bare hash lands and opens nothing
+        /* A press that travelled is someone trying to select text, not a tap.
+           e.detail is 0 for keyboard activation, so Enter always passes. */
+        if (e.detail && (Math.abs(e.clientX - pressX) > 6 || Math.abs(e.clientY - pressY) > 6)) return;
+        showOverlay("modal", p);
+      });
+      /* Deliberately the same destination as the card: the button is not a
+         second action, it is the labelled one. A mis-tap between them costs
+         nothing because both outcomes are identical. */
+      card.querySelector("[data-add]").addEventListener("click", function () { showOverlay("modal", p); });
       var photo = card.querySelector(".photo");
       if (photo.tagName === "VIDEO") {
         attachCardVideo(card, p, photo);
@@ -511,8 +540,6 @@
     $("productOverlay").hidden = false;
     document.body.style.overflow = "hidden";
     $("modalClose").focus();
-    // Deep-linkable cakes: Mia can put this exact URL in an Instagram story.
-    if (history.replaceState) history.replaceState(null, "", "#cake-" + encodeURIComponent(p.id));
   }
 
   function closeModal() {
@@ -520,18 +547,151 @@
     $("productOverlay").hidden = true;
     modalState = null;
     document.body.style.overflow = "";
-    if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
     restoreFocus("modal");
   }
 
+  /* ---------- Overlay history ----------
+     A full-screen modal or drawer reads as a new page on a phone, so the
+     back-swipe and the Android Back key have to close it. They used not to:
+     neither overlay created a history entry, so Back left the site and took
+     the half-built order with it.
+
+     Three rules keep it honest:
+       · the open overlay is described by ONE history entry, marked in
+         history.state — never by a variable, so a reload and the return trip
+         from the WhatsApp hand-off both read the answer the entry was made
+         with;
+       · popstate only RECONCILES the DOM to that state. It never pushes,
+         replaces, or decides to close on its own, so a close and a back-press
+         cannot fire each other;
+       · a close consumes the entry with history.back() only when we pushed it.
+         An overlay the page ARRIVED holding — a shared #cake- link, or the
+         header's "Your Order" pointing at shop.html#order — adopts its entry
+         instead, so Back returns to whoever sent the visitor here rather than
+         costing a press to leave a page they entered once.
+
+     The invariant that makes one Back press provable: pushState runs only when
+     the current entry is unmarked, so the entry behind a pushed overlay is
+     always one the reconciler will close. */
+
+  function overlayState() {
+    try { return (history.state && history.state.aurette) || null; }
+    catch (e) { return null; }
+  }
+
+  function overlayOpen() {
+    return !$("productOverlay").hidden || $("cartDrawer").classList.contains("open");
+  }
+
+  function overlayUrl(view, product) {
+    return location.pathname + location.search +
+      (view === "modal" ? "#cake-" + encodeURIComponent(product.id) : "#order");
+  }
+
+  /* Opening from an in-page tap: a card, an IG tile, the cart button. */
+  function showOverlay(view, product) {
+    var cur = overlayState();
+    if (history.pushState) {
+      try {
+        var st = { aurette: {
+          view: view,
+          id: product ? product.id : null,
+          /* A swap — cake to cake, or drawer to cake — rewrites the entry we
+             are standing on rather than stacking a second one, so Back stays
+             exactly one press from the menu. A swap inside an ADOPTED session
+             stays adopted; promoting it would make the next Back walk out. */
+          pushed: cur ? cur.pushed : true,
+        } };
+        if (cur) history.replaceState(st, "", overlayUrl(view, product));
+        else history.pushState(st, "", overlayUrl(view, product));
+      } catch (e) { /* file:// or a locked-down webview — the overlay still opens */ }
+    }
+    if (view === "modal") { closeDrawer(); openModal(product); }
+    else { closeModal(); renderCart(); openDrawer(); }
+  }
+
+  /* The single close path behind ×, Escape, the backdrop and Add to Order. */
+  function dismissOverlay() {
+    if (!overlayOpen()) return;
+    var st = overlayState();
+    /* Shut the paper first, release the entry after: the tap lands
+       immediately, and the popstate that follows finds nothing left to do
+       because both closers no-op on an already-shut layer. That ordering is
+       what stops a close and a back-press chasing each other, and it fails
+       safe in a webview that swallows the traversal — a stale entry, not an
+       overlay stuck on screen. */
+    closeModal();
+    closeDrawer();
+    if (st && st.pushed) history.back();
+    else clearOverlayUrl();
+  }
+
+  function clearOverlayUrl() {
+    if (!history.replaceState) return;
+    // null state on purpose: this drops the marker. ?category= survives.
+    try { history.replaceState(null, "", location.pathname + location.search); }
+    catch (e) { /* older browser — the hash simply stays on the URL */ }
+  }
+
+  /* Back, Forward, the iOS back-swipe and a bfcache restore all land here.
+     Idempotent on purpose: a browser that fires popstate twice for one gesture
+     must come out of this unchanged — in particular it must not re-run
+     openModal() on the cake already showing and wipe the quantity and note the
+     visitor has typed. */
+  function syncOverlayToState() {
+    var st = overlayState();
+    var view = st ? st.view : null;
+    var p = view === "modal" ? findProduct(st.id) : null;
+    if (view === "modal" && (!p || p.available === false)) view = null;
+
+    if (view === "modal") {
+      if (modalState && modalState.product.id === p.id) return;
+      closeDrawer();
+      openModal(p);
+      return;
+    }
+    if (view === "drawer") {
+      closeModal();
+      if (!$("cartDrawer").classList.contains("open")) { renderCart(); openDrawer(); }
+      return;
+    }
+    closeModal();
+    closeDrawer();
+  }
+
+  /* Runs once, at init. Whatever overlay the URL asks for opens on the entry
+     the visitor ARRIVED on — adopted, not pushed (see above). Where the entry
+     behind it happens to be this same page (a cake opened and then refreshed),
+     Back still closes the overlay for free: it lands on an unmarked entry and
+     the reconciler shuts it. Adoption never costs a working Back, it just
+     declines to invent one. */
   function openFromHash() {
-    /* The header slot on the landing and about pages says "Your Order" and
-       points here — so it has to land on the order, not just on the page. */
-    if (location.hash === "#order") { renderCart(); openDrawer(); return; }
-    var m = location.hash.match(/^#cake-(.+)$/);
-    if (!m) return;
-    var p = findProduct(decodeURIComponent(m[1]));
-    if (p && p.available !== false) openModal(p);
+    var st = overlayState();
+    var view = null;
+    var p = null;
+    if (st) {
+      // A reload, or a Forward press into an entry we marked earlier.
+      view = st.view;
+      if (view === "modal") p = findProduct(st.id);
+    } else if (location.hash === "#order") {
+      /* The header slot on the landing and about pages says "Your Order" and
+         points here — so it has to land on the order, not just on the page. */
+      view = "drawer";
+    } else {
+      var m = location.hash.match(/^#cake-(.+)$/);
+      if (m) { view = "modal"; p = findProduct(decodeURIComponent(m[1])); }
+    }
+    if (view === "modal" && (!p || p.available === false)) { clearOverlayUrl(); return; }
+    if (!view) return;
+    if (history.replaceState) {
+      try {
+        history.replaceState(
+          { aurette: { view: view, id: p ? p.id : null, pushed: st ? !!st.pushed : false } },
+          "", location.href);
+      } catch (e) { /* older browser — the overlay still opens, Back still leaves */ }
+    }
+    if (view === "drawer") { renderCart(); openDrawer(); }
+    else openModal(p);
   }
 
   function updateModalPrice() {
@@ -571,7 +731,7 @@
     }
     saveCart();
     renderCart();
-    closeModal();
+    dismissOverlay();
     toast(p.name + " added to your order");
     document.dispatchEvent(new CustomEvent("aurette:added"));
   }
@@ -901,16 +1061,20 @@
   }
 
   function wireUi() {
-    $("cartButton").addEventListener("click", function () { renderCart(); openDrawer(); });
-    $("drawerClose").addEventListener("click", closeDrawer);
-    $("drawerOverlay").addEventListener("click", closeDrawer);
+    $("cartButton").addEventListener("click", function () { showOverlay("drawer", null); });
+    $("drawerClose").addEventListener("click", function () { dismissOverlay(); });
+    $("drawerOverlay").addEventListener("click", function () { dismissOverlay(); });
 
-    $("modalClose").addEventListener("click", closeModal);
+    $("modalClose").addEventListener("click", function () { dismissOverlay(); });
     $("productOverlay").addEventListener("click", function (e) {
-      if (e.target === $("productOverlay")) closeModal();
+      if (e.target === $("productOverlay")) dismissOverlay();
     });
+    /* Back, Forward and the iOS back-swipe. motion.js keeps its own pageshow
+       handler for the wipe sheet; the two are independent. */
+    window.addEventListener("popstate", syncOverlayToState);
+    window.addEventListener("pageshow", function (e) { if (e.persisted) syncOverlayToState(); });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { closeModal(); closeDrawer(); }
+      if (e.key === "Escape") dismissOverlay();
       if (e.key === "Tab") {
         if (!$("productOverlay").hidden) trapFocus($("productOverlay"), e);
         else if ($("cartDrawer").classList.contains("open")) trapFocus($("cartDrawer"), e);
@@ -973,7 +1137,7 @@
              rather than reloading. */
           el.addEventListener("click", function (e) {
             e.preventDefault();
-            openModal(t.product);
+            showOverlay("modal", t.product);
           });
         } else {
           el.target = "_blank";

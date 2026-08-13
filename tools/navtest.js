@@ -139,15 +139,25 @@ const state = (p) => p.evaluate(() => {
     await p.waitForTimeout(700);
     check('one Back after Escape leaves the menu', (await state(p)).page, 'index.html');
 
-    // A shared deep link still opens the cake, and Back returns to the referrer.
-    await p.goto(B + '/index.html', { waitUntil: 'networkidle' });
-    await p.waitForTimeout(300);
-    await p.goto(B + '/shop.html#cake-classic-vanilla', { waitUntil: 'networkidle' });
-    await p.waitForTimeout(900);
-    check('deep link opens the cake', (await state(p)).modal, true);
-    await p.goBack().catch(() => {});
-    await p.waitForTimeout(700);
-    check('Back from a deep-linked cake closes it', (await state(p)).modal, false);
+    // A shared deep link opens the cake on the entry the visitor ARRIVED on.
+    // That entry is adopted, not pushed: closing consumes nothing, so Back
+    // still returns to whoever sent them here instead of costing a press to
+    // leave a page they only entered once.
+    await step('deep-linked cake', async () => {
+      await p.goto(B + '/index.html', { waitUntil: 'networkidle' });
+      await p.waitForTimeout(300);
+      await p.goto(B + '/shop.html#cake-classic-vanilla', { waitUntil: 'networkidle' });
+      await p.waitForTimeout(900);
+      check('deep link opens the cake', (await state(p)).modal, true);
+      await p.locator('#modalClose').click({ timeout: 5000 });
+      await p.waitForTimeout(500);
+      const s3 = await state(p);
+      check('closing a deep-linked cake reveals the menu', { modal: s3.modal, hash: s3.hash, page: s3.page },
+        { modal: false, hash: '', page: 'shop.html' });
+      await p.goBack().catch(() => {});
+      await p.waitForTimeout(700);
+      check('Back from an adopted overlay returns to the referrer', (await state(p)).page, 'index.html');
+    });
 
     // The header CTA on the other pages points at shop.html#order.
     await p.goto(B + '/shop.html#order', { waitUntil: 'networkidle' });
@@ -194,41 +204,99 @@ const state = (p) => p.evaluate(() => {
     check('the Add button is not inside the link', anatomy.addInsideLink, false);
     check('Add button stays >=44px', anatomy.addSize && Math.min(anatomy.addSize[0], anatomy.addSize[1]) >= 44, true);
 
-    // Tapping the photo opens the cake.
+    // Hit-test every region of the card: each must belong to the cake link,
+    // except the Add button which keeps its own. This is a stronger assertion
+    // than clicking — a direct .photo-frame click is correctly refused by the
+    // browser precisely because the link's sheet covers it.
+    // scroll first and let it land — html has scroll-behavior: smooth, so
+    // scrollIntoView is asynchronous and hit-testing straight after it reads
+    // positions the page has not moved to yet.
+    await p.evaluate(() => document.querySelector('.card').scrollIntoView({ block: 'center', behavior: 'instant' }));
+    await p.waitForTimeout(400);
+    const regions = await p.evaluate(() => {
+      const c = document.querySelector('.card');
+      const at = (el, dx, dy) => {
+        const r = el.getBoundingClientRect();
+        const hit = document.elementFromPoint(r.left + (dx == null ? r.width / 2 : dx), r.top + (dy == null ? r.height / 2 : dy));
+        return hit ? (hit.closest('[data-add]') ? 'add-button' : (hit.closest('a.card-link') ? 'cake-link' : hit.tagName + '.' + hit.className)) : 'nothing';
+      };
+      return {
+        photo: at(c.querySelector('.photo-frame')),
+        badge: at(c.querySelector('.badge')),
+        title: at(c.querySelector('h3')),
+        desc: at(c.querySelector('.desc')),
+        pickup: at(c.querySelector('.pickup-note')),
+        price: at(c.querySelector('.price')),
+        add: at(c.querySelector('[data-add]')),
+      };
+    });
+    check('every region of the card opens the cake, except the button', regions, {
+      photo: 'cake-link', badge: 'cake-link', title: 'cake-link', desc: 'cake-link',
+      pickup: 'cake-link', price: 'cake-link', add: 'add-button',
+    });
+
+    // And a real tap over the photo does open it.
     await step('photo tap', async () => {
-      await p.locator('.card .photo-frame').first().click();
+      const box = await p.locator('.card .photo-frame').first().boundingBox();
+      await p.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
       await p.waitForTimeout(600);
-      check('photo tap opens the modal', (await state(p)).modal, true);
+      check('tapping the photo opens the modal', (await state(p)).modal, true);
       await p.locator('#modalClose').click({ timeout: 5000 }).catch(() => {});
       await p.waitForTimeout(500);
     });
 
-    // Tapping Add must add to the order, NOT open the modal. Start from a
-    // known-clean page so a leftover overlay from an earlier step cannot make
-    // this look like a pass or a fail on its own.
+    // The card's own button does NOT add to the order — it opens the same cake
+    // the card does, because size, quantity and the note are all chosen in the
+    // modal. So it must open exactly one modal for the right cake, and must not
+    // fire twice by also triggering the card link it sits inside the card with.
+    // Start from a clean page so no leftover overlay can fake a pass.
     await arrive(p);
-    const before = await p.evaluate(() => document.getElementById('cartCount').textContent);
     await p.locator('.card [data-add]').first().click();
     await p.waitForTimeout(600);
-    const after = await p.evaluate(() => ({
-      count: document.getElementById('cartCount').textContent,
+    const viaButton = await p.evaluate(() => ({
       modal: !document.getElementById('productOverlay').hidden,
+      title: document.getElementById('modalTitle').textContent,
+      firstCardName: (document.querySelector('.card h3') || {}).textContent,
     }));
-    check('Add adds to the order', after.count !== before, true);
-    check('Add does not also open the modal', after.modal, false);
+    check('the card button opens the modal', viaButton.modal, true);
+    check('and opens the cake it belongs to', viaButton.title, viaButton.firstCardName);
+    // One press, one entry: Back must return to the menu, not skip past it.
+    await p.goBack().catch(() => {});
+    await p.waitForTimeout(700);
+    const afterBack = await state(p);
+    check('the button did not stack two history entries', { page: afterBack.page, modal: afterBack.modal },
+      { page: 'shop.html', modal: false });
 
-    // Keyboard: the card must be reachable and operable, with a visible ring.
-    const kb = await p.evaluate(() => {
-      const link = document.querySelector('.card a[href^="#cake-"]');
-      if (!link) return null;
-      link.focus();
-      const cs = getComputedStyle(link);
-      const ring = (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0)
-        || cs.boxShadow !== 'none';
-      return { focused: document.activeElement === link || link.contains(document.activeElement), ring: ring };
+    // Keyboard: tab until the first card link has focus. Real Tab presses, not
+    // .focus() — :focus-visible does not match a programmatic focus, so the
+    // ring would read as missing when it is really there.
+    await arrive(p);
+    let onLink = false;
+    for (let i = 0; i < 25 && !onLink; i++) {
+      await p.keyboard.press('Tab');
+      onLink = await p.evaluate(() => {
+        const a = document.activeElement;
+        return !!(a && a.matches && a.matches('.card a.card-link'));
+      });
+    }
+    check('card link is reachable by Tab', onLink, true);
+    const ring = await p.evaluate(() => {
+      const a = document.activeElement;
+      if (!a || !a.matches('.card a.card-link')) return null;
+      const card = a.closest('.card');
+      const cs = getComputedStyle(card);
+      const own = getComputedStyle(a);
+      return {
+        focusVisible: a.matches(':focus-visible'),
+        // the ring is drawn on the whole card, not on the title alone
+        cardOutline: cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0,
+        cardOutlineWidth: Math.round(parseFloat(cs.outlineWidth)),
+        linkOwnRingSuppressed: own.outlineStyle === 'none' || parseFloat(own.outlineWidth) === 0,
+      };
     });
-    check('card link takes keyboard focus', kb && kb.focused, true);
-    check('and shows a focus indicator', kb && kb.ring, true);
+    check('and the whole card shows the focus ring', ring && {
+      focusVisible: ring.focusVisible, cardOutline: ring.cardOutline, linkOwnRingSuppressed: ring.linkOwnRingSuppressed,
+    }, { focusVisible: true, cardOutline: true, linkOwnRingSuppressed: true });
 
     await step('Enter opens the card', async () => {
       await p.keyboard.press('Enter');
@@ -248,7 +316,8 @@ const state = (p) => p.evaluate(() => {
     await p.route('https://cdn.jsdelivr.net/**', r => r.abort());
     await step('reduced motion', async () => {
       await arrive(p);
-      await p.locator('.card .photo-frame').first().click();
+      const rb = await p.locator('.card .photo-frame').first().boundingBox();
+      await p.mouse.click(rb.x + rb.width / 2, rb.y + rb.height / 2);
       await p.waitForTimeout(600);
       check('reduced motion: card still opens', (await state(p)).modal, true);
       await p.goBack().catch(() => {});
@@ -261,7 +330,8 @@ const state = (p) => p.evaluate(() => {
     // GSAP present (the wipe interceptor is live) — a #cake- link must not wipe.
     const p = await newPage(true);
     await arrive(p);
-    await p.locator('.card .photo-frame').first().click().catch(() => {});
+    const gb = await p.locator('.card .photo-frame').first().boundingBox();
+    if (gb) await p.mouse.click(gb.x + gb.width / 2, gb.y + gb.height / 2);
     await p.waitForTimeout(900);
     const s = await p.evaluate(() => ({
       modal: !document.getElementById('productOverlay').hidden,
