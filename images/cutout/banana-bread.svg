@@ -1,26 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Banana bread loaf and slice on a gold board, magazine cutout">
   <!-- print shadow -->
-  <path d="M33 348 L33 305 L52 304 L52 251 L53 176 L67 138 L105 116 L152 111 L200 117 L238 139 L252 176 L255 208 L266 195 L286 181 L314 178 L343 181 L363 196 L375 221 L376 304 L378 348 L376 364 L119 367 L34 362 Z" fill="#d9cbb6"/>
+  <path d="M33 348 L33 305 L52 304 L52 251 L52 175 L53 153 L66 131 L105 113 L152 109 L200 115 L239 135 L252 152 L255 208 L266 195 L286 181 L314 178 L343 181 L363 196 L375 221 L376 304 L378 348 L376 362 L119 364 L34 362 Z" fill="#d9cbb6"/>
   <!-- sticker rim (hand-cut, ragged) -->
-  <path d="M28 341 L28 298 L47 297 L47 244 L48 169 L62 131 L100 109 L147 104 L195 110 L233 132 L247 169 L250 201 L261 188 L281 174 L309 171 L338 174 L358 189 L370 214 L371 297 L373 341 L371 355 L286 357 L114 357 L29 355 Z" fill="#fffdf8"/>
+  <path d="M28 341 L28 298 L47 297 L47 244 L47 168 L48 146 L61 124 L100 106 L147 102 L195 108 L234 128 L247 145 L250 201 L261 188 L281 174 L309 171 L338 174 L358 189 L370 214 L371 297 L373 341 L371 355 L114 357 L29 355 Z" fill="#fffdf8"/>
   <!-- cutting board -->
   <rect x="36" y="306" width="328" height="32" rx="10" fill="#d9a94e"/>
   <path d="M36 330 L364 330 L364 338 Q364 348 354 348 L46 348 Q36 348 36 338 Z" fill="#a87d2e"/>
   <rect x="56" y="308" width="184" height="6" fill="#a87d2e"/>
   <rect x="252" y="308" width="110" height="6" fill="#a87d2e"/>
   <!-- loaf body -->
-  <rect x="56" y="170" width="184" height="138" rx="18" fill="#4a2f1c"/>
+  <rect x="56" y="156" width="184" height="152" rx="16" fill="#4a2f1c"/>
   <!-- halftone on the shaded right of the loaf -->
   <g fill="#2e1a0c">
-    <circle cx="227" cy="234" r="2.5"/><circle cx="214" cy="246" r="3"/>
-    <circle cx="226" cy="258" r="3"/><circle cx="214" cy="270" r="3"/>
-    <circle cx="226" cy="282" r="2.5"/><circle cx="214" cy="294" r="2.5"/>
+    <circle cx="227" cy="212" r="2.5"/><circle cx="214" cy="224" r="3"/>
+    <circle cx="226" cy="238" r="3"/><circle cx="214" cy="252" r="3"/>
+    <circle cx="226" cy="266" r="3"/><circle cx="214" cy="280" r="2.5"/>
+    <circle cx="226" cy="294" r="2.5"/>
   </g>
-  <!-- cream crown, wavy underside across the full loaf width -->
-  <path d="M56 200 L56 176 Q56 128 104 118 Q148 108 192 118 Q240 128 240 176 L240 200 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 z" fill="#f6ecdc"/>
-  <!-- split in the crown -->
-  <path d="M100 150 L134 138 L170 136 L204 146 L172 143 L136 146 Z" fill="#4a2f1c"/>
-  <!-- cut slice, face up -->
+  <!-- cream crown, wavy underside spanning the full loaf width -->
+  <path d="M56 170 L56 150 Q56 124 104 116 Q148 106 192 116 Q240 124 240 150 L240 170 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 q-11.5 23 -23 0 z" fill="#f6ecdc"/>
+  <!-- split down the crown -->
+  <path d="M104 148 L136 138 L172 136 L206 144 L174 141 L138 145 Z" fill="#4a2f1c"/>
+  <!-- cut slice lying face up -->
   <path d="M252 308 L252 216 Q252 190 280 182 Q307 176 334 182 Q362 190 362 216 L362 308 Z" fill="#4a2f1c"/>
   <path d="M262 298 L262 221 Q262 199 285 193 Q307 188 329 193 Q352 199 352 221 L352 298 Z" fill="#f6ecdc"/>
   <g fill="#2e1a0c">
