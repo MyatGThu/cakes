@@ -47,27 +47,38 @@
      Internal navigation sweeps a curved ink sheet up over the page; the next
      page arrives already covered (html.wipe-hold, set pre-paint) and the
      sheet lifts away with the destination's name on it. */
-  /* A torn strip of paper, not a smooth curve. Every state is built by the
-     same function, so all five paths share one point structure and morph
-     cleanly: a torn top edge (left to right) and a torn bottom edge (right
-     to left). Whichever edge is leading gets the jagged amplitude. */
-  function sheet(topY, topAmp, botY, botAmp) {
-    var d = "M 0 " + topY;
-    var i, jag;
-    for (i = 1; i <= 20; i++) {
-      jag = (i % 2 ? -1 : 1) * topAmp * (0.55 + (i % 3) * 0.22);
-      d += " L " + (i * 5) + " " + (topY + jag);
+  /* A torn strip of paper, not a smooth curve. The sheet's viewBox is
+     stretched to the whole viewport (preserveAspectRatio="none"), so the
+     tear needs MANY small irregular notches — a few big alternating teeth
+     read as a saw blade, not paper. One fixed jitter table keeps every
+     state's path identical in structure so they morph cleanly. */
+  var JAG_STEPS = 56;
+  var JAG = (function () {
+    var a = [], seed = 9241;
+    for (var i = 0; i <= JAG_STEPS; i++) {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      var r = (seed / 2147483648) * 2 - 1;            // -1 … 1
+      // occasional deeper nick, like a fibre catching
+      a.push(i % 7 === 3 ? r * 1.8 : r);
     }
-    for (i = 20; i >= 0; i--) {
-      jag = (i % 2 ? 1 : -1) * botAmp * (0.55 + (i % 3) * 0.22);
-      d += " L " + (i * 5) + " " + (botY + jag);
+    a[0] = 0; a[JAG_STEPS] = 0;                        // meet the edges cleanly
+    return a;
+  })();
+
+  function sheet(topY, topAmp, botY, botAmp) {
+    var i, d = "M 0 " + topY;
+    for (i = 1; i <= JAG_STEPS; i++) {
+      d += " L " + ((i * 100) / JAG_STEPS).toFixed(2) + " " + (topY + JAG[i] * topAmp).toFixed(2);
+    }
+    for (i = JAG_STEPS; i >= 0; i--) {
+      d += " L " + ((i * 100) / JAG_STEPS).toFixed(2) + " " + (botY + JAG[i] * botAmp).toFixed(2);
     }
     return d + " Z";
   }
   var WIPE_BELOW = sheet(100, 0, 100, 0);
-  var WIPE_RISE = sheet(52, 4.5, 100, 0);
+  var WIPE_RISE = sheet(52, 1.5, 100, 0);
   var WIPE_COVER = sheet(0, 0, 100, 0);
-  var WIPE_LIFT = sheet(0, 0, 45, 4.5);
+  var WIPE_LIFT = sheet(0, 0, 45, 1.5);
   var WIPE_GONE = sheet(0, 0, 0, 0);
   var wipe = document.querySelector(".page-wipe");
   var wipePath = wipe && wipe.querySelector("path");
