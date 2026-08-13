@@ -137,7 +137,7 @@ async function withGsap(page) {
   // cannot come back quietly: every page must offer all three destinations, and
   // every tab must stay thumb-sized.
   for (const [name, url] of [['landing', '/'], ['shop', '/shop.html'], ['about', '/about.html']]) {
-    for (const w of [360, 390]) {
+    for (const w of [320, 360, 390]) { // 320 is the tightest point in the header
       const mob = await browser.newPage({ viewport: { width: w, height: 844 } });
       track(mob, 'mob-' + name + '-' + w);
       await withGsap(mob);
@@ -162,6 +162,20 @@ async function withGsap(page) {
           hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
       });
+      // --header-h is a hand-maintained mirror of the header's real height. If
+      // the bar padding, nav font-size or monogram size drifts, the sticky tab
+      // strip stops meeting the header and nothing else here would notice.
+      if (name === 'shop') {
+        const dock = await mob.evaluate(() => {
+          const c = document.getElementById('categoryChips');
+          if (!c || c.hidden || getComputedStyle(c).position !== 'sticky') return null;
+          const h = document.querySelector('.site-header').getBoundingClientRect();
+          return Math.round(parseFloat(getComputedStyle(c).top) - h.height);
+        });
+        if (dock !== null && (dock < 4 || dock > 10)) {
+          errors.push('[mob-' + name + '-' + w + '] tab strip offset drifted: ' + dock);
+        }
+      }
       const bad = [];
       if (nav.headerNav !== 3 || !nav.reaches) bad.push('header nav incomplete');
       if (nav.footerNav !== 3) bad.push('footer nav incomplete');

@@ -171,10 +171,22 @@ the current page, the category tabs fill the active one as a stamp.
 
 The category filter lives in **`?category=`** (not the hash — `closeModal()`
 resets the URL to `pathname + search`, so a query param survives closing a cake
-and a hash would not). `renderChips()` builds the row once and afterwards only
-re-labels it; rebuilding with `innerHTML` destroyed the button being pressed and
-threw keyboard focus to `<body>`. An unknown category falls back to All rather
-than an empty grid, and `#gridStatus` announces the new count.
+and a hash would not), written with `replaceState` so a filter never costs a
+Back press to leave the site. `renderChips()` builds the row once and afterwards
+only re-labels it; rebuilding with `innerHTML` destroyed the button being
+pressed and threw keyboard focus to `<body>`. An unknown category falls back to
+All rather than an empty grid, and `#gridStatus` announces the new count.
+
+The strip is `position: sticky` under the header above 600px of viewport
+height, so a category can be changed from anywhere in the 3,500px grid instead
+of only from the top of the page. `--header-h` (68px, 81px at ≥600px wide) is
+the header's measured height plus the 6px printed drop `collage.css` hangs
+beneath it; `smoke3.js` asserts the two still meet. Sticky **on its own makes
+things worse** — a shorter grid shrinks the containing block and drags the
+stuck row off-screen with it, leaving nothing visible after a filter — so
+`keepResultsInView()` re-anchors the strip and the first result afterwards.
+Read its comment before touching it: the `requestAnimationFrame` and the
+one-frame `position: static` are both load-bearing measurements.
 
 ### Theming
 

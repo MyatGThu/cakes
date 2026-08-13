@@ -238,8 +238,10 @@
     });
   }
 
-  /* The filter lives in the URL so "here are the cupcakes" is a shareable link
-     and Back undoes a filter. ?theme= must survive alongside it. */
+  /* The filter lives in the URL so "here are the cupcakes" is a link Mia can
+     put in a story, and so it survives a refresh. replaceState, not pushState:
+     a filter should not cost a Back press to escape the site. ?theme= has to
+     survive alongside it. */
   function readCategoryFromUrl() {
     try {
       return new URLSearchParams(location.search).get("category") || "All";
@@ -286,6 +288,7 @@
         syncChips();
         renderGrid();
         writeCategoryToUrl();
+        keepResultsInView();
       });
       host.appendChild(b);
     });
@@ -296,6 +299,48 @@
     for (var i = 0; i < chips.length; i++) {
       chips[i].setAttribute("aria-pressed", String(chips[i].getAttribute("data-cat") === activeCategory));
     }
+  }
+
+  /* Filtering from deep in the grid strands you: the shorter grid ends above
+     where you were standing, the browser clamps the scroll, and you are left
+     in the next section with nothing to look at. Measured at 375x667 with the
+     strip sticky, filtering to a one-item category from the bottom of the menu
+     left ZERO tabs and ZERO cards on screen while the live region cheerfully
+     announced "1 item in Cupcakes". Making the row sticky does not fix this on
+     its own — it makes it worse, because a shrinking containing block drags
+     the stuck row up out of view with it.
+
+     The rAF is load-bearing, not tidiness: called straight after renderGrid()
+     this measures the old layout. And a stuck row reports its STUCK top from
+     getBoundingClientRect, so the resting position has to be read with
+     stickiness switched off for exactly one measurement — sticky does not
+     affect sibling layout, so the in-flow box is unchanged and the read is
+     exact. Scrolling is instant on purpose: this is a correction of a broken
+     position, not a journey. */
+  function keepResultsInView() {
+    var host = $("categoryChips");
+    if (!host || host.hidden || !window.requestAnimationFrame) return;
+    requestAnimationFrame(function () {
+      var cs = window.getComputedStyle(host);
+      var stuck = cs.position === "sticky";
+      var offset;
+      if (stuck) {
+        offset = parseFloat(cs.top) || 0;
+        host.style.position = "static";
+      } else {
+        var hd = document.querySelector(".site-header");
+        offset = (hd && window.getComputedStyle(hd).position === "sticky")
+          ? Math.round(hd.getBoundingClientRect().height) + 6
+          : 0;
+      }
+      var resting = host.getBoundingClientRect().top + window.pageYOffset;
+      if (stuck) host.style.position = "";
+      var target = Math.max(0, Math.round(resting - offset));
+      if (window.pageYOffset > target + 1) {
+        try { window.scrollTo({ top: target, behavior: "instant" }); }
+        catch (e) { window.scrollTo(0, target); }
+      }
+    });
   }
 
   function priceLabel(p) {
@@ -1001,6 +1046,9 @@
       renderShopInfo();
       activeCategory = readCategoryFromUrl();
       renderChips();
+      /* renderChips() coerces an unknown category back to All; this stops the
+         dead ?category=Pavlova travelling on through anyone's reshared link. */
+      writeCategoryToUrl();
       renderGrid();
       renderCart();
       wireUi();

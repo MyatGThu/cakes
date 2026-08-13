@@ -25,10 +25,16 @@
   --font-display: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
   --font-body: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* The sticky header's measured height plus the 6px printed drop collage.css
+     hangs under it. Anything that docks below the header reads this, and
+     smoke3 asserts the two still meet. */
+  --header-h: 68px;
 }
+@media (min-width: 600px) { :root { --header-h: 81px; } }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 84px; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
 /* App-like page morphs between landing / menu / about (Chrome, Safari;
@@ -227,6 +233,14 @@ a.brand:hover .brand-name { color: var(--accent-dark); }
   font-size: 14.5px;
   white-space: nowrap;
   flex: none;
+  /* Measured 41px on a phone — the last sub-44px target, and it is the CTA.
+     min-height rather than more padding, so the floor survives a font
+     fallback with different metrics. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  text-decoration: none;
 }
 /* Ungated, this stuck in its hover colour after a tap on a touch screen. */
 @media (hover: hover) { .cart-button:hover { background: var(--accent-dark); } }
@@ -366,6 +380,26 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
    sight — a second row is visible, a horizontal scroller is not. */
 @media (max-width: 599px) {
   .chip { padding: 11px 11px; font-size: 12px; letter-spacing: 0.06em; }
+}
+/* The tab row is the menu's own navigation, but it sat at y≈470 on a 6,500px
+   page — so on a phone you could filter once, from the top, and after that you
+   were committed: changing your mind meant scrolling the whole grid back up.
+   Sticky fixes that with no scroll listener and no observer, because it is
+   bounded by its containing block (.wrap): the row rides down the grid and
+   lets go by itself where the menu section ends, and does nothing at all on
+   the two pages that have no tabs.
+   This works only while no ancestor scrolls or transforms — if `overflow-x:
+   hidden` ever lands on body/main/.wrap to chase a scrollbar, it dies quietly.
+   Short viewports keep the plain scrolling row: on a landscape phone the
+   header plus the strip would eat a third of the screen. */
+@media (min-height: 600px) {
+  .chips {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 30; /* below .site-header (40), above the cards */
+    background: var(--bg); /* opaque, or cards slide up through the labels */
+    padding-top: 6px;
+  }
 }
 
 /* ---------- Product grid ---------- */

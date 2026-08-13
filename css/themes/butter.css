@@ -3,7 +3,7 @@
   --bg: #fbf3dc;
   --surface: #fffbef;
   --ink: #3d2a1a;
-  --ink-soft: #83705c;
+  --ink-soft: #7d6a57; /* #83705c was 4.2:1 on --bg — under the 4.5 floor */
   --line: #eddfc2;
   --accent: #6b4226;
   --accent-dark: #52301a;

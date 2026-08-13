@@ -29,14 +29,11 @@
     .theme-card .btn { margin-top: 6px; }
     .picker-note { text-align: center; color: var(--ink-soft); font-size: 14px; margin-top: 34px; }
     .picker-note a { color: var(--accent); }
-    /* Picking a theme should not be the only way off this page. */
-    .picker-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 2px; margin-top: 40px; }
-    .picker-nav a {
-      color: var(--ink); text-decoration: none; font-weight: 700; font-size: 13px;
-      letter-spacing: 0.12em; text-transform: uppercase; padding: 13px 14px;
-      border-bottom: 2px solid transparent;
-    }
-    @media (hover: hover) { .picker-nav a:hover { border-bottom-color: var(--accent); } }
+    /* Picking a theme should not be the only way off this page. Reuse the
+       footer's nav rather than minting a fourth copy of the same component —
+       it only needs its own centring, which the site footer gets from
+       text-align on a parent this page does not have. */
+    .footer-nav { justify-content: center; margin-top: 40px; }
   </style>
 </head>
 <body>
@@ -71,7 +68,7 @@
         <h2>Butter &amp; Cocoa</h2>
         <p>Warm nostalgia — butter-yellow ground and cocoa-brown accents. Grandma's kitchen, in the best way.</p>
         <div class="swatches"><span style="background:#fbf3dc"></span><span style="background:#6b4226"></span><span style="background:#3d2a1a"></span><span style="background:#f5ead3"></span></div>
-        <a class="btn btn-primary" href="shop.html?theme=butter">Browse in Butter Paper</a>
+        <a class="btn btn-primary" href="shop.html?theme=butter">Browse in Butter &amp; Cocoa</a>
       </div>
 
       <div class="theme-card">
@@ -82,7 +79,7 @@
       </div>
     </div>
 
-    <nav class="picker-nav" aria-label="Aurette">
+    <nav class="footer-nav" aria-label="Aurette">
       <a href="index.html">Home</a>
       <a href="shop.html">Menu</a>
       <a href="about.html">About</a>

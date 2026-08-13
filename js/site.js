@@ -4,10 +4,19 @@
 window.Aurette = (function () {
   "use strict";
 
+  /* The values data/settings.json ships with, until the owner sets her real
+     ones through admin.html. A tappable link to a 555 number or to
+     orders@example.com is worse than no link at all, so these stay as plain
+     text and quietly become links the moment they are replaced. */
+  var PLACEHOLDERS = ["15551234567", "orders@example.com"];
+  function isPlaceholder(v) {
+    return PLACEHOLDERS.indexOf(String(v || "").trim().toLowerCase()) !== -1;
+  }
+
   /* The footer is the last thing a phone visitor reaches, and on a small screen
      it is where people look for a way to contact the bakery. It used to be set
      with textContent, so the handle and the email address were plain words you
-     could not tap. Every channel here is a real link. */
+     could not tap. */
   function renderFooterContact(host, settings) {
     if (!host) return;
     var links = [];
@@ -20,8 +29,10 @@ window.Aurette = (function () {
       });
     }
     var wa = String(settings.whatsappNumber || "").replace(/[^0-9]/g, "");
-    if (wa) links.push({ href: "https://wa.me/" + wa, text: "WhatsApp", external: true });
-    if (settings.orderEmail) {
+    if (wa && !isPlaceholder(wa)) {
+      links.push({ href: "https://wa.me/" + wa, text: "WhatsApp", external: true });
+    }
+    if (settings.orderEmail && !isPlaceholder(settings.orderEmail)) {
       links.push({ href: "mailto:" + settings.orderEmail, text: settings.orderEmail });
     }
     if (!links.length) return; // keep whatever the static markup said
