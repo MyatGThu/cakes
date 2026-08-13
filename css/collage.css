@@ -193,10 +193,15 @@ body::after {
    `outline: 2px solid var(--accent)` focus ring never appears on it. Depth and
    focus therefore both have to be drawn INSIDE the cut, with inset shadows. */
 .btn { border-radius: 0; clip-path: polygon(1% 4%, 100% 0%, 99% 96%, 0% 100%); }
-.cart-button { border-radius: 0; clip-path: polygon(1% 5%, 100% 0%, 99% 95%, 0% 100%); }
+/* The slot is a <button> on shop.html and an <a> elsewhere; without this the
+   anchor flavour arrives underlined and the two stop looking like one control. */
+.cart-button { border-radius: 0; text-decoration: none; clip-path: polygon(1% 5%, 100% 0%, 99% 95%, 0% 100%); }
 .btn-primary, .cart-button {
   box-shadow: inset -3px -4px 0 color-mix(in srgb, var(--ink) 14%, transparent);
 }
+/* The cut bites into the left and right edges, which sliced a 1px border open
+   on three sides — so the outline button draws its edge inside the cut too. */
+.btn-outline { border-color: transparent; box-shadow: inset 0 0 0 2px currentColor; }
 
 /* Two nested rings so the indicator stays visible whatever the button's own
    colour is: the paper ring reads on dark fills, the ink ring on light ones. */

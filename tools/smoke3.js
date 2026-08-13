@@ -132,16 +132,47 @@ async function withGsap(page) {
   await rm.close();
 
   // ---- Mobile all three ----
+  // The nav used to be display:none below 720px with nothing in its place, which
+  // made shop.html a dead end on a phone. These assertions are here so that
+  // cannot come back quietly: every page must offer all three destinations, and
+  // every tab must stay thumb-sized.
   for (const [name, url] of [['landing', '/'], ['shop', '/shop.html'], ['about', '/about.html']]) {
-    const mob = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    track(mob, 'mob-' + name);
-    await withGsap(mob);
-    await mob.goto('http://localhost:8098' + url, { waitUntil: 'networkidle' });
-    await mob.waitForTimeout(500);
-    const hs = await mob.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
-    console.log('mobile', name, 'h-scroll:', hs);
-    if (name === 'landing') await mob.screenshot({ path: OUT + '/v4-mobile.png' });
-    await mob.close();
+    for (const w of [360, 390]) {
+      const mob = await browser.newPage({ viewport: { width: w, height: 844 } });
+      track(mob, 'mob-' + name + '-' + w);
+      await withGsap(mob);
+      await mob.goto('http://localhost:8098' + url, { waitUntil: 'networkidle' });
+      await mob.waitForTimeout(500);
+      const nav = await mob.evaluate(() => {
+        const seen = (sel) => Array.from(document.querySelectorAll(sel))
+          .filter(a => a.offsetParent !== null)
+          .map(a => (a.getAttribute('href') || '').split('#')[0].split('?')[0]);
+        const head = seen('.nav-links a'), foot = seen('.footer-nav a');
+        const wanted = ['index.html', 'shop.html', 'about.html'];
+        const chips = Array.from(document.querySelectorAll('.chip'))
+          .map(c => c.getBoundingClientRect());
+        return {
+          headerNav: head.length,
+          reaches: wanted.every(w => head.includes(w)),
+          footerNav: foot.length,
+          brandVisible: document.querySelector('.brand').getBoundingClientRect().x >= 0,
+          smallestTab: chips.length
+            ? Math.round(Math.min(...chips.map(c => Math.min(c.width, c.height))))
+            : null,
+          hScroll: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+        };
+      });
+      const bad = [];
+      if (nav.headerNav !== 3 || !nav.reaches) bad.push('header nav incomplete');
+      if (nav.footerNav !== 3) bad.push('footer nav incomplete');
+      if (!nav.brandVisible) bad.push('brand pushed off-screen');
+      if (nav.smallestTab !== null && nav.smallestTab < 44) bad.push('tab under 44px: ' + nav.smallestTab);
+      if (nav.hScroll) bad.push('horizontal scroll');
+      console.log('mobile', name, w + 'px:', JSON.stringify(nav), bad.length ? '❌ ' + bad.join(', ') : '✅');
+      if (bad.length) errors.push('[mob-' + name + '-' + w + '] ' + bad.join(', '));
+      if (name === 'landing' && w === 390) await mob.screenshot({ path: OUT + '/v4-mobile.png' });
+      await mob.close();
+    }
   }
 
   console.log('\nERRORS:', errors.length ? '\n' + errors.join('\n') : 'none ✅');

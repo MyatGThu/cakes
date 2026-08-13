@@ -111,11 +111,29 @@ chain (cheaper, crisper, and it survives the no-filter rule). `images/flat/`
 holds the previous plainer set, still valid as fallback art.
 
 **Page** — `css/collage.css` loads last on every page and turns the furniture
-into paper: `.scrap` (a torn sheet; note it uses `filter: drop-shadow` because
-`clip-path` would clip a `box-shadow`), `.tape` (multiply-blended strips),
-`.clipping` (stamped labels), `.scribble` (handwriting), plus one fixed
-body-level grain overlay. Cards, buttons and headers are re-skinned there, not
-in `style.css`.
+into paper: `.scrap` (a torn sheet, shadowed with `filter: drop-shadow` so the
+shadow follows the silhouette), `.tape` (blended strips), `.clipping` (stamped
+labels), `.scribble` (handwriting), plus one fixed body-level grain overlay.
+Cards, buttons and headers are re-skinned there, not in `style.css`.
+
+Two traps this layer sets, both already paid for — don't re-introduce them:
+
+- **`clip-path` clips everything the element paints outside the polygon** —
+  `box-shadow`, `filter: drop-shadow` *and* `outline` alike. So a clipped
+  control can carry no printed drop, and more seriously the global
+  `outline: 2px solid var(--accent)` focus ring vanishes from it. Every clipped
+  interactive element (`.btn`, `.cart-button`) draws depth and focus with
+  **inset** shadows instead. When a new component wants the cut-paper edge but
+  needs a real outline, put the `clip-path` on a `::before` background layer and
+  leave the element's own box unclipped — that is what the active `.chip` does.
+- **The paper colours are derived, never hardcoded.** `--paper`, `--kraft`,
+  `--print-shadow` and `--tape` are `color-mix()`ed from `--surface`/`--bg`/
+  `--ink`/`--gold` at the top of `collage.css`. A literal `#fffdf8` paints a
+  white header with near-white type on the dark Midnight theme.
+
+A rotated block swings its whole line box, so anything tilted (`.scribble`)
+must shrink to its content (`display: table`) or the tilt alone will drop it
+onto the paragraph below at wide viewports.
 
 Three type roles, each with one job: **Archivo** (`--font-display`/
 `--font-body`) for structure, **Fraunces** (`--font-serif`) for the editorial
@@ -125,6 +143,38 @@ small; keep it at 20px+ and slightly rotated.
 
 `images/brand/logo-original-150.png` is the owner's untouched logo — every
 other brand asset is a Lanczos resample of it; never redraw or "enhance" it.
+
+### Navigation
+
+Three destinations (Home / Menu / About) plus the order. That is small enough
+that the nav is simply **always visible** — there is no hamburger, no drawer, no
+disclosure widget to build or to keep accessible. Below 600px the wordmark folds
+down to the monogram to pay for the room (it truncated to "Aurette by…" at those
+widths anyway); the `.brand` anchor keeps its name from an `aria-label`. The
+same three destinations repeat in every footer, which is where people look once
+they have read to the end. **Do not put the nav behind a breakpoint again** —
+`smoke3.js` asserts all three links are reachable at 360px and 390px on every
+page, plus a visible brand and no horizontal scroll.
+
+One rule keeps the header honest: **one slot, one meaning.** The dark button on
+the right is always the order — a real cart `<button>` on `shop.html`, and on the
+other pages an `<a>` that says "Order Now" while empty and becomes "Your Order"
+pointing at `shop.html#order` (which `openFromHash()` opens straight into the
+drawer) once something is in it. It is not a second route to the menu; the nav
+link "Menu" is that. Repetition that *is* correct — hero and section CTAs, the
+logo linking home alongside a nav "Home" — is deliberate, so don't
+"de-duplicate" it.
+
+Two "you are here" languages, one per component, so the two horizontal rows of
+words on `shop.html` can't be mistaken for each other: the site nav underlines
+the current page, the category tabs fill the active one as a stamp.
+
+The category filter lives in **`?category=`** (not the hash — `closeModal()`
+resets the URL to `pathname + search`, so a query param survives closing a cake
+and a hash would not). `renderChips()` builds the row once and afterwards only
+re-labels it; rebuilding with `innerHTML` destroyed the button being pressed and
+threw keyboard focus to `<body>`. An unknown category falls back to All rather
+than an empty grid, and `#gridStatus` announces the new count.
 
 ### Theming
 

@@ -28,6 +28,11 @@ for the owner to maintain day-to-day.
   is two JSON files in [`data/`](data/).
 - **Everything degrades gracefully** — reduced motion, JS disabled, or a
   blocked CDN all get a complete, calm, static site.
+- **Navigation that is actually there on a phone** — three destinations do not
+  need a hamburger, so Home / Menu / About stay visible at every width down to
+  320px (the wordmark folds to the monogram to make room) and repeat in the
+  footer. Category tabs are thumb-sized, live in `?category=` so a filtered
+  menu can be shared, and keep keyboard focus when you switch them.
 - **Themes** (`themes.html`) — a picker that previews alternate palettes via
   `?theme=` (persisted per device) for choosing Aurette's look.
 
@@ -45,6 +50,8 @@ place an order.
 index.html + js/landing.js   ← cinematic landing (flying ingredients, scroll cake)
 shop.html + js/store.js      ← the menu, cart and ordering flow
 about.html                   ← Mia's story (parchment / torn-paper treatment)
+js/site.js                   ← the few things every page shares (footer contact
+                               links), loaded ahead of landing.js / store.js
 js/motion.js                 ← the whole GSAP layer: deal-in scatter, wobble,
                                parallax, cake assembly, torn page wipe, magnetic
                                buttons, marquee — pure progressive enhancement

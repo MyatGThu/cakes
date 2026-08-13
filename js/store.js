@@ -920,7 +920,21 @@
     tiles.forEach(function (t) {
       var el = document.createElement(t.href ? "a" : "div");
       el.className = "ig-tile";
-      if (t.href) { el.href = t.href; el.target = "_blank"; el.rel = "noopener"; }
+      if (t.href) {
+        el.href = t.href;
+        if (t.product) {
+          /* A real href, so the tile can be copied and shared and still lands
+             on the cake via openFromHash — but the click opens the modal here
+             rather than reloading. */
+          el.addEventListener("click", function (e) {
+            e.preventDefault();
+            openModal(t.product);
+          });
+        } else {
+          el.target = "_blank";
+          el.rel = "noopener";
+        }
+      }
       el.innerHTML =
         '<img loading="lazy" width="400" height="400" alt="' + escapeHtml(t.alt || "") + '" src="' + escapeHtml(t.image) + '">' +
         (t.caption ? '<span class="veil"><span>' + escapeHtml(t.caption) + "</span></span>" : "");
@@ -932,9 +946,17 @@
   function igFallbackGallery() {
     $("igTitle").textContent = "This week's bakes";
     $("igSub").textContent = "A taste of what leaves the kitchen.";
+    /* These tiles carry a hover caption and read as tappable, so they have to
+       be: each one opens its cake instead of being eight dead photographs at
+       the bottom of the page. */
     var tiles = PRODUCTS.filter(function (p) { return p.available !== false && p.image; })
       .slice(0, 8)
-      .map(function (p) { return { image: p.image, alt: p.name, caption: p.name }; });
+      .map(function (p) {
+        return {
+          image: p.image, alt: p.name, caption: p.name,
+          href: "#cake-" + encodeURIComponent(p.id), product: p,
+        };
+      });
     renderIgTiles(tiles);
   }
 
