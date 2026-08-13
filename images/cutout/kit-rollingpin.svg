@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Wooden rolling pin, magazine cutout">
+  <g transform="rotate(-11 200 200)">
+    <!-- print shadow -->
+    <path d="M46 207 L54 180 L86 184 L92 191 L97 169 L312 169 L317 191 L324 183 L354 179 L363 208 L354 237 L324 233 L317 225 L312 247 L97 247 L92 225 L86 232 L54 236 Z" fill="#d9cbb6"/>
+    <!-- sticker rim (hand-cut, ragged) -->
+    <path d="M42 199 L47 175 L68 170 L82 176 L87 182 L93 160 L200 163 L308 161 L313 182 L319 175 L338 170 L358 176 L359 200 L357 224 L338 230 L319 225 L313 218 L308 240 L200 238 L93 239 L87 218 L82 224 L68 230 L47 226 Z" fill="#fffdf8"/>
+    <!-- barrel -->
+    <rect x="100" y="172" width="200" height="56" rx="28" fill="#d9a94e"/>
+    <!-- handle rods -->
+    <rect x="72" y="190" width="30" height="20" rx="10" fill="#2e1a0c"/>
+    <rect x="298" y="190" width="30" height="20" rx="10" fill="#2e1a0c"/>
+    <!-- barrel end caps -->
+    <rect x="94" y="168" width="22" height="64" rx="11" fill="#a87d2e"/>
+    <rect x="284" y="168" width="22" height="64" rx="11" fill="#a87d2e"/>
+    <!-- handles -->
+    <rect x="50" y="178" width="30" height="44" rx="13" fill="#4a2f1c"/>
+    <rect x="320" y="178" width="30" height="44" rx="13" fill="#4a2f1c"/>
+    <!-- halftone along the shaded lower edge of the barrel -->
+    <g fill="#a87d2e">
+      <circle cx="142" cy="217" r="3"/><circle cx="160" cy="220" r="2.5"/>
+      <circle cx="178" cy="217" r="3"/><circle cx="196" cy="220" r="2.5"/>
+      <circle cx="214" cy="217" r="3"/><circle cx="232" cy="220" r="2.5"/>
+      <circle cx="250" cy="217" r="3"/><circle cx="266" cy="219" r="2.5"/>
+    </g>
+  </g>
+</svg>

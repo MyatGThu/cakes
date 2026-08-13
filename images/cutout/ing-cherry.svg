@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Cherry, magazine cutout">
+  <!-- print shadow -->
+  <path d="M226 131 L270 157 L297 200 L308 249 L294 298 L264 339 L218 361 L168 367 L121 348 L83 314 L66 266 L66 215 L90 170 L127 136 L146 63 L186 53 L218 59 L244 77 L285 69 L321 63 L335 73 L328 86 L303 92 L261 109 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M221 124 L265 150 L292 193 L303 242 L289 291 L259 332 L213 354 L163 360 L116 341 L78 307 L61 259 L61 208 L85 163 L122 129 L141 56 L181 46 L213 52 L239 70 L280 62 L316 56 L330 66 L323 79 L298 85 L256 102 Z" fill="#fffdf8"/>
+  <!-- leaf -->
+  <path d="M248 100 C234 60, 192 44, 150 60 C162 98, 206 114, 248 100 Z" fill="#356b44"/>
+  <!-- stem -->
+  <path d="M187 140 C220 99, 246 76, 315 65 L321 71 C250 82, 226 105, 193 144 Z" fill="#4a2f1c"/>
+  <!-- cherry body -->
+  <circle cx="180" cy="238" r="114" fill="#8e2440"/>
+  <!-- flat gleam, upper left -->
+  <path d="M121 199 C116 182, 130 166, 149 168 C160 178, 152 198, 133 203 Z" fill="#f3d7de"/>
+  <!-- halftone crescent on the shaded lower right -->
+  <g fill="#4a2f1c">
+    <circle cx="273" cy="263" r="3"/><circle cx="259" cy="293" r="3.5"/><circle cx="235" cy="317" r="3"/><circle cx="205" cy="331" r="2.5"/>
+    <circle cx="251" cy="271" r="2.5"/><circle cx="235" cy="293" r="3"/><circle cx="213" cy="309" r="2.5"/>
+    <circle cx="229" cy="272" r="2"/><circle cx="214" cy="287" r="2"/>
+  </g>
+</svg>

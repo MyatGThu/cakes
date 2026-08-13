@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Oven mitt, magazine cutout">
+  <!-- print shadow -->
+  <path d="M143 348 L219 357 L283 368 L299 355 L311 293 L327 222 L331 154 L322 99 L296 60 L245 40 L196 39 L162 65 L136 114 L139 116 L130 112 L90 118 L74 143 L84 174 L114 201 L127 219 L124 283 L126 335 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M138 341 L214 350 L278 361 L294 348 L306 286 L322 215 L326 147 L317 92 L291 53 L240 33 L191 32 L157 58 L131 107 L134 109 L125 105 L85 110 L69 136 L79 167 L109 193 L122 212 L119 276 L121 328 Z" fill="#fffdf8"/>
+  <!-- mitt body -->
+  <path d="M139 332 L273 350 Q285 352 288 340 L297 296 L306 246 Q323 161 314 108 Q305 60 243 43 Q180 26 154 76 Q144 95 139 117 Q123 109 104 114 Q76 120 77 143 Q78 165 107 180 Q125 190 131 211 L129 272 L127 317 Q126 330 139 332 Z" fill="#b03052"/>
+  <!-- halftone down the shaded right flank -->
+  <g fill="#8e2440"><circle cx="299" cy="168" r="3.0"/><circle cx="306" cy="183" r="2.6"/><circle cx="293" cy="193" r="3.0"/><circle cx="303" cy="208" r="2.6"/><circle cx="292" cy="219" r="3.0"/><circle cx="298" cy="233" r="2.6"/><circle cx="285" cy="243" r="2.6"/><circle cx="292" cy="256" r="3.0"/><circle cx="277" cy="263" r="2.0"/></g>
+  <!-- cuff band -->
+  <path d="M129 268 L129 272 L127 317 Q126 330 139 332 L273 350 Q285 352 288 340 L297 296 L298 292 Z" fill="#f6ecdc"/>
+  <!-- halftone on the shaded end of the cuff -->
+  <g fill="#d9cbb6"><circle cx="276" cy="309" r="2.6"/><circle cx="278" cy="328" r="2.6"/><circle cx="266" cy="325" r="2.0"/></g>
+  <!-- palm stitch dashes -->
+  <rect x="172" y="207" width="63" height="15" rx="7" transform="rotate(8 203 215)" fill="#f6ecdc"/>
+  <rect x="167" y="239" width="63" height="15" rx="7" transform="rotate(8 199 247)" fill="#f6ecdc"/>
+</svg>

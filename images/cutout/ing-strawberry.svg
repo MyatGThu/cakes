@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Strawberry, magazine cutout">
+  <!-- print shadow -->
+  <path d="M206 42 L260 129 L339 85 L319 179 L350 211 L348 249 L339 280 L321 315 L283 342 L249 363 L204 376 L160 363 L125 343 L89 314 L71 282 L61 249 L59 212 L89 179 L70 86 L150 129 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M201 35 L255 122 L334 78 L314 172 L345 204 L343 242 L334 273 L316 308 L278 335 L244 356 L199 369 L155 356 L120 336 L84 307 L66 275 L56 242 L54 205 L84 172 L65 79 L145 122 Z" fill="#fffdf8"/>
+  <!-- berry body -->
+  <path d="M200 138 C272 138 336 176 336 230 C336 292 276 330 200 358 C124 330 64 292 64 230 C64 176 128 138 200 138 Z" fill="#b03052"/>
+  <!-- shaded right flank -->
+  <path d="M325 193 C332 205 336 218 336 230 C336 292 276 330 200 358 C258 322 300 276 312 232 C317 213 321 200 325 193 Z" fill="#8e2440"/>
+  <!-- halftone on the shaded lower right -->
+  <g fill="#8e2440">
+    <circle cx="296" cy="206" r="3"/><circle cx="286" cy="234" r="3"/><circle cx="272" cy="264" r="3"/>
+    <circle cx="292" cy="268" r="2.5"/><circle cx="258" cy="296" r="3"/><circle cx="276" cy="300" r="2.5"/>
+    <circle cx="234" cy="316" r="3"/>
+  </g>
+  <!-- three-wedge crown -->
+  <path d="M76 88 L140 142 L200 46 L260 142 L324 88 L300 158 C258 174 142 174 100 158 Z" fill="#356b44"/>
+  <!-- seeds -->
+  <g fill="#f6ecdc">
+    <circle cx="150" cy="196" r="7"/><circle cx="250" cy="196" r="7"/><circle cx="200" cy="232" r="7"/>
+    <circle cx="110" cy="252" r="7"/><circle cx="290" cy="250" r="7"/><circle cx="200" cy="296" r="7"/>
+    <circle cx="152" cy="326" r="7"/><circle cx="248" cy="326" r="7"/>
+  </g>
+</svg>

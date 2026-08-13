@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Mixing bowl of batter with a wooden spoon, magazine cutout">
+  <!-- print shadow -->
+  <path d="M48 174 L92 142 L146 134 L201 130 L260 135 L297 103 L320 73 L338 51 L355 55 L359 69 L349 87 L327 117 L309 142 L350 161 L363 187 L357 245 L337 300 L306 343 L252 373 L205 379 L158 373 L104 343 L73 300 L53 245 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M43 167 L87 135 L141 127 L196 123 L255 128 L292 96 L315 66 L333 44 L350 48 L354 62 L344 80 L322 110 L304 135 L345 154 L358 180 L352 238 L332 293 L301 336 L247 366 L200 372 L153 366 L99 336 L68 293 L48 238 Z" fill="#fffdf8"/>
+  <!-- bowl body -->
+  <path d="M52 178 C52 305 118 362 200 362 C282 362 348 305 348 178 Z" fill="#b9bcc0"/>
+  <!-- shaded right flank -->
+  <path d="M348 178 C348 305 282 362 200 362 C258 352 302 296 306 178 Z" fill="#7f8489"/>
+  <!-- halftone along the shade break -->
+  <g fill="#7f8489">
+    <circle cx="287" cy="230" r="3"/><circle cx="293" cy="240" r="2.5"/><circle cx="280" cy="252" r="2.5"/>
+    <circle cx="274" cy="282" r="3"/><circle cx="262" cy="306" r="2.5"/>
+  </g>
+  <!-- rim -->
+  <ellipse cx="200" cy="178" rx="148" ry="46" fill="#7f8489"/>
+  <!-- batter -->
+  <ellipse cx="200" cy="184" rx="124" ry="33" fill="#f6ecdc"/>
+  <!-- wooden spoon -->
+  <ellipse cx="250" cy="182" rx="24" ry="17" transform="rotate(-54 250 182)" fill="#4a2f1c"/>
+  <path d="M244 174 L260 186 L344 66 L333 56 Z" fill="#4a2f1c"/>
+  <circle cx="338" cy="61" r="8" fill="#4a2f1c"/>
+  <path d="M260 186 L344 66 L340 63 L256 183 Z" fill="#2e1a0c"/>
+</svg>

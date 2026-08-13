@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Stack of chocolate chip cookies, magazine cutout">
+  <!-- print shadow -->
+  <path d="M89 124 L167 56 L233 91 L242 130 L289 188 L351 238 L363 273 L359 315 L362 345 L356 363 L133 364 L61 365 L41 356 L43 335 L59 289 L67 221 L79 159 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M84 117 L99 83 L127 60 L162 49 L201 61 L228 84 L237 123 L252 168 L284 181 L320 197 L346 231 L358 266 L354 308 L357 338 L351 356 L300 358 L214 355 L128 357 L56 358 L36 349 L38 328 L54 282 L62 214 L74 152 Z" fill="#fffdf8"/>
+  <!-- bottom cookie of the stack (edge + face) -->
+  <circle cx="160" cy="282" r="68" fill="#a87d2e"/>
+  <circle cx="156" cy="274" r="68" fill="#d9a94e"/>
+  <!-- middle cookie -->
+  <circle cx="144" cy="208" r="68" fill="#a87d2e"/>
+  <circle cx="140" cy="200" r="68" fill="#d9a94e"/>
+  <!-- top cookie -->
+  <circle cx="164" cy="134" r="68" fill="#a87d2e"/>
+  <circle cx="160" cy="126" r="68" fill="#d9a94e"/>
+  <!-- cookie leaning against the stack -->
+  <circle cx="280" cy="272" r="70" fill="#a87d2e"/>
+  <circle cx="276" cy="264" r="70" fill="#d9a94e"/>
+  <!-- chips: top cookie face -->
+  <g fill="#2e1a0c">
+    <circle cx="132" cy="98" r="7"/><circle cx="182" cy="94" r="7"/><circle cx="158" cy="132" r="7"/>
+    <circle cx="118" cy="142" r="7"/><circle cx="196" cy="140" r="7"/><circle cx="166" cy="170" r="7"/>
+  </g>
+  <!-- chips: middle cookie face -->
+  <g fill="#2e1a0c">
+    <circle cx="96" cy="218" r="7"/><circle cx="132" cy="230" r="7"/><circle cx="172" cy="220" r="7"/>
+    <circle cx="114" cy="250" r="7"/><circle cx="152" cy="254" r="7"/><circle cx="182" cy="238" r="7"/>
+  </g>
+  <!-- chips: bottom cookie face -->
+  <g fill="#2e1a0c">
+    <circle cx="110" cy="296" r="7"/><circle cx="150" cy="310" r="7"/><circle cx="192" cy="296" r="7"/>
+    <circle cx="124" cy="316" r="7"/><circle cx="176" cy="318" r="7"/>
+  </g>
+  <!-- chips: leaning cookie face -->
+  <g fill="#2e1a0c">
+    <circle cx="248" cy="236" r="7"/><circle cx="298" cy="232" r="7"/><circle cx="270" cy="276" r="7"/>
+    <circle cx="236" cy="282" r="7"/><circle cx="304" cy="276" r="7"/><circle cx="280" cy="312" r="7"/>
+  </g>
+  <!-- halftone crumbs beside the stack -->
+  <g fill="#a87d2e">
+    <circle cx="60" cy="318" r="3"/><circle cx="72" cy="306" r="2.5"/><circle cx="78" cy="322" r="3"/>
+    <circle cx="64" cy="300" r="2"/><circle cx="86" cy="312" r="2.5"/>
+  </g>
+  <!-- halftone on the shaded right of the leaning cookie -->
+  <g fill="#a87d2e">
+    <circle cx="316" cy="296" r="3"/><circle cx="324" cy="282" r="2.5"/><circle cx="310" cy="310" r="2.5"/>
+  </g>
+  <!-- ink plate strip -->
+  <rect x="46" y="332" width="304" height="18" rx="9" fill="#241a14"/>
+</svg>

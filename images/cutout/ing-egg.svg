@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Cracked egg, magazine cutout">
+  <!-- print shadow -->
+  <path d="M206 73 L250 88 L278 114 L291 157 L335 160 L353 204 L346 278 L307 331 L259 359 L204 358 L151 360 L103 335 L64 274 L57 208 L75 160 L103 157 L132 116 L162 85 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M201 66 L245 81 L273 107 L286 150 L303 156 L330 153 L348 197 L341 271 L302 324 L254 352 L199 351 L146 353 L98 328 L59 267 L52 201 L70 153 L98 150 L114 154 L127 109 L157 78 Z" fill="#fffdf8"/>
+  <!-- yolk -->
+  <circle cx="200" cy="152" r="78" fill="#d9a94e"/>
+  <!-- yolk shade, upper right -->
+  <path d="M278 152 A78 78 0 0 0 239 85 Q250 126 278 152 Z" fill="#a87d2e"/>
+  <!-- flat paper highlight -->
+  <rect x="150" y="100" width="36" height="16" rx="8" fill="#fffdf8"/>
+  <!-- shell bottom half, jagged cracked rim spanning the full width -->
+  <path d="M60 200 L78 168 L95 209 L113 161 L130 206 L148 170 L165 210 L183 158 L200 207 L218 164 L235 211 L253 160 L270 206 L288 169 L305 209 L323 165 L340 200 C338 292 290 344 200 344 C110 344 62 292 60 200 Z" fill="#f6ecdc"/>
+  <!-- hairline fracture -->
+  <path d="M162 209 L168 209 L173 246 L169 264 L165 242 Z" fill="#d9cbb6"/>
+  <!-- halftone on the shaded right of the shell -->
+  <g fill="#d9cbb6">
+    <circle cx="320" cy="232" r="3"/><circle cx="326" cy="250" r="3"/><circle cx="319" cy="262" r="3"/>
+    <circle cx="314" cy="272" r="3"/><circle cx="305" cy="288" r="3"/>
+    <circle cx="295" cy="302" r="2.5"/><circle cx="283" cy="314" r="2.5"/>
+  </g>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Three cupcakes in a row, magazine cutout">
+  <!-- print shadow -->
+  <path d="M58 361 L37 263 L62 165 L77 135 L128 137 L140 167 L152 220 L160 129 L187 64 L205 58 L223 65 L250 130 L258 221 L270 166 L333 135 L348 165 L374 264 L352 362 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M53 354 L32 256 L57 158 L72 128 L123 130 L135 160 L147 213 L143 187 L155 122 L168 92 L182 57 L200 51 L218 58 L232 93 L245 123 L257 186 L253 214 L265 159 L277 130 L328 128 L343 158 L369 257 L347 355 Z" fill="#fffdf8"/>
+  <!-- left cupcake: gold pleated liner + blush swirl -->
+  <path d="M48 272 H144 L133 344 H59 Z" fill="#d9a94e"/>
+  <rect x="70" y="280" width="4" height="58" fill="#fffdf8"/>
+  <rect x="94" y="280" width="4" height="58" fill="#fffdf8"/>
+  <rect x="118" y="280" width="4" height="58" fill="#fffdf8"/>
+  <ellipse cx="96" cy="258" rx="58" ry="30" fill="#f3d7de"/>
+  <ellipse cx="96" cy="210" rx="45" ry="28" fill="#f3d7de"/>
+  <ellipse cx="96" cy="164" rx="32" ry="26" fill="#f3d7de"/>
+  <!-- right cupcake: gold pleated liner + chocolate swirl -->
+  <path d="M256 272 H352 L341 344 H267 Z" fill="#d9a94e"/>
+  <rect x="278" y="280" width="4" height="58" fill="#fffdf8"/>
+  <rect x="302" y="280" width="4" height="58" fill="#fffdf8"/>
+  <rect x="326" y="280" width="4" height="58" fill="#fffdf8"/>
+  <!-- halftone on the shaded right of this liner -->
+  <g fill="#a87d2e">
+    <circle cx="344" cy="286" r="2.5"/><circle cx="338" cy="296" r="3"/>
+    <circle cx="342" cy="310" r="3"/><circle cx="336" cy="322" r="2.5"/>
+    <circle cx="334" cy="334" r="2.5"/>
+  </g>
+  <ellipse cx="304" cy="258" rx="58" ry="30" fill="#4a2f1c"/>
+  <ellipse cx="304" cy="210" rx="45" ry="28" fill="#4a2f1c"/>
+  <ellipse cx="304" cy="164" rx="32" ry="26" fill="#4a2f1c"/>
+  <!-- middle cupcake: taller, foreground -->
+  <path d="M144 258 H256 L245 347 H155 Z" fill="#d9a94e"/>
+  <rect x="172" y="268" width="5" height="72" fill="#fffdf8"/>
+  <rect x="197" y="268" width="6" height="72" fill="#fffdf8"/>
+  <rect x="223" y="268" width="5" height="72" fill="#fffdf8"/>
+  <ellipse cx="200" cy="244" rx="64" ry="33" fill="#f6ecdc"/>
+  <!-- halftone on the shaded left of the cream swirl -->
+  <g fill="#d9cbb6">
+    <circle cx="164" cy="236" r="2.5"/><circle cx="156" cy="246" r="3"/>
+    <circle cx="150" cy="258" r="3"/><circle cx="163" cy="262" r="2.5"/>
+    <circle cx="162" cy="268" r="2.5"/>
+  </g>
+  <ellipse cx="200" cy="188" rx="50" ry="32" fill="#f6ecdc"/>
+  <circle cx="200" cy="124" r="36" fill="#f6ecdc"/>
+  <circle cx="200" cy="74" r="16" fill="#8e2440"/>
+</svg>

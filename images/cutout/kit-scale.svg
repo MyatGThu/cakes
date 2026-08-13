@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Vintage kitchen scale, magazine cutout">
+  <!-- print shadow -->
+  <path d="M44 89 L68 69 L123 61 L206 54 L287 62 L342 69 L367 88 L319 131 L230 156 L227 173 L252 176 L286 211 L296 254 L280 302 L347 315 L346 373 L62 371 L64 316 L130 302 L114 256 L123 210 L158 177 L183 173 L181 155 L91 131 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M39 82 L63 62 L118 54 L201 47 L282 55 L337 62 L362 81 L314 124 L225 149 L222 166 L247 169 L281 204 L291 247 L275 295 L342 308 L341 366 L57 364 L59 309 L125 295 L109 249 L118 203 L153 170 L178 166 L176 148 L86 124 Z" fill="#fffdf8"/>
+  <!-- base: shadow slab then top plate -->
+  <rect x="66" y="320" width="268" height="36" rx="16" fill="#7f8489"/>
+  <rect x="66" y="320" width="268" height="24" rx="12" fill="#b9bcc0"/>
+  <!-- halftone on the shaded right of the base -->
+  <g fill="#7f8489">
+    <circle cx="268" cy="332" r="3"/><circle cx="282" cy="338" r="3"/><circle cx="296" cy="331" r="2.5"/>
+    <circle cx="280" cy="325" r="2.5"/><circle cx="302" cy="340" r="2"/>
+  </g>
+  <!-- column -->
+  <rect x="186" y="112" width="28" height="64" rx="8" fill="#7f8489"/>
+  <!-- weighing pan: shallow bowl, then flattened rim and cream well -->
+  <path d="M48 80 Q200 190 352 80 Z" fill="#7f8489"/>
+  <ellipse cx="200" cy="80" rx="152" ry="23" fill="#b9bcc0"/>
+  <ellipse cx="200" cy="82" rx="133" ry="15" fill="#f6ecdc"/>
+  <!-- dial -->
+  <circle cx="200" cy="248" r="80" fill="#b9bcc0"/>
+  <circle cx="200" cy="248" r="64" fill="#fffdf8"/>
+  <g fill="#7f8489">
+    <circle cx="128" cy="248" r="5"/><circle cx="272" cy="248" r="5"/>
+  </g>
+  <g fill="#241a14">
+    <rect x="197" y="190" width="6" height="15" rx="3"/>
+    <rect x="138" y="245" width="15" height="6" rx="3"/>
+    <rect x="247" y="245" width="15" height="6" rx="3"/>
+  </g>
+  <!-- needle -->
+  <rect x="196" y="190" width="8" height="62" rx="4" fill="#b03052" transform="rotate(34 200 248)"/>
+  <circle cx="200" cy="248" r="9" fill="#241a14"/>
+</svg>

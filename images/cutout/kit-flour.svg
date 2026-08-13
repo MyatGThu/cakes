@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Paper flour sack, magazine cutout">
+  <!-- print shadow -->
+  <path d="M87 61 L205 49 L324 62 L332 129 L339 307 L341 348 L334 365 L109 368 L78 365 L69 348 L73 247 L79 129 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M82 54 L140 47 L200 42 L256 48 L319 55 L325 100 L327 122 L330 180 L331 240 L334 300 L336 341 L329 358 L290 361 L244 359 L196 362 L148 359 L104 361 L73 358 L64 341 L66 300 L68 240 L70 180 L74 122 L76 88 Z" fill="#fffdf8"/>
+  <!-- sack body -->
+  <path d="M82 108 L318 108 L328 338 Q329 352 315 352 L85 352 Q71 352 72 338 Z" fill="#f6ecdc"/>
+  <!-- base band -->
+  <path d="M72 332 L328 332 L328 338 Q329 352 315 352 L85 352 Q71 352 72 338 Z" fill="#d9cbb6"/>
+  <!-- folded top: light flap, shaded flap, crease -->
+  <path d="M82 112 L88 58 L200 48 L201 112 Z" fill="#f6ecdc"/>
+  <path d="M201 112 L200 48 L312 60 L318 112 Z" fill="#d9cbb6"/>
+  <path d="M82 112 L318 112 L319 128 L81 128 Z" fill="#d9cbb6"/>
+  <!-- shaded right side of the sack -->
+  <path d="M272 128 L319 128 L328 338 Q329 352 315 352 L280 352 Z" fill="#d9cbb6"/>
+  <!-- halftone, shadow side only -->
+  <g fill="#d9cbb6">
+    <circle cx="252" cy="146" r="3"/><circle cx="262" cy="158" r="3"/><circle cx="250" cy="170" r="2.5"/>
+    <circle cx="260" cy="182" r="2.5"/><circle cx="266" cy="144" r="2"/>
+    <circle cx="254" cy="292" r="3"/><circle cx="264" cy="304" r="3"/><circle cx="252" cy="316" r="2.5"/>
+    <circle cx="264" cy="328" r="2.5"/><circle cx="268" cy="290" r="2"/>
+  </g>
+  <!-- label band -->
+  <path d="M80 198 L320 188 L323 268 L77 278 Z" fill="#b03052"/>
+  <path d="M78 252 L322 242 L323 268 L77 278 Z" fill="#8e2440"/>
+  <!-- wheat sprig -->
+  <g fill="#d9a94e">
+    <path d="M197 266 L203 266 L202 222 L200 216 L198 222 Z"/>
+    <ellipse cx="200" cy="210" rx="5" ry="10"/>
+    <ellipse cx="188" cy="224" rx="5" ry="10" transform="rotate(-38 188 224)"/>
+    <ellipse cx="212" cy="224" rx="5" ry="10" transform="rotate(38 212 224)"/>
+    <ellipse cx="184" cy="242" rx="5" ry="10" transform="rotate(-38 184 242)"/>
+    <ellipse cx="216" cy="242" rx="5" ry="10" transform="rotate(38 216 242)"/>
+    <ellipse cx="181" cy="260" rx="5" ry="10" transform="rotate(-38 181 260)"/>
+    <ellipse cx="219" cy="260" rx="5" ry="10" transform="rotate(38 219 260)"/>
+  </g>
+</svg>

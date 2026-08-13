@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Balloon whisk, magazine cutout">
+  <!-- print shadow -->
+  <path d="M205 41 L236 58 L234 125 L243 183 L243 218 L276 239 L295 269 L299 290 L294 311 L271 337 L245 353 L224 365 L205 370 L186 365 L165 353 L139 337 L115 311 L111 290 L115 265 L134 243 L167 218 L167 183 L176 130 L174 58 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M200 34 L231 51 L229 118 L238 176 L238 211 L271 232 L290 262 L294 283 L289 304 L266 330 L240 346 L219 358 L200 363 L181 358 L160 346 L134 330 L110 304 L106 283 L110 258 L129 236 L162 211 L162 176 L171 123 L169 51 Z" fill="#fffdf8"/>
+  <!-- handle -->
+  <rect x="178" y="40" width="44" height="136" rx="22" fill="#4a2f1c"/>
+  <!-- halftone on the shaded right of the handle -->
+  <g fill="#2e1a0c">
+    <circle cx="212" cy="72" r="2.5"/><circle cx="210" cy="88" r="3"/><circle cx="213" cy="104" r="3"/>
+    <circle cx="210" cy="120" r="3"/><circle cx="213" cy="136" r="2.5"/><circle cx="210" cy="152" r="2.5"/>
+    <circle cx="204" cy="112" r="2"/>
+  </g>
+  <!-- outer loops -->
+  <path d="M200 198 C285 232 340 308 200 354 C322 306 271 236 200 198 Z" fill="#b9bcc0"/>
+  <path d="M200 198 C115 232 60 308 200 354 C78 306 129 236 200 198 Z" fill="#b9bcc0"/>
+  <!-- inner loops -->
+  <path d="M200 198 C248 234 278 312 200 354 C264 310 234 236 200 198 Z" fill="#7f8489"/>
+  <path d="M200 198 C152 234 122 312 200 354 C136 310 166 236 200 198 Z" fill="#7f8489"/>
+  <!-- wire tip cap -->
+  <rect x="191" y="338" width="18" height="18" rx="9" fill="#7f8489"/>
+  <!-- collar -->
+  <rect x="170" y="164" width="60" height="50" rx="12" fill="#7f8489"/>
+  <rect x="170" y="182" width="60" height="10" fill="#b9bcc0"/>
+</svg>

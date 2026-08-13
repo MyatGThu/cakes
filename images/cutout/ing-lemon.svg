@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Lemon wheel, magazine cutout">
+  <!-- print shadow -->
+  <path d="M 205 41 L 260 53 L 310 79 L 346 124 L 365 177 L 367 233 L 345 286 L 310 330 L 261 359 L 205 367 L 149 358 L 100 331 L 65 286 L 43 233 L 45 177 L 64 123 L 100 79 L 150 53 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M 200 31 L 243 38 L 282 55 L 318 80 L 344 115 L 361 155 L 365 198 L 360 241 L 345 282 L 317 315 L 284 343 L 243 358 L 200 363 L 157 359 L 117 342 L 82 316 L 57 280 L 40 241 L 33 198 L 40 155 L 57 115 L 82 80 L 117 54 L 157 39 Z" fill="#fffdf8"/>
+  <!-- rind -->
+  <circle cx="200" cy="198" r="158" fill="#d9a94e"/>
+  <!-- pith -->
+  <circle cx="200" cy="198" r="135" fill="#fffdf8"/>
+  <!-- flesh -->
+  <circle cx="200" cy="198" r="129" fill="#f6ecdc"/>
+  <!-- six segments -->
+  <path d="M 200 184 L 147 88 A 122 122 0 0 1 253 88 Z" fill="#d9a94e"/>
+  <path d="M 212 191 L 268 97 A 122 122 0 0 1 322 189 Z" fill="#d9a94e"/>
+  <path d="M 212 205 L 322 207 A 122 122 0 0 1 268 299 Z" fill="#d9a94e"/>
+  <path d="M 200 212 L 253 308 A 122 122 0 0 1 147 308 Z" fill="#d9a94e"/>
+  <path d="M 188 205 L 132 299 A 122 122 0 0 1 78 207 Z" fill="#d9a94e"/>
+  <path d="M 188 191 L 78 189 A 122 122 0 0 1 132 97 Z" fill="#d9a94e"/>
+  <!-- halftone arc along the shaded bottom of the rind -->
+  <g fill="#a87d2e">
+    <circle cx="315" cy="288" r="3"/><circle cx="290" cy="313" r="3"/><circle cx="260" cy="332" r="2.5"/>
+    <circle cx="225" cy="342" r="3"/><circle cx="190" cy="344" r="3"/><circle cx="155" cy="337" r="2.5"/>
+    <circle cx="122" cy="322" r="3"/><circle cx="95" cy="300" r="3"/>
+  </g>
+</svg>

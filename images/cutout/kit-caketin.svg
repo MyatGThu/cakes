@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Round cake tin, magazine cutout">
+  <!-- print shadow -->
+  <path d="M67 120 L136 73 L206 66 L274 73 L344 118 L343 149 L375 148 L374 205 L345 204 L343 327 L332 348 L304 359 L205 367 L106 360 L78 347 L66 327 L68 204 L35 205 L36 148 L69 149 Z" fill="#d9cbb6"/>
+  <!-- sticker rim (hand-cut, ragged) -->
+  <path d="M62 113 L78 86 L131 66 L201 59 L269 66 L322 86 L339 111 L338 142 L370 141 L369 198 L340 197 L338 320 L327 341 L299 352 L258 359 L200 360 L142 358 L101 353 L73 340 L61 320 L63 197 L30 198 L31 141 L64 142 Z" fill="#fffdf8"/>
+  <!-- handle tabs -->
+  <rect x="38" y="150" width="42" height="40" rx="11" fill="#b9bcc0"/>
+  <rect x="320" y="150" width="42" height="40" rx="11" fill="#b9bcc0"/>
+  <rect x="48" y="164" width="22" height="11" rx="5.5" fill="#7f8489"/>
+  <rect x="330" y="164" width="22" height="11" rx="5.5" fill="#7f8489"/>
+  <!-- tin body -->
+  <path d="M70 112 L330 112 L330 320 Q330 352 200 352 Q70 352 70 320 Z" fill="#b9bcc0"/>
+  <!-- base band -->
+  <path d="M70 306 Q70 338 200 338 Q330 338 330 306 L330 320 Q330 352 200 352 Q70 352 70 320 Z" fill="#7f8489"/>
+  <!-- top rim -->
+  <ellipse cx="200" cy="112" rx="130" ry="44" fill="#7f8489"/>
+  <!-- parchment lining -->
+  <ellipse cx="200" cy="118" rx="103" ry="31" fill="#fffdf8"/>
+  <!-- halftone on the shaded right of the body -->
+  <g fill="#7f8489">
+    <circle cx="292" cy="190" r="3"/><circle cx="304" cy="202" r="3"/><circle cx="292" cy="214" r="3"/>
+    <circle cx="304" cy="226" r="3"/><circle cx="292" cy="238" r="2.5"/><circle cx="304" cy="250" r="2.5"/>
+    <circle cx="292" cy="262" r="2.5"/><circle cx="303" cy="274" r="2.5"/><circle cx="291" cy="288" r="2"/>
+  </g>
+</svg>
