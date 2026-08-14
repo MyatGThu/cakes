@@ -82,11 +82,29 @@ they used to `elastic.out`, and the hover-fill sheet rises on the viscous curve
 with its border-radius given a *longer* duration than the transform, so the
 liquid's surface finishes levelling ~300ms after the colour has arrived.
 
-It applies to the controls layer only — buttons, the cart, cards. `wobble()`
-keeps its elastic settle on purpose: a scrap of paper nudged on a table is a
-different physical metaphor from syrup, and making paper behave like liquid
-would undercut the collage. Everything is inside the existing
-`(hover: hover) and (prefers-reduced-motion: no-preference)` gates.
+It runs through the whole hover layer, `wobble()` included: a scrap now
+resists, swings and creeps into its new angle instead of snapping there on an
+elastic bounce. `motion.js` rebuilds the identical curve as a plain function
+(`cubicBezier`) and hands it to GSAP as an ease, so the CSS and GSAP layers
+settle the same way rather than drifting apart, and no CustomEase plugin is
+needed. Everything is inside the existing `(hover: hover) and
+(prefers-reduced-motion: no-preference)` gates.
+
+Two things `wobble()` has to keep doing. It tweens the card's hover LIFT
+itself rather than leaving it to CSS: GSAP writes an inline transform for the
+rotation, an inline transform beats the stylesheet, and so
+`.card:hover { transform: … translateY(-6px) }` never applied at all — the few
+pixels the card seemed to move were only its bounding box growing as it turned.
+And it ends the leave tween with `clearProps: "transform"`, which hands the
+element back to CSS; without that a hovered scrap settled at a flat 0° and lost
+its pasted-up angle for the rest of the visit.
+
+One test trap this uncovered: `.hover()` in Playwright scrolls the element into
+view and then places the cursor, but the page scrolls *smoothly*, so the card
+was still travelling when the pointer landed and slid out from under it —
+firing a real mouseleave that paused the very video the test was measuring.
+`videotest.js` now waits for `scrollY` to stop before hovering. Any new hover
+assertion needs the same wait.
 
 ### The page wipe (cross-page transition)
 

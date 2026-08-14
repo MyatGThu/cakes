@@ -77,6 +77,20 @@ async function withVp9Videos(page) {
   console.log('desktop setup:', JSON.stringify(setup), '(want 3 videos, 3 stills, all true)');
 
   const vanillaCard = p1.locator('.card', { hasText: 'Classic Vanilla' });
+  // The page scrolls smoothly (css/style.css gates scroll-behavior on
+  // prefers-reduced-motion), so .hover() would place the cursor while the page
+  // is still travelling — the card then slides out from under a stationary
+  // pointer, fires mouseleave, and pauses the video this is about to measure.
+  // Scroll first, wait for scrollY to actually stop, and only then hover.
+  await vanillaCard.scrollIntoViewIfNeeded();
+  await p1.waitForFunction(() => new Promise(done => {
+    let last = -1, still = 0;
+    (function check() {
+      if (window.scrollY === last) { if (++still > 3) return done(true); }
+      else { still = 0; last = window.scrollY; }
+      requestAnimationFrame(check);
+    })();
+  }));
   await vanillaCard.hover();
   await p1.waitForTimeout(900);
   const during = await vanillaCard.locator('video').evaluate(v => ({ playing: !v.paused, t: v.currentTime }));

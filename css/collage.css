@@ -147,15 +147,19 @@ body::after {
   border-radius: 0;
   box-shadow: 6px 8px 0 var(--print-shadow),
               0 14px 28px -12px rgba(41, 29, 16, 0.18);
-  /* Weight, not snap: a card lifts as if it were being peeled off something
-     tacky (the viscous hover feel). */
-  transition: transform 0.42s var(--ease-viscous), box-shadow 0.42s var(--ease-viscous);
+  /* Only the shadow transitions here. The transform belongs to motion.js's
+     wobble(), which writes it inline frame by frame — a CSS transition on the
+     same property would try to interpolate every one of those frames and fight
+     the tween. Weight comes from the viscous curve on the GSAP side. */
+  transition: box-shadow 0.42s var(--ease-viscous);
 }
 .card:nth-child(3n+1) { transform: rotate(-0.9deg); }
 .card:nth-child(3n+2) { transform: rotate(0.6deg); }
 .card:nth-child(3n)   { transform: rotate(-0.3deg); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .card:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 10px 14px 0 var(--print-shadow), 0 22px 40px -14px rgba(41, 29, 16, 0.22); }
+  /* No transform here — wobble() owns it (see the note on .card above). This
+     rule used to set one, and it silently did nothing. */
+  .card:hover { box-shadow: 10px 14px 0 var(--print-shadow), 0 22px 40px -14px rgba(41, 29, 16, 0.22); }
   .card:hover .photo { transform: none; }
 }
 .card .photo-frame { background: var(--cat-ground, var(--accent-soft)); }

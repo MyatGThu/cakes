@@ -142,6 +142,29 @@
     });
   }
 
+  /* The same curve CSS calls --ease-viscous, so the GSAP layer and the CSS
+     layer settle identically instead of drifting apart. GSAP takes a plain
+     function as an ease, which saves loading the CustomEase plugin for one
+     curve. The binary search is more than accurate enough at frame
+     resolution, and it runs once per tween tick on one hovered element. */
+  function cubicBezier(x1, y1, x2, y2) {
+    function axis(t, a, b) {
+      var u = 1 - t;
+      return 3 * a * t * u * u + 3 * b * t * t * u + t * t * t;
+    }
+    return function (x) {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      var lo = 0, hi = 1, t = x;
+      for (var i = 0; i < 22; i++) {
+        t = (lo + hi) / 2;
+        if (axis(t, x1, x2) < x) lo = t; else hi = t;
+      }
+      return axis((lo + hi) / 2, y1, y2);
+    };
+  }
+  var viscous = cubicBezier(0.62, 0.02, 0.14, 1);
+
   // Magnetic CTAs (same kit): buttons lean toward the cursor and spring back.
   var magnetResets = [];
   window.addEventListener("scroll", function () {
@@ -168,23 +191,43 @@
     });
   }
 
-  /* Hover wobble: a scrap lifts and re-settles at a new angle, like a card
-     nudged on a table. Desktop pointers only; the resting tilt is CSS. */
+  /* Hover wobble: a scrap re-settles at a new angle. It used to snap there on
+     an elastic bounce; on the viscous curve it resists, swings, and creeps into
+     place — so the whole hover layer, paper included, now shares one feel.
+     Longer durations than the elastic version because viscous motion that
+     hurries reads as sluggish rather than thick. Desktop pointers only; the
+     resting tilt is CSS, so the no-JS page still looks pasted-up. */
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    function wobble(el) {
+    /* `lift` is for menu cards, which also rise on hover. The rise has to be
+       tweened HERE rather than left to CSS: GSAP writes an inline transform for
+       the rotation, and an inline transform beats the stylesheet outright — so
+       `.card:hover { transform: … translateY(-6px) }` never applied at all, and
+       the few pixels the card appeared to move were just its bounding box
+       growing as it turned. */
+    function wobble(el, lift) {
       el.addEventListener("mouseenter", function () {
         gsap.to(el, {
           rotation: gsap.utils.random(-2.6, 2.6),
-          duration: 0.45, ease: "elastic.out(1, 0.45)", overwrite: "auto",
+          y: lift ? -6 : 0,
+          duration: 0.7, ease: viscous, overwrite: "auto",
         });
       });
       el.addEventListener("mouseleave", function () {
-        gsap.to(el, { rotation: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" });
+        /* clearProps hands the element back to CSS, which is what restores the
+           resting tilt. Without it a hovered scrap settled at a flat 0° and
+           stayed there — the pasted-up angle was lost for the rest of the
+           visit. The last degree of the return is a snap rather than a tween,
+           which at these angles is well under a pixel. */
+        gsap.to(el, {
+          rotation: 0, y: 0,
+          duration: 0.75, ease: viscous, overwrite: "auto",
+          clearProps: "transform",
+        });
       });
     }
-    gsap.utils.toArray(".scrap").forEach(wobble);
+    gsap.utils.toArray(".scrap").forEach(function (el) { wobble(el, false); });
     document.addEventListener("aurette:menu-rendered", function () {
-      gsap.utils.toArray("#productGrid .card").forEach(wobble);
+      gsap.utils.toArray("#productGrid .card").forEach(function (el) { wobble(el, true); });
     });
   }
 
