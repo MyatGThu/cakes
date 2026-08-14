@@ -51,7 +51,7 @@ async function withGsap(page) {
   console.log('magnetic: transform changed:', before !== during, JSON.stringify({ before, during }));
   console.log('hover-fill: ::after moved:', fillBefore !== fillDuring);
   await p1.mouse.move(10, 10);
-  await p1.waitForTimeout(900);
+  await p1.waitForTimeout(1400); // the viscous return settles over ~0.85s
   const after = await btn.evaluate(el => getComputedStyle(el).transform);
   console.log('magnetic: springs back near identity:', after === 'none' || /matrix\(1, 0, 0, 1, -?0?\.?\d*, -?0?\.?\d*\)/.test(after), after);
 

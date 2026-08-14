@@ -147,7 +147,9 @@ body::after {
   border-radius: 0;
   box-shadow: 6px 8px 0 var(--print-shadow),
               0 14px 28px -12px rgba(41, 29, 16, 0.18);
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
+  /* Weight, not snap: a card lifts as if it were being peeled off something
+     tacky (the viscous hover feel). */
+  transition: transform 0.42s var(--ease-viscous), box-shadow 0.42s var(--ease-viscous);
 }
 .card:nth-child(3n+1) { transform: rotate(-0.9deg); }
 .card:nth-child(3n+2) { transform: rotate(0.6deg); }

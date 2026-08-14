@@ -148,9 +148,14 @@
     for (var mi = 0; mi < magnetResets.length; mi++) magnetResets[mi]();
   }, { passive: true });
   if (window.matchMedia("(pointer: fine)").matches) {
+    /* BÖBA's viscous feel: the button is dragged through something thick, so it
+       trails the cursor and then creeps home. The elastic spring this replaces
+       was the opposite reading — honey clings and settles, it does not bounce —
+       so this swaps the curve rather than adding another kind of motion. */
+    var VISCOUS = { duration: 0.85, ease: "power3.out" };
     gsap.utils.toArray(".btn-primary, .btn-outline, .cart-button").forEach(function (el) {
-      var xTo = gsap.quickTo(el, "x", { duration: 0.6, ease: "elastic.out(1, 0.3)" });
-      var yTo = gsap.quickTo(el, "y", { duration: 0.6, ease: "elastic.out(1, 0.3)" });
+      var xTo = gsap.quickTo(el, "x", VISCOUS);
+      var yTo = gsap.quickTo(el, "y", VISCOUS);
       var rect = null; // measured once per hover; scrolling invalidates it below
       magnetResets.push(function () { rect = null; });
       el.addEventListener("mouseenter", function () { rect = el.getBoundingClientRect(); });

@@ -30,6 +30,13 @@
      hangs under it. Anything that docks below the header reads this, and
      smoke3 asserts the two still meet. */
   --header-h: 68px;
+
+  /* BÖBA's viscous hover feel. A thick liquid resists at the start, flows once
+     it is moving, then takes its time settling — and crucially it does NOT
+     bounce, so this replaces the springy curves rather than stacking on top of
+     them. The control points hang near zero (resistance) then arrive early in
+     the back half and creep home (the long settle). */
+  --ease-viscous: cubic-bezier(0.62, 0.02, 0.14, 1);
 }
 @media (min-width: 600px) { :root { --header-h: 81px; } }
 
@@ -133,9 +140,13 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
 .btn-primary::after { background: var(--accent-dark); }
 .btn-outline::after { background: var(--accent); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  /* The sheet is the literal liquid, so it is where the viscous curve belongs.
+     Its curved top is the fluid's surface: giving the radius a longer duration
+     than the rise means the surface keeps levelling off after the colour has
+     arrived, the way a poured liquid settles last. */
   .btn-primary::after, .btn-outline::after {
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-                border-radius 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.62s var(--ease-viscous),
+                border-radius 0.86s var(--ease-viscous);
   }
   .btn-primary:hover { background: var(--accent); }
   .btn-outline:hover { background: transparent; color: #fff; }
@@ -143,7 +154,7 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
   /* text colour must track the fill sheet's speed, or the label sits
      accent-on-accent while the sheet is still leaving */
   .btn-outline {
-    transition: background 0.18s ease, color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transition: background 0.18s ease, color 0.5s var(--ease-viscous),
                 transform 0.12s ease, box-shadow 0.18s ease;
   }
 }
