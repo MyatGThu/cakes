@@ -234,6 +234,26 @@ adding directly — size, quantity and the note are all chosen there.
 
 `tools/navtest.js` (`npm run test:nav`) asserts all of this.
 
+### Flavour coding (Ceremony Coffee)
+
+Each category owns one colour, and it appears in three places that must agree:
+the swatch on its tab, the ground behind its cutouts, and the printed rule
+under every card's picture (the ground alone is invisible on a card showing a
+video poster, which fills its frame edge to edge).
+
+Colours are assigned by **position** in `categoryList()`, never hashed from the
+category name — a hash collided (Cupcakes, Cookies and Celebration all landed on
+one pastel) and changed meaning whenever the owner renamed a category. They are
+drawn from the theme's own `--accent` / `--gold` / `--green` (and their mixes
+past three), so a theme's palette carries through instead of a fixed pastel
+array painting pink onto Midnight's dark page.
+
+This only works while a theme's three named hues are actually distinct —
+Pistachio used to define `--accent` and `--green` as the same hex, which
+silently collapsed two categories onto one colour *and* made the "Ready to go"
+badge indistinguishable from every accent. `navtest.js` asserts distinctness per
+theme, so a new theme cannot re-break it quietly.
+
 ### Theming
 
 `css/themes/*.css` override the design tokens in `:root`; the inline head

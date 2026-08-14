@@ -375,6 +375,24 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
 @media (hover: hover) { .chip:hover { color: var(--accent-dark); } }
 .chip:active { color: var(--accent-dark); }
 .chip[aria-pressed="true"] { color: var(--paper, #fffdf8); background: var(--ink); }
+/* Ceremony Coffee's flavour coding: each category owns one of the theme's
+   named hues, and the same colour grounds its cakes — so the tab you pressed
+   and the cards you are looking at agree without reading a word. The swatch
+   goes on ::after because collage.css already uses ::before for the active
+   tab's stamp; `order: -1` puts it back in front of the label, where it reads
+   as a legend rather than a trailing dot. */
+.chip--coded { display: inline-flex; align-items: center; gap: 7px; }
+.chip--coded::after {
+  content: "";
+  order: -1;
+  width: 9px;
+  height: 9px;
+  flex: none;
+  background: var(--cat-hue);
+}
+/* Against the active tab's ink stamp the saturated hue goes muddy, so there
+   the swatch switches to the category's light ground. */
+.chip--coded[aria-pressed="true"]::after { background: var(--cat-ground); }
 /* Tightened just enough to keep four categories on one row at 375px while the
    targets stay over 44px. A fifth category wraps rather than scrolling out of
    sight — a second row is visible, a horizontal scroller is not. */
@@ -421,7 +439,7 @@ section.block { padding: clamp(56px, 9vh, 104px) 0; }
   .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lift); }
   .card:hover .photo { transform: scale(1.045); }
 }
-.card .photo-frame { overflow: hidden; background: var(--cat-tint, var(--accent-soft)); }
+.card .photo-frame { overflow: hidden; background: var(--cat-ground, var(--accent-soft)); }
 .card .photo {
   aspect-ratio: 4 / 3;
   object-fit: cover;

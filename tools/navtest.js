@@ -307,6 +307,39 @@ const state = (p) => p.evaluate(() => {
     await p.context().close();
   }
 
+  // Ceremony Coffee's flavour coding only works if the colours are actually
+  // distinguishable. The first version hashed the category NAME into five fixed
+  // pastels, so Cupcakes/Cookies/Celebration collided; the second drew from the
+  // theme's three named hues, which collided again on Pistachio because it
+  // defined --accent and --green as the same hex. Assert per theme.
+  console.log('\n--- A category colour means one category, in every theme');
+  {
+    const p = await newPage(false);
+    for (const theme of ['default', 'butter', 'fairy', 'midnight', 'pistachio']) {
+      await p.goto(B + '/shop.html?theme=' + theme, { waitUntil: 'networkidle' });
+      await p.waitForTimeout(700);
+      const swatches = await p.evaluate(() => Array.from(document.querySelectorAll('.chip--coded'))
+        .map(c => ({ cat: c.getAttribute('data-cat'), colour: getComputedStyle(c, '::after').backgroundColor })));
+      const colours = swatches.map(s => s.colour);
+      const unique = new Set(colours).size === colours.length;
+      // and each card's ground must match the tab it belongs to
+      const tied = await p.evaluate(() => {
+        const chipGround = {};
+        document.querySelectorAll('.chip--coded').forEach(c => {
+          chipGround[c.getAttribute('data-cat')] = c.style.getPropertyValue('--cat-ground').trim();
+        });
+        return Array.from(document.querySelectorAll('.card')).every(card => {
+          const g = card.style.getPropertyValue('--cat-ground').trim();
+          return !g || Object.values(chipGround).indexOf(g) !== -1;
+        });
+      });
+      check(theme + ': ' + colours.length + ' category colours, all distinct', unique, true);
+      if (!unique) console.log('      ', JSON.stringify(swatches));
+      check(theme + ': every card matches its tab', tied, true);
+    }
+    await p.context().close();
+  }
+
   console.log('\n--- Still fine on the other rungs of the ladder');
   {
     // Reduced motion.

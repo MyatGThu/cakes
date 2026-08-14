@@ -284,6 +284,8 @@
       b.textContent = c;
       b.setAttribute("data-cat", c);
       b.setAttribute("aria-pressed", String(c === activeCategory));
+      // "All" is the absence of a filter, so it carries no swatch.
+      if (paintCategory(b, c, cats.slice(1))) b.classList.add("chip--coded");
       b.addEventListener("click", function () {
         if (activeCategory === c) return;
         activeCategory = c;
@@ -406,6 +408,7 @@
   function renderGrid() {
     var host = $("productGrid");
     var items = visibleProducts();
+    var cats = categoryList();
     if (videoWatcher) { videoWatcher.disconnect(); videoWatcher = null; }
     host.innerHTML = "";
     $("emptyNote").hidden = items.length > 0;
@@ -427,7 +430,7 @@
         : escapeHtml(PAUSED_MSG);
       var card = document.createElement("article");
       card.className = "card";
-      card.style.setProperty("--cat-tint", categoryTint(p.category));
+      paintCategory(card, p.category, cats);
       var media = (p.video && !PREFERS_STILL)
         ? '<video class="photo" width="720" height="540" muted loop playsinline disablepictureinpicture preload="metadata" poster="' + escapeHtml(p.videoPoster || p.image || "") + '" src="' + escapeHtml(p.video) + '" aria-label="' + escapeHtml(p.name) + '"></video>'
         : '<img class="photo' + (cardStill(p).indexOf("images/video/") === 0 ? " photo--real" : "") + '" loading="lazy" width="800" height="800" alt="' + escapeHtml(p.name) + '" src="' + escapeHtml(cardStill(p)) + '">';
@@ -491,14 +494,47 @@
     document.dispatchEvent(new CustomEvent("aurette:menu-rendered"));
   }
 
-  /* A soft tint per category so flavours read at a glance (Ceremony Coffee's
-     colour-coding lesson) — stable hash into a small pastel palette. */
-  var TINTS = ["#f7e4e9", "#f5ead3", "#e9f0e2", "#eee6f4", "#fbeadd"];
-  function categoryTint(cat) {
-    var s = String(cat || "");
-    var h = 0;
-    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 997;
-    return TINTS[h % TINTS.length];
+  /* Ceremony Coffee's lesson: a category should own a colour you can learn, so
+     the tab you pressed and the cakes you are looking at agree without reading
+     a word.
+
+     Assigned by POSITION in the menu, never hashed from the name. The hash this
+     replaces collided badly — Cupcakes, Cookies and Celebration all landed on
+     one pastel, so the colour taught nothing — and it changed meaning whenever
+     the owner renamed a category. Drawn from the theme's own three named hues
+     (plus their mixes if the menu ever grows past three) rather than a fixed
+     pastel array, so Midnight gets Midnight's palette instead of a pink block
+     on a dark page. */
+  var CAT_COLOURS = [
+    { hue: "var(--accent)", ground: "var(--accent-soft)" },
+    { hue: "var(--gold)", ground: "var(--gold-soft)" },
+    { hue: "var(--green)", ground: "var(--green-soft)" },
+    { hue: "color-mix(in srgb, var(--accent) 55%, var(--gold))",
+      ground: "color-mix(in srgb, var(--accent-soft) 55%, var(--gold-soft))" },
+    { hue: "color-mix(in srgb, var(--gold) 55%, var(--green))",
+      ground: "color-mix(in srgb, var(--gold-soft) 55%, var(--green-soft))" },
+    { hue: "color-mix(in srgb, var(--green) 55%, var(--accent))",
+      ground: "color-mix(in srgb, var(--green-soft) 55%, var(--accent-soft))" },
+  ];
+
+  /* The menu's categories in the order they first appear — the one ordering
+     both the tabs and the cards index into, so the two can never disagree. */
+  function categoryList() {
+    var cats = [];
+    PRODUCTS.forEach(function (p) {
+      if (p.available === false) return;
+      if (p.category && cats.indexOf(p.category) === -1) cats.push(p.category);
+    });
+    return cats;
+  }
+
+  function paintCategory(el, cat, cats) {
+    var i = (cats || categoryList()).indexOf(cat);
+    if (i === -1) return false;
+    var c = CAT_COLOURS[i % CAT_COLOURS.length];
+    el.style.setProperty("--cat-hue", c.hue);
+    el.style.setProperty("--cat-ground", c.ground);
+    return true;
   }
 
   /* ---------- Product modal ---------- */

@@ -10,6 +10,9 @@
   --accent-soft: #e3eedd;
   --gold: #a8842f;
   --gold-soft: #f3ecd4;
-  --green: #3e6b4a;
-  --green-soft: #e3eedd;
+  /* Distinct from --accent on purpose. This theme used to define both as
+     #3e6b4a, which made the "Ready to go" badge indistinguishable from every
+     accent on the page and collapsed two category colours onto one. */
+  --green: #1f6f63;
+  --green-soft: #dcecea;
 }

@@ -156,7 +156,11 @@ body::after {
   .card:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 10px 14px 0 var(--print-shadow), 0 22px 40px -14px rgba(41, 29, 16, 0.22); }
   .card:hover .photo { transform: none; }
 }
-.card .photo-frame { background: var(--cat-tint, var(--blush, #f3d7de)); }
+.card .photo-frame { background: var(--cat-ground, var(--accent-soft)); }
+/* The ground only shows around a cutout — a video poster fills its frame edge
+   to edge — so the category also gets a printed rule under the picture. That
+   is what actually ties a card to the tab you pressed on a grid of photos. */
+.card .body { border-top: 3px solid var(--cat-hue, transparent); }
 
 /* Badges + prices read as rubber stamps and price stickers. */
 .badge {
