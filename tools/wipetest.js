@@ -22,6 +22,9 @@ async function withGsap(page) {
   await page.route('https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/*', route => {
     route.fulfill({ body: fs.readFileSync(path.join(GSAP, route.request().url().split('/').pop()), 'utf8'), contentType: 'text/javascript' });
   });
+  await page.route('https://cdn.jsdelivr.net/npm/lenis@*/dist/*', route => {
+    route.fulfill({ body: fs.readFileSync(path.join(__dirname, 'node_modules/lenis/dist', route.request().url().split('/').pop())), contentType: 'text/javascript' });
+  });
   await page.route('https://fonts.googleapis.com/**', r => r.abort());
   await page.route('https://fonts.gstatic.com/**', r => r.abort());
 }

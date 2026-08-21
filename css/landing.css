@@ -266,3 +266,131 @@ html:not(.motion-on) .stage-ingredients { display: none; }
   text-transform: uppercase;
   line-height: 1.2;
 }
+
+/* ---------- Act 3.5 · The laneway ----------
+   Melbourne, in the vocabulary the rest of the site already speaks: a bluestone
+   wall with paper pasted on it. The city's laneways ARE layered paste-ups, so
+   this is the one place the collage direction and the location are the same
+   idea — it did not need a new visual language, only the right subject.
+
+   Bluestone is derived but deliberately anchored to the real basalt colour
+   rather than to --ink alone: the stone should stay stone on every theme,
+   including Midnight where --ink is a light cream. */
+.laneway {
+  --bluestone: color-mix(in srgb, #3d4750 80%, var(--ink));
+  --lane-paper: color-mix(in srgb, #fffdf8 92%, var(--gold));
+  position: relative;
+  overflow: hidden; /* the drifting layers must never widen the page */
+  padding: clamp(72px, 12vh, 132px) 0;
+  background-color: var(--bluestone);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.045) 1px, transparent 0),
+    radial-gradient(circle at 6px 9px, rgba(0, 0, 0, 0.16) 1.5px, transparent 0),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.22), transparent 22%, rgba(0, 0, 0, 0.24));
+  background-size: 5px 5px, 14px 14px, 100% 100%;
+  color: var(--lane-paper);
+}
+
+/* The pasted layers sit behind the copy and drift at their own rates. */
+.lane-wall { position: absolute; inset: 0; pointer-events: none; }
+.lane-layer { position: absolute; will-change: transform; }
+
+/* Ghost type — the faded wall lettering under everything else. */
+.lane-ghost {
+  left: 50%;
+  top: 6%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(72px, 19vw, 280px);
+  letter-spacing: -0.04em;
+  line-height: 0.8;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.055);
+}
+
+/* Suburb paste-ups: torn tickets, angled, half-peeling like a real wall. */
+.lane-paste {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(12px, 1.5vw, 15px);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--lane-paper);
+  padding: 9px 15px 10px;
+  clip-path: polygon(0% 7%, 100% 0%, 98% 93%, 2% 100%);
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.6);
+}
+.lane-paste--a { top: 16%; left: 4%;  transform: rotate(-4deg); }
+.lane-paste--b { top: 68%; left: 9%;  transform: rotate(3deg); }
+.lane-paste--c { top: 78%; right: 12%; transform: rotate(-2.5deg); }
+.lane-paste--d { top: 12%; right: 6%;  transform: rotate(5deg); }
+
+/* A tram-route enamel plate — the most Melbourne object there is. */
+.lane-plate {
+  top: 40%;
+  right: 4%;
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.85), 0 12px 26px -10px rgba(0, 0, 0, 0.7);
+  transform: rotate(-6deg);
+}
+.lane-plate b { font-family: var(--font-display); font-weight: 900; font-size: 26px; line-height: 1; }
+.lane-plate i { font-style: normal; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.9; }
+
+.lane-stamp {
+  top: 30%;
+  left: 7%;
+  font-family: var(--font-hand);
+  font-size: clamp(20px, 2.4vw, 30px);
+  color: rgba(255, 255, 255, 0.5);
+  transform: rotate(-8deg);
+}
+
+/* ---------- The copy, riding on top ---------- */
+.lane-copy { position: relative; z-index: 2; max-width: 760px; }
+.laneway h2 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5vw, 58px);
+  font-weight: 900;
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 16px 0 0;
+  text-wrap: balance;
+}
+.laneway h2 .accent { color: var(--gold-soft); font-style: normal; }
+.laneway .scribble { color: var(--gold-soft); }
+.laneway .sub { max-width: 52ch; color: rgba(255, 255, 255, 0.82); margin: 0 0 26px; }
+
+.lane-suburbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+}
+.lane-suburbs li {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  color: var(--lane-paper);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+.lane-note { font-size: 14px; color: rgba(255, 255, 255, 0.62); margin: 0; }
+
+/* Small screens: the drifting wall gets in the way of the words, so the
+   paste-ups step back and only the ghost lettering stays. */
+@media (max-width: 700px) {
+  .lane-paste, .lane-plate, .lane-stamp { display: none; }
+  .lane-ghost { top: 2%; font-size: 26vw; }
+}

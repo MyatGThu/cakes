@@ -106,6 +106,45 @@ firing a real mouseleave that paused the very video the test was measuring.
 `videotest.js` now waits for `scrollY` to stop before hovering. Any new hover
 assertion needs the same wait.
 
+### Smooth scroll (Lenis) — why the parallax is smooth
+
+A mouse wheel delivers scroll in discrete jumps, so every scrub-driven tween on
+this site inherited that stepping no matter how it was eased. The stutter is in
+the scroll POSITION, which is the only place it can be fixed — that is what
+Lenis is here for, and why one 18KB library did more for the parallax than any
+amount of easing work.
+
+Three rules keep it from fighting the rest of the site:
+- **GSAP's ticker drives it** (`autoRaf: false`), so there is ONE rAF loop and
+  Lenis and ScrollTrigger can never read different frames.
+- **Touch is left native** (`syncTouch: false`) — a phone's own inertia is
+  already smooth and hijacking it only costs responsiveness.
+- It lives inside the `motion-on` gate, so reduced motion, a blocked CDN and no
+  JS all keep plain native scrolling; `html.lenis*` classes only ever appear
+  when the library is genuinely live, and the CSS that disables the browser's
+  own `scroll-behavior: smooth` is scoped to them.
+
+Lenis keeps the real scroll position rather than transforming a wrapper, which
+is what lets `position: sticky` — the header and the category strip — survive.
+Anything that scrolls the page from JS must go through
+`window.Aurette.scrollToY()`; motion.js swaps in Lenis's own `scrollTo` there,
+because a raw `window.scrollTo` gets fought by the next frame of interpolation.
+
+### The laneway (Melbourne)
+
+`.laneway` on the landing page is the one place the collage direction and the
+location are the same idea: Melbourne's laneways ARE layered paste-ups, so the
+city needed no new visual language, only the right subject. A bluestone ground
+carries seven `.lane-layer` pieces, each drifting at its own `data-lane` depth
+across the section — real depth rather than one backdrop, which is what gives
+the smooth scroll something to show off.
+
+`--bluestone` is derived but anchored to the real basalt colour rather than to
+`--ink` alone, so the stone stays stone on Midnight where `--ink` is a light
+cream. The wall names laneways and the market; the chips below name the suburbs
+she delivers to. Those two lists must stay different — when both said Fitzroy
+and Brunswick the wall read as a broken duplicate of the delivery list.
+
 ### The page wipe (cross-page transition)
 
 Three cooperating pieces, all three pages: an inline `<head>` script sets

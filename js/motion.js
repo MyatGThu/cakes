@@ -43,6 +43,43 @@
   gsap.registerPlugin(ScrollTrigger);
   var rise = "power3.out";
 
+  /* ---------- Smooth scroll (Lenis) ----------
+     A mouse wheel delivers scroll in discrete jumps, so every scrub-driven
+     parallax on this page inherits that stepping no matter how the tween is
+     eased — the stutter is in the scroll POSITION, and that is the only place
+     it can be fixed. Lenis interpolates the position and hands ScrollTrigger
+     the smoothed value, which is why one small library does more for the
+     parallax here than any amount of easing work.
+
+     Three things keep it from fighting the rest of the site:
+       · GSAP's ticker drives it (autoRaf: false) so there is ONE rAF loop and
+         Lenis and ScrollTrigger can never read a different frame's position;
+       · touch is left alone — a phone's native inertia is already smooth, and
+         hijacking it costs responsiveness for nothing;
+       · it is inside the motion-on gate, so reduced motion, a blocked CDN, or
+         no JS all keep plain native scrolling.
+     It also keeps the real scroll position (no transformed wrapper), which is
+     what lets position: sticky — the header and the category strip — survive. */
+  var lenis = null;
+  if (window.Lenis) {
+    lenis = new Lenis({
+      autoRaf: false,
+      smoothWheel: true,
+      syncTouch: false,   // native inertia on touch
+      duration: 1.05,
+      anchors: { offset: -84 }, // clear the sticky header on #story, #menu, …
+    });
+    document.documentElement.classList.add("lenis-on");
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    /* store.js re-anchors the grid after a category change; with Lenis running
+       a raw window.scrollTo is fought by the next frame's interpolation. */
+    if (window.Aurette) {
+      window.Aurette.scrollToY = function (y) { lenis.scrollTo(y, { immediate: true }); };
+    }
+  }
+
   /* ---------- The page wipe (Dennis Snellenberg's signature move) ----------
      Internal navigation sweeps a curved ink sheet up over the page; the next
      page arrives already covered (html.wipe-hold, set pre-paint) and the
@@ -164,6 +201,35 @@
     };
   }
   var viscous = cubicBezier(0.62, 0.02, 0.14, 1);
+
+  /* ---------- The laneway wall ----------
+     Real depth, not one drifting backdrop: each pasted layer moves at its own
+     rate across the section, so the wall reads as things stuck at different
+     distances. This is the piece Lenis exists for — scrubbed against a stepped
+     native wheel it judders, and against an interpolated position it glides.
+     `ease: "none"` on purpose: the scroll position is the timeline, so any
+     easing here would fight the visitor's own hand. */
+  var laneway = document.querySelector(".laneway");
+  if (laneway) {
+    gsap.utils.toArray(".lane-layer").forEach(function (layer) {
+      var depth = parseFloat(layer.getAttribute("data-lane") || "0.3");
+      gsap.fromTo(layer,
+        { yPercent: depth * 46 },
+        {
+          yPercent: -depth * 46,
+          ease: "none",
+          scrollTrigger: {
+            trigger: laneway,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.5,
+          },
+        });
+    });
+    /* The suburb tickets deal themselves onto the wall the first time it is
+       reached — same paste-up gesture the rest of the collage uses. */
+    revealIn(gsap.utils.toArray(".lane-suburbs li"));
+  }
 
   // Magnetic CTAs (same kit): buttons lean toward the cursor and spring back.
   var magnetResets = [];

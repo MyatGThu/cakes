@@ -341,8 +341,7 @@
       if (stuck) host.style.position = "";
       var target = Math.max(0, Math.round(resting - offset));
       if (window.pageYOffset > target + 1) {
-        try { window.scrollTo({ top: target, behavior: "instant" }); }
-        catch (e) { window.scrollTo(0, target); }
+        window.Aurette.scrollToY(target);
       }
     });
   }

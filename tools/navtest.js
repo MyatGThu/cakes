@@ -16,6 +16,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const GSAP = path.join(__dirname, 'node_modules/gsap/dist');
+const LENIS = path.join(__dirname, 'node_modules/lenis/dist');
 const PORT = 8079;
 const B = 'http://localhost:' + PORT;
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.mp4': 'video/mp4' };
@@ -71,6 +72,8 @@ const state = (p) => p.evaluate(() => {
     if (withGsap) {
       await p.route('https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/*', r =>
         r.fulfill({ body: fs.readFileSync(path.join(GSAP, r.request().url().split('/').pop()), 'utf8'), contentType: 'text/javascript' }));
+      await p.route('https://cdn.jsdelivr.net/npm/lenis@*/dist/*', r =>
+        r.fulfill({ body: fs.readFileSync(path.join(LENIS, r.request().url().split('/').pop())), contentType: 'text/javascript' }));
     } else {
       await p.route('https://cdn.jsdelivr.net/**', r => r.abort());
     }

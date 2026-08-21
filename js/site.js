@@ -48,5 +48,13 @@ window.Aurette = (function () {
     });
   }
 
-  return { renderFooterContact: renderFooterContact };
+  /* Scrolling the page from JS. motion.js replaces this with Lenis's own
+     scrollTo once smooth scroll is live — a raw window.scrollTo would be
+     fought by the next frame of interpolation. */
+  function scrollToY(y) {
+    try { window.scrollTo({ top: y, behavior: "instant" }); }
+    catch (e) { window.scrollTo(0, y); }
+  }
+
+  return { renderFooterContact: renderFooterContact, scrollToY: scrollToY };
 })();

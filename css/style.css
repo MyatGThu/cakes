@@ -43,6 +43,14 @@
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+/* Lenis owns the scroll position when it is running, so the browser's own
+   smooth-scroll has to stand down or the two ease against each other. These
+   three rules are Lenis's required stylesheet, scoped to the class motion.js
+   only adds once the library is actually live — nothing here applies on the
+   reduced-motion, no-JS or blocked-CDN paths. */
+html.lenis, html.lenis body { height: auto; }
+html.lenis.lenis-smooth { scroll-behavior: auto !important; }
+html.lenis.lenis-stopped { overflow: hidden; }
 
 /* App-like page morphs between landing / menu / about (Chrome, Safari;
    others get instant navigation). */
