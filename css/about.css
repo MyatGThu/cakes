@@ -170,3 +170,65 @@ main { position: relative; z-index: 1; }
 }
 .pull-quote cite { font-style: normal; color: var(--ink-soft); font-size: 15px; }
 .values-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- Contact ----------
+   No form: there is no backend to receive one, and every message should land
+   in the same inbox Mia already answers. The page's job is to pick the channel
+   and tell you what to say. */
+.contact-title {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 5.4vw, 60px);
+  font-weight: 900;
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin: 14px 0 0;
+  text-wrap: balance;
+}
+.contact-title .accent { color: var(--accent); font-style: normal; }
+.contact-lede { max-width: 46ch; color: var(--ink-soft); margin: 16px 0 30px; }
+
+.channel-list { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 16px; max-width: 460px; }
+.channel { display: grid; gap: 6px; }
+.channel .btn { width: 100%; }
+.channel-note { font-size: 14px; color: var(--ink-soft); }
+.channel--none { color: var(--ink-soft); font-size: 15px; }
+
+.sheet-brief h2, .sheet-practical h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.4vw, 38px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+.brief-lede { color: var(--ink-soft); margin: 0 0 26px; max-width: 48ch; }
+.brief-list { list-style: none; counter-reset: brief; margin: 0 0 32px; padding: 0; display: grid; gap: 18px; max-width: 620px; }
+/* Numbered because these genuinely are a sequence — it is the order Mia needs
+   them in to quote you, not decoration. */
+.brief-list li { counter-increment: brief; display: grid; grid-template-columns: 44px 1fr; gap: 4px 14px; align-items: baseline; }
+.brief-list li::before {
+  content: counter(brief, decimal-leading-zero);
+  grid-row: 1 / span 2;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.brief-list b { font-family: var(--font-display); font-size: 17px; text-transform: uppercase; letter-spacing: 0.02em; }
+.brief-list span { color: var(--ink-soft); font-size: 15px; }
+.brief-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.practical { margin: 0 0 18px; display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 12px 24px; max-width: 720px; }
+.practical dt {
+  font-family: var(--font-display); font-weight: 700; font-size: 12.5px;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+  padding-top: 3px;
+}
+.practical dd { margin: 0; color: var(--ink); }
+.practical-note { color: var(--ink-soft); font-size: 14.5px; max-width: 56ch; margin: 0; }
+@media (max-width: 560px) {
+  .practical { grid-template-columns: 1fr; gap: 4px; }
+  .practical dd { margin-bottom: 12px; }
+}

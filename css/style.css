@@ -337,7 +337,11 @@ a.brand:hover .brand-name { color: var(--accent-dark); }
 
 /* ---------- Sections ---------- */
 .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-section.block { padding: clamp(56px, 9vh, 104px) 0; }
+/* One idea per screen: the acts are given enough room that a section arrives,
+   is read, and leaves before the next one starts competing for attention.
+   The clamp keeps a phone from turning that into an endless scroll — the
+   minimum only grows a little, the desktop maximum grows a lot. */
+section.block { padding: clamp(68px, 14vh, 168px) 0; }
 
 /* Swiss section head: hairline rule, uppercase meta line, big flush-left
    headline. The rule + label is the grid made visible. */

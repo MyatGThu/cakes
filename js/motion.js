@@ -151,7 +151,7 @@
   window.addEventListener("pageshow", function (e) { if (e.persisted) hideWipe(); });
 
   if (wipe) {
-    var WIPE_LABELS = { "": "Aurette", "index.html": "Aurette", "shop.html": "The Menu", "about.html": "The Baker" };
+    var WIPE_LABELS = { "": "Aurette", "index.html": "Aurette", "shop.html": "The Menu", "about.html": "The Baker", "contact.html": "Say Hello" };
     document.addEventListener("click", function (e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       var a = e.target.closest && e.target.closest("a[href]");
@@ -306,14 +306,18 @@
   }
 
   // Generic reveals — everything rises into place.
+  /* Calm, not busy: things arrive one at a time. The trigger sits lower in the
+     viewport so a section is properly on screen before it starts, and the
+     longer duration and stagger mean a group reads as a sequence rather than a
+     single flash of everything at once. */
   function revealIn(els) {
     if (!els.length) return;
-    gsap.set(els, { opacity: 0, y: 30 });
+    gsap.set(els, { opacity: 0, y: 34 });
     ScrollTrigger.batch(els, {
-      start: "top 88%",
+      start: "top 82%",
       once: true,
       onEnter: function (batch) {
-        gsap.to(batch, { opacity: 1, y: 0, duration: 0.8, stagger: 0.09, ease: rise, overwrite: true });
+        gsap.to(batch, { opacity: 1, y: 0, duration: 1.05, stagger: 0.14, ease: rise, overwrite: true });
       },
     });
   }

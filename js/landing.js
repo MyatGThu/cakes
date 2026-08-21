@@ -44,6 +44,7 @@
       var fPickup = $("footerPickup");
       if (fPickup) fPickup.textContent = s.pickupAddress ? "Pickup: " + s.pickupAddress : "";
       window.Aurette.renderFooterContact($("footerContact"), s);
+      renderContactPage(s);
       var handle = String(s.instagramHandle || "").replace(/^@/, "");
       var igAbout = $("igFollowAbout");
       if (igAbout && handle) {
@@ -52,6 +53,72 @@
       }
     })
     .catch(function () { /* static defaults remain */ });
+
+  /* contact.html only. Everything here is read from settings.json rather than
+     written into the page, so the hours, the closed day and the delivery note
+     cannot drift away from what the shop actually does once Mia edits them. */
+  function renderContactPage(s) {
+    var list = $("contactChannels");
+    if (list) {
+      var channels = window.Aurette.contactChannels(s);
+      list.innerHTML = "";
+      if (!channels.length) {
+        var li = document.createElement("li");
+        li.className = "channel channel--none";
+        li.textContent = "Contact details are being set up — check back shortly.";
+        list.appendChild(li);
+      }
+      channels.forEach(function (c) {
+        var li = document.createElement("li");
+        li.className = "channel";
+        var a = document.createElement("a");
+        a.className = "btn btn-primary btn-lg";
+        a.href = c.href;
+        a.textContent = c.label;
+        if (c.external) { a.target = "_blank"; a.rel = "noopener"; }
+        var note = document.createElement("span");
+        note.className = "channel-note";
+        note.textContent = c.note;
+        li.appendChild(a);
+        li.appendChild(note);
+        list.appendChild(li);
+      });
+    }
+
+    var dl = $("practical");
+    if (!dl) return;
+    var rows = [];
+    if (s.pickupAddress) rows.push(["Pickup", s.pickupAddress]);
+    if (s.deliveryAvailable === true) {
+      rows.push(["Delivery", s.deliveryNote || "Available across Melbourne — confirmed with your order."]);
+    }
+    var cutoff = parseInt(s.orderCutoffHour, 10);
+    if (!isNaN(cutoff)) {
+      var h = cutoff % 12 === 0 ? 12 : cutoff % 12;
+      rows.push(["Daily cutoff", "Orders in after " + h + (cutoff < 12 ? "am" : "pm") +
+        " start counting from the next day."]);
+    }
+    var closed = Array.isArray(s.closedWeekdays) ? s.closedWeekdays : [];
+    if (closed.length) {
+      rows.push(["Closed", closed.map(function (i) {
+        return new Date(2026, 1, 1 + i).toLocaleDateString(undefined, { weekday: "long" });
+      }).join(" and ")]);
+    }
+    if (Array.isArray(s.pickupSlots) && s.pickupSlots.length) {
+      rows.push(["Pickup windows", s.pickupSlots.join("  ·  ")]);
+    }
+    dl.innerHTML = "";
+    rows.forEach(function (r) {
+      var dt = document.createElement("dt"); dt.textContent = r[0];
+      var dd = document.createElement("dd"); dd.textContent = r[1];
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+    var note = $("practicalNote");
+    if (note) {
+      note.textContent = "Every cake shows its own notice period on the menu — the site only offers " +
+        "dates Mia can genuinely make.";
+    }
+  }
 
   // If an order is already in progress, the header button reflects it.
   try {

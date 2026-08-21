@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Baker — Aurette by Mia</title>
-  <meta name="description" content="Meet Mia — the baker behind Aurette. Made-to-order cakes from one Melbourne kitchen.">
+  <title>Contact — Aurette by Mia</title>
+  <meta name="description" content="Get in touch with Aurette by Mia — Melbourne made-to-order cakes. Pickup and delivery across the inner suburbs.">
   <meta name="theme-color" content="#f6eedd">
-  <meta property="og:title" content="The Baker — Aurette by Mia">
-  <meta property="og:description" content="Every cake has a story — usually it starts with someone’s favourite person.">
+  <meta property="og:title" content="Contact — Aurette by Mia">
+  <meta property="og:description" content="Message Mia about a cake — Melbourne pickup and delivery.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://myatgthu.github.io/cakes/images/og.png">
   <link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png">
@@ -70,7 +70,7 @@
       <nav class="nav-links" aria-label="Main">
         <a href="index.html">Home</a>
         <a href="shop.html">Menu</a>
-        <a href="about.html" aria-current="page">About</a>
+        <a href="about.html">About</a>
       </nav>
       <a class="cart-button" id="orderNow" href="shop.html">
         Order Now<span class="count" id="cartCount" hidden>0</span>
@@ -79,59 +79,40 @@
   </header>
 
   <main id="main">
-    <div class="paper-grain" aria-hidden="true"></div>
+    <section class="sheet sheet-contact" aria-label="Contact">
+      <p class="stamp" data-reveal>Say hello</p>
+      <h1 class="contact-title" data-reveal>One kitchen, one baker, <em class="accent">and a real reply.</em></h1>
+      <p class="contact-lede" data-reveal>There&rsquo;s no contact form here on purpose. Every message goes
+         straight to Mia, and she answers them herself &mdash; usually the same day.</p>
 
-    <section class="sheet sheet-title" aria-label="Introduction">
-      <img class="sheet-mark" src="images/brand/logo.png" alt="Aurette monogram" width="512" height="512" data-reveal>
-      <p class="stamp" data-reveal>Est. Melbourne · One Kitchen</p>
-      <h1 data-reveal>The baker behind <em>Aurette</em></h1>
-      <p class="lede scrap" data-reveal>Aurette is not a factory, a franchise, or a “cloud bakery.”
-         It’s Mia, an oven with opinions, and a calendar that only says yes when a cake can be made properly.</p>
+      <ul class="channel-list" id="contactChannels" data-reveal></ul>
+
+      <p class="scribble">tell me the date first ✎</p>
     </section>
 
     <div class="torn-divider" aria-hidden="true"></div>
 
-    <section class="sheet sheet-story" aria-label="Mia’s story">
-      <div class="story-grid">
-        <figure class="polaroid" data-reveal><span class="tape tape--tl" aria-hidden="true"></span>
-          <img src="images/cutout/classic-vanilla.svg" alt="Magazine cutout of a two-tier celebration cake" width="400" height="400" loading="lazy">
-          <figcaption>The first Aurette cake — as remembered, generously.</figcaption>
-        </figure>
-        <div class="story-copy">
-          <p class="stamp" data-reveal>Chapter 01 · How it started</p>
-          <p data-reveal>It started, like most good things, with a birthday emergency. A friend’s cake order fell through
-             two days before the party, and Mia — armed with her grandmother’s notebook and an optimistic amount of butter —
-             said the four words every baker regrets and treasures: <em>“I can make one.”</em></p>
-          <p data-reveal>The party ate every crumb. Someone asked for a card. There was no card.
-             There was, eventually, an Instagram handle.</p>
-          <p class="stamp" data-reveal>Chapter 02 · How it works now</p>
-          <p data-reveal>Every Aurette cake is made to order in one Melbourne kitchen — that’s the whole business model.
-             No freezer full of “just in case,” no shelf life to chase. You pick a date, the calendar checks it’s honest,
-             and your cake goes in the oven <em>because it’s yours</em>.</p>
-          <p data-reveal>Custom requests are the favourite part. Bring the wild idea. The worst that happens is a
-             conversation about structural engineering and buttercream.</p>
-        </div>
+    <section class="sheet sheet-brief" aria-label="What to include">
+      <h2 data-reveal>What to put in your first message</h2>
+      <p class="brief-lede" data-reveal>Answer these four and Mia can usually quote you straight back.</p>
+      <ol class="brief-list">
+        <li data-reveal><b>The date</b><span>When you need it in your hands &mdash; and whether that&rsquo;s firm.</span></li>
+        <li data-reveal><b>How many people</b><span>Rough is fine. It sets the tier and the price.</span></li>
+        <li data-reveal><b>Flavour or vibe</b><span>A flavour, a colour, a photo you like &mdash; anything to start from.</span></li>
+        <li data-reveal><b>Pickup or delivery</b><span>If delivery, your suburb. She&rsquo;ll confirm the fee with the quote.</span></li>
+      </ol>
+      <div class="brief-cta" data-reveal>
+        <a class="btn btn-primary btn-lg" href="shop.html">Start from the Menu</a>
+        <a class="btn btn-outline btn-lg" href="about.html">Meet the Baker</a>
       </div>
     </section>
 
     <div class="torn-divider flip" aria-hidden="true"></div>
 
-    <section class="sheet sheet-values" aria-label="What Aurette stands for">
-      <h2 class="values-title" data-reveal>Baked into everything</h2>
-      <div class="values-row">
-        <p class="value-stamp" data-reveal>Slow<br>Baked</p>
-        <p class="value-stamp" data-reveal>Real<br>Butter</p>
-        <p class="value-stamp" data-reveal>Made to<br>Order</p>
-        <p class="value-stamp" data-reveal>Melbourne<br>Made</p>
-      </div>
-      <blockquote class="pull-quote scrap" data-reveal><span class="tape tape--tr" aria-hidden="true"></span>
-        <p>“Every cake has a story — usually it starts with someone’s favourite person.”</p>
-        <cite class="scribble">— Mia</cite>
-      </blockquote>
-      <div class="values-cta" data-reveal>
-        <a class="btn btn-primary btn-lg" href="shop.html">Browse the Menu</a>
-        <a class="btn btn-outline btn-lg" id="igFollowAbout" href="https://instagram.com/aurette_by_mia" target="_blank" rel="noopener">Follow on Instagram</a>
-      </div>
+    <section class="sheet sheet-practical" aria-label="Pickup, delivery and timing">
+      <h2 data-reveal>The practical bits</h2>
+      <dl class="practical" id="practical" data-reveal></dl>
+      <p class="practical-note" id="practicalNote"></p>
     </section>
   </main>
 
@@ -141,8 +122,8 @@
     <nav class="footer-nav" aria-label="Footer">
       <a href="index.html">Home</a>
       <a href="shop.html">Menu</a>
-      <a href="about.html" aria-current="page">About</a>
-      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" aria-current="page">Contact</a>
     </nav>
     <p id="footerPickup">Pickup &amp; delivery across Melbourne — details confirmed with every order</p>
     <p id="footerContact"><a href="https://instagram.com/aurette_by_mia" rel="noopener">Instagram @aurette_by_mia</a></p>

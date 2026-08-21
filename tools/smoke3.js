@@ -139,7 +139,7 @@ async function withGsap(page) {
   // made shop.html a dead end on a phone. These assertions are here so that
   // cannot come back quietly: every page must offer all three destinations, and
   // every tab must stay thumb-sized.
-  for (const [name, url] of [['landing', '/'], ['shop', '/shop.html'], ['about', '/about.html']]) {
+  for (const [name, url] of [['landing', '/'], ['shop', '/shop.html'], ['about', '/about.html'], ['contact', '/contact.html']]) {
     for (const w of [320, 360, 390]) { // 320 is the tightest point in the header
       const mob = await browser.newPage({ viewport: { width: w, height: 844 } });
       track(mob, 'mob-' + name + '-' + w);
@@ -152,12 +152,14 @@ async function withGsap(page) {
           .map(a => (a.getAttribute('href') || '').split('#')[0].split('?')[0]);
         const head = seen('.nav-links a'), foot = seen('.footer-nav a');
         const wanted = ['index.html', 'shop.html', 'about.html'];
+        const wantedFoot = wanted.concat('contact.html');
         const chips = Array.from(document.querySelectorAll('.chip'))
           .map(c => c.getBoundingClientRect());
         return {
           headerNav: head.length,
           reaches: wanted.every(w => head.includes(w)),
           footerNav: foot.length,
+          footerReaches: wantedFoot.every(w => foot.includes(w)),
           brandVisible: document.querySelector('.brand').getBoundingClientRect().x >= 0,
           smallestTab: chips.length
             ? Math.round(Math.min(...chips.map(c => Math.min(c.width, c.height))))
@@ -181,7 +183,10 @@ async function withGsap(page) {
       }
       const bad = [];
       if (nav.headerNav !== 3 || !nav.reaches) bad.push('header nav incomplete');
-      if (nav.footerNav !== 3) bad.push('footer nav incomplete');
+      // Contact lives in the footer, not the header: a fourth header link does
+      // not fit at 320px (measured 43px short), and three destinations plus the
+      // order is the header contract.
+      if (nav.footerNav !== 4 || !nav.footerReaches) bad.push('footer nav incomplete');
       if (!nav.brandVisible) bad.push('brand pushed off-screen');
       if (nav.smallestTab !== null && nav.smallestTab < 44) bad.push('tab under 44px: ' + nav.smallestTab);
       if (nav.hScroll) bad.push('horizontal scroll');

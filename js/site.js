@@ -48,6 +48,39 @@ window.Aurette = (function () {
     });
   }
 
+  /* The ways a customer can actually reach Mia, in the order she prefers them.
+     Shares the placeholder guard above, so a shop that has not been configured
+     yet advertises only the channels that really exist. */
+  function contactChannels(settings) {
+    var out = [];
+    var handle = String(settings.instagramHandle || "").replace(/^@/, "");
+    if (handle) {
+      out.push({
+        href: "https://instagram.com/" + encodeURIComponent(handle),
+        label: "Message on Instagram",
+        note: "@" + handle + " — usually the fastest reply.",
+        external: true,
+      });
+    }
+    var wa = String(settings.whatsappNumber || "").replace(/[^0-9]/g, "");
+    if (wa && !isPlaceholder(wa)) {
+      out.push({
+        href: "https://wa.me/" + wa,
+        label: "Send a WhatsApp",
+        note: "Best for working through a custom cake.",
+        external: true,
+      });
+    }
+    if (settings.orderEmail && !isPlaceholder(settings.orderEmail)) {
+      out.push({
+        href: "mailto:" + settings.orderEmail,
+        label: "Email the kitchen",
+        note: settings.orderEmail,
+      });
+    }
+    return out;
+  }
+
   /* Scrolling the page from JS. motion.js replaces this with Lenis's own
      scrollTo once smooth scroll is live — a raw window.scrollTo would be
      fought by the next frame of interpolation. */
@@ -56,5 +89,9 @@ window.Aurette = (function () {
     catch (e) { window.scrollTo(0, y); }
   }
 
-  return { renderFooterContact: renderFooterContact, scrollToY: scrollToY };
+  return {
+    renderFooterContact: renderFooterContact,
+    contactChannels: contactChannels,
+    scrollToY: scrollToY,
+  };
 })();

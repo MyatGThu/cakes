@@ -222,6 +222,13 @@ other brand asset is a Lanczos resample of it; never redraw or "enhance" it.
 
 ### Navigation
 
+Four destinations, but only three in the header. **Contact lives in the footer
+on purpose**: a fourth header link does not fit — measured 43px short at 320px,
+3px short at 360px, and 96px short at 600px where the wordmark returns — and for
+a bakery Contact is not a peer of Menu, because the ordering flow *is* the
+contact. `contact.html` is reachable from every footer, and `smoke3.js` asserts
+four footer destinations on all four pages.
+
 Three destinations (Home / Menu / About) plus the order. That is small enough
 that the nav is simply **always visible** — there is no hamburger, no drawer, no
 disclosure widget to build or to keep accessible. Below 600px the wordmark folds
@@ -329,6 +336,20 @@ Pistachio used to define `--accent` and `--green` as the same hex, which
 silently collapsed two categories onto one colour *and* made the "Ready to go"
 badge indistinguishable from every accent. `navtest.js` asserts distinctness per
 theme, so a new theme cannot re-break it quietly.
+
+### contact.html
+
+A real page rather than a form: there is no backend to receive one, and every
+message should land in the inbox Mia already answers. The page's job is to pick
+the channel and say what to put in the first message.
+
+Everything on it is read from `data/settings.json` at runtime — the pickup line,
+the delivery note, the cutoff hour, the closed weekdays, the pickup windows — so
+it cannot drift away from what the shop actually does once Mia edits them
+through admin.html. The channel list shares `isPlaceholder()` with the footer,
+so a shop that has not been configured yet advertises only the channels that
+really exist (today: Instagram only, since the WhatsApp number and order email
+are still the shipped placeholders).
 
 ### Theming
 
