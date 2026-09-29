@@ -25,10 +25,13 @@ Everything runs from `tools/` (the only npm package in the repo):
 
 ```bash
 cd tools && npm install          # once; set CHROMIUM_PATH if Playwright's browser lives elsewhere
-npm test                         # smoke3 (3 pages) + wipetest — assert zero page errors
+npm test                         # smoke3 (4 pages + the film) + wipetest — assert zero page errors
+npm run test:nav                 # overlays/Back, card links, theme colours
 npm run test:video               # hover-video behaviour (generates VP9 twins first — see below)
 node smoke3.js                   # a single suite; screenshots land in tools/out/
 npm run og                       # rebuild images/og.png from images/brand/logo.png
+node gen-film.js story a.mp4 b.mp4 --frames 144 --still end.png   # cut the scroll film's frames
+python3 make-cutout.py in.png ../images/photo/x.webp --size 360     # bake a photo into a sticker cutout
 ```
 
 Local preview of the site itself: `python3 -m http.server 8000` from the repo root
@@ -51,7 +54,7 @@ Test quirks worth knowing:
 `js/motion.js` owns all animation and is layered strictly:
 
 1. **`html.motion-on`** — set only when GSAP loaded *and* the user allows motion.
-   Every cinematic layout state (pinned 340vh cake stage, hidden captions,
+   Every cinematic layout state (pinned 520vh film stage, hidden captions,
    ingredient choreography, page wipe, magnetic buttons, marquee) is gated on
    this class in CSS/JS.
 2. **`html.io-anim`** — no GSAP but motion allowed: IntersectionObserver + CSS
@@ -145,12 +148,52 @@ cream. The wall names laneways and the market; the chips below name the suburbs
 she delivers to. Those two lists must stay different — when both said Fitzroy
 and Brunswick the wall read as a broken duplicate of the delivery list.
 
+### The film (the screening room)
+
+Act 2 on the landing page is the one place that leaves the paper: a dark
+room (`--film-black`/`--film-cream`, anchored to real values like the
+laneway's basalt, never derived from `--ink`) with a film in it that the
+visitor plays with the scrollbar. Three shots on one set — her raw
+ingredients suspended in a black void fold into her strawberry vanilla cake;
+the cake lifts apart into an exploded cross-section of its layers; hands
+present it — in a Nolan register: one hard tungsten key, no fill, deep blacks,
+locked-off camera, large-format 65mm look. The IMAX 1.43:1 frame on desktop,
+square on phones.
+
+How it is built, and why:
+- **Frames, not `<video>`.** `tools/gen-film.js` cuts the clips into
+  `images/film/<name>/lg` (16:9, every frame) and `sm` (the centre square,
+  every other frame, for phones and Save-Data). `makeFilm()` in motion.js
+  draws the nearest loaded frame to a canvas. Seeking a video per scroll tick
+  waits on the decoder and stutters; a decoded frame answers instantly in
+  both directions.
+- **Coarse-to-fine loading** (every 32nd frame, then 16th, …) starting three
+  screens early, so an early arrival sees the film move in bigger steps
+  rather than a frozen picture.
+- **`data-sequence` is an edit list** over the frames. The exploded view
+  plays forwards and then runs back on itself — time reversing is what
+  reassembles the cake — without shipping a frame twice. Motion that reads
+  the same backwards (suspended, weightless, no pouring or cracking) is a
+  rule for any new shot, because the visitor WILL scroll up.
+- **`data-chapters`** are the points in that edit list where each subtitle
+  takes over, so the captions follow the picture rather than the scrollbar.
+- **Degraded paths**: the canvas only exists under `motion-on`; everywhere
+  else `.film-still` (the finished cake) is the picture, and it stays up
+  until the first frame is actually painted.
+
+The shots were generated from keyframes made first on one shared set (same
+stand, light and lens), then animated between pinned start/end frames —
+Kling 3.0 for the assembly and exploded view (steadier between pinned
+frames), Seedance 2.0 for the hands (better at hand actions). Only Mia's own
+cake appears; the ingredients and the cross-section are illustrative.
+
 ### The page wipe (cross-page transition)
 
-Three cooperating pieces, all three pages: an inline `<head>` script sets
+Three cooperating pieces, on every visitor page: an inline `<head>` script sets
 `html.wipe-hold` **pre-paint** when `sessionStorage.auretteWipe` exists (with a
 2.2s failsafe timeout); `.page-wipe` markup + CSS shows the covering sheet;
-`motion.js` intercepts same-origin clicks to `index/shop/about.html` only, plays
+`motion.js` intercepts same-origin clicks to the pages named in `WIPE_LABELS`
+(index/shop/about/contact) only, plays
 the curved-SVG cover, sets the sessionStorage flag, navigates, and on the next
 page lifts the sheet. Every degraded path (reduced motion, no GSAP, bfcache
 restore) must clear the flag/class — that cleanup already exists in
@@ -158,11 +201,21 @@ restore) must clear the flag/class — that cleanup already exists in
 
 ### Card media ladder (shop)
 
-`store.js` picks each product card's media: real footage (`p.video`,
+`store.js` picks each product card's media: footage (`p.video`,
 chromeless muted `<video>`, hover-play on desktop / in-view on touch) →
 the product's flat 2D illustration (`p.image`). Reduced motion always gets
 stills; a missing video (or poster) falls back down the ladder. Cart
 thumbnails and the IG-fallback gallery always use the static `p.image`.
+
+Two kinds of footage share the grid. `classic-vanilla`, `chocolate-fudge`
+and `custom-celebration` are **Mia's own phone footage — never re-encode,
+regrade or replace them**. `cupcake-box`, `banana-bread`, `cookie-box` and
+`lemon-drizzle` are generated stand-ins (Higgsfield; a warm set with one hard
+window key so they sit beside hers rather than out-shout them), encoded by
+`tools/gen-card-video.js` into the same 720×540 H.264 + first-frame poster.
+They are placeholders for her real footage: when she films one, drop it in
+with the same tool and the same file name. `videotest.js` reads its expected
+video/still counts from `products.json`, so that swap needs no test edit.
 
 ### Ordering without a backend
 
@@ -178,13 +231,21 @@ mismatch after menu edits — prices are never trusted from stale storage.
 
 The site is a paper collage. Two rules carry it:
 
-**Art** — every product, ingredient and kitchen tool is a magazine cutout in
-`images/cutout/`, governed by `images/cutout/_spec.md`: a flat `#d9cbb6`
-print shadow, a `#fffdf8` sticker rim with a RAGGED hand-cut edge, then flat
-art, plus sparing halftone dots. No gradients, strokes, filters or opacity —
-the sticker rim is drawn into the SVG rather than applied as a CSS filter
-chain (cheaper, crisper, and it survives the no-filter rule). `images/flat/`
-holds the previous plainer set, still valid as fallback art.
+**Art** — the landing and About pages use **photographic** cutouts in
+`images/photo/`: real photographs (Higgsfield renders for ingredients and
+tools; Mia's own cakes, re-lit from frames of her footage) with the collage
+grammar baked into the pixels by `tools/make-cutout.py` — a flat `#d9cbb6`
+print shadow, a `#fffdf8` sticker rim cut in short straight scissor strokes,
+then the photo. That is what a real magazine collage is: photographs cut out
+with scissors. The rim is cut around the OUTSIDE only, so the gaps inside a
+whisk are paper, and it is never a CSS filter (a filter on an element whose
+transform changes every frame forces a repaint every frame).
+
+The illustrated set in `images/cutout/` (governed by
+`images/cutout/_spec.md`) is still the product-card art for anything without
+footage — and it should stay illustrated: a photoreal render of a cake Mia
+did not bake would be a picture of a product she does not sell. Only her own
+cakes appear as photographs. `images/flat/` holds the older plainer set.
 
 **Page** — `css/collage.css` loads last on every page and turns the furniture
 into paper: `.scrap` (a torn sheet, shadowed with `filter: drop-shadow` so the

@@ -448,44 +448,161 @@
     });
   }
 
-  // The stage: the flat cake assembles layer by layer as you scroll,
-  // while ingredients fly in from the edges and disappear into it.
+  /* ---------- The film: a scroll-scrubbed frame sequence ----------
+     The story stage plays real footage frame by frame from the scroll
+     position, so the visitor holds the playhead: scroll down and the cake is
+     made, scroll up and time runs backwards. Frames rather than a <video>
+     because seeking a video on every scroll tick waits on the decoder and
+     stutters (iOS Safari worst of all); a pre-cut frame on a canvas answers
+     instantly in both directions. tools/gen-film.js cuts the frames.
+
+     Loading is coarse-to-fine — every 32nd frame, then every 16th, … — so a
+     visitor who scrolls in early still sees the film move, just in bigger
+     steps, while the rest arrive. Phones and Save-Data get the small set at
+     half the frame count. Until a frame is on the canvas the still stays up,
+     and without motion-on there is no canvas at all: the still (the finished
+     cake) IS the static page.
+
+     data-sequence is an edit list over the cut frames ("1-80,81-120,120-81")
+     so a shot can play forwards and then run back on itself — the layers
+     that fly apart are reassembled by time running backwards — without
+     shipping a single extra frame. */
+  function makeFilm(el) {
+    var base = el.getAttribute("data-film");
+    var total = parseInt(el.getAttribute("data-frames") || "0", 10);
+    var seq = [];
+    (el.getAttribute("data-sequence") || "1-" + total).split(",").forEach(function (range) {
+      var ends = range.split("-");
+      var a = parseInt(ends[0], 10) - 1, b = parseInt(ends[1] || ends[0], 10) - 1;
+      var dir = a <= b ? 1 : -1;
+      for (var i = a; i !== b + dir; i += dir) if (i >= 0 && i < total) seq.push(i);
+    });
+    var canvas = el.querySelector(".film-canvas");
+    if (!base || !total || !seq.length || !canvas || !canvas.getContext) return null;
+    var ctx = canvas.getContext("2d");
+    var conn = navigator.connection || {};
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var small = !!conn.saveData || el.clientWidth * dpr < 900;
+    var set = small ? "sm" : "lg";
+    var step = small ? 2 : 1;
+    var last = Math.floor((total - 1) / step) * step;
+    function snap(i) { return Math.min(last, Math.round(i / step) * step); }
+    var frames = [];
+    var want = 0, drawn = -1, started = false, live = false;
+
+    function url(i) { return base + "/" + set + "/" + ("00" + (i + 1)).slice(-3) + ".webp"; }
+    function queue() {
+      var seen = {}, q = [];
+      function add(i) { if (!seen[i]) { seen[i] = true; q.push(i); } }
+      add(snap(seq[0])); add(snap(seq[seq.length - 1]));
+      for (var gap = 32 * step; gap >= step; gap /= 2) {
+        for (var i = 0; i <= last; i += gap) add(i);
+      }
+      return q;
+    }
+    function nearest(i) {
+      for (var d = 0; d <= last; d += step) {
+        if (frames[i - d]) return i - d;
+        if (frames[i + d]) return i + d;
+      }
+      return -1;
+    }
+    function fit() {
+      var w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+      if (w && h && (canvas.width !== w || canvas.height !== h)) {
+        canvas.width = w; canvas.height = h; drawn = -1;
+      }
+    }
+    function draw() {
+      var i = nearest(want);
+      if (i < 0 || i === drawn) return;
+      var img = frames[i], cw = canvas.width, ch = canvas.height;
+      if (!cw || !ch) return;
+      var s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight); // cover
+      var w = img.naturalWidth * s, h = img.naturalHeight * s;
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      drawn = i;
+      if (!live) { live = true; el.classList.add("film-live"); }
+    }
+    function load() {
+      if (started) return;
+      started = true;
+      fit();
+      var q = queue(), active = 0;
+      (function pump() {
+        while (active < 6 && q.length) {
+          (function (i) {
+            active++;
+            var img = new Image();
+            img.decoding = "async";
+            function done() { active--; pump(); }
+            img.onload = function () {
+              // decode off the main thread before the canvas ever asks for it
+              var ready = img.decode ? img.decode() : Promise.resolve();
+              ready.catch(function () {}).then(function () { frames[i] = img; draw(); done(); });
+            };
+            img.onerror = done;
+            img.src = url(i);
+          })(q.shift());
+        }
+      })();
+    }
+    if (window.ResizeObserver) new ResizeObserver(function () { fit(); draw(); }).observe(canvas);
+    return {
+      load: load,
+      seek: function (p) {
+        want = snap(seq[Math.round(p * (seq.length - 1))]);
+        draw();
+      },
+    };
+  }
+
+  // The stage: ingredients fly in and vanish into the film, which then plays
+  // the cake being made from the scroll position.
   var stage = document.querySelector(".cake-stage");
   if (stage) {
-    var layers = ["#sPlate", "#sTier1", "#sTier2", "#sTier3", "#sDots", "#sCherry"];
-    gsap.set(layers, { opacity: 0, y: -64 });
-    var build = gsap.timeline({
-      scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.4 },
-    });
-    layers.forEach(function (sel, i) {
-      build.to(sel, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2 + i * 0.3);
-    });
-    build.to({}, { duration: 1.2 }); // dwell on the finished cake
-
+    var filmEl = stage.querySelector(".film");
+    var reel = filmEl && makeFilm(filmEl);
     var captions = gsap.utils.toArray(".stage-caption");
     gsap.set(captions, { autoAlpha: 0, y: 26 });
     var shown = -1;
-    ScrollTrigger.create({
-      trigger: stage,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: true,
-      onUpdate: function (self) {
-        var want = Math.min(2, Math.floor(self.progress * 3.15));
-        if (want !== shown) {
-          if (shown >= 0) gsap.to(captions[shown], { autoAlpha: 0, y: -20, duration: 0.35, ease: "power2.in", overwrite: true });
-          gsap.to(captions[want], { autoAlpha: 1, y: 0, duration: 0.5, ease: rise, overwrite: true });
-          shown = want;
-        }
-      },
-    });
-    gsap.fromTo(".stage-cake", { scale: 0.88, y: 30 }, {
+    function caption(want) {
+      if (want === shown || !captions[want]) return;
+      if (shown >= 0) gsap.to(captions[shown], { autoAlpha: 0, y: -20, duration: 0.35, ease: "power2.in", overwrite: true });
+      gsap.to(captions[want], { autoAlpha: 1, y: 0, duration: 0.5, ease: rise, overwrite: true });
+      shown = want;
+    }
+    // Where each caption takes over, as a fraction of the film's edit list
+    // (data-chapters) — the subtitles follow the picture, not the scrollbar.
+    var chapters = ((filmEl && filmEl.getAttribute("data-chapters")) || "0,0.34,0.67").split(",").map(parseFloat);
+    function chapterAt(p) {
+      var k = 0;
+      chapters.forEach(function (c, i) { if (p >= c) k = i; });
+      return k;
+    }
+    var playhead = { p: 0 };
+    if (reel) {
+      // start fetching well before the stage arrives
+      ScrollTrigger.create({ trigger: stage, start: "top 300%", onEnter: reel.load, onEnterBack: reel.load });
+    }
+    gsap.timeline({
+      scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.6 },
+    })
+      .to({}, { duration: 0.05 }) // hold the opening frame while the ingredients land
+      .to(playhead, {
+        p: 1, duration: 0.9, ease: "none",
+        onUpdate: function () { if (reel) reel.seek(playhead.p); caption(chapterAt(playhead.p)); },
+      })
+      .to({}, { duration: 0.05 }); // and the last one, before the page moves on
+    caption(0);
+    gsap.fromTo(".stage-cake", { scale: 0.94, y: 24 }, {
       scale: 1.0, y: 0, ease: "none",
       scrollTrigger: { trigger: stage, start: "top top", end: "bottom bottom", scrub: 0.4 },
     });
 
-    // The recipe plays out: flat ingredients fly in and vanish into the cake
-    // during the first half of the scroll story.
+    // The paper ingredients fly in and vanish into the film in the opening
+    // fifth of the stage, just as the real ones appear on screen — the
+    // collage hands over to the footage.
     var stageIngs = gsap.utils.toArray(".stage-ing");
     if (stageIngs.length) {
       var squeeze = window.innerWidth < 700 ? 0.42 : 1;
@@ -496,13 +613,13 @@
         var sx = parseFloat(el.getAttribute("data-sx") || "300") * squeeze;
         var sy = parseFloat(el.getAttribute("data-sy") || "0") * squeeze;
         var rot = parseFloat(el.getAttribute("data-srot") || "120");
-        var at = i * 0.16;
+        var at = i * 0.05;
         conv.fromTo(el,
           { x: sx, y: sy, rotation: rot, scale: 1, opacity: 0 },
           { x: sx * 0.16, y: sy * 0.16, rotation: rot * 0.25, opacity: 1, scale: 0.72, duration: 0.5, ease: "power1.in", immediateRender: true }, at)
           .to(el, { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 0.2, ease: "power2.in" }, at + 0.5);
       });
-      conv.to({}, { duration: 1.9 });
+      conv.to({}, { duration: 3.6 });
     }
   }
 

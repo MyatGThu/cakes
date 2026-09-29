@@ -57,12 +57,40 @@ async function withGsap(page) {
   // scroll into the turntable stage
   await land.evaluate(() => document.querySelector('.cake-stage').scrollIntoView());
   for (let i = 0; i < 10; i++) { await land.mouse.wheel(0, 400); await land.waitForTimeout(120); }
-  const stageState = await land.evaluate(() => {
-    const tier = document.querySelector('#sTier1');
-    const visibleCaptions = Array.from(document.querySelectorAll('.stage-caption')).filter(el => parseFloat(getComputedStyle(el).opacity) > 0.5).length;
-    return { cakeBuilding: parseFloat(getComputedStyle(tier).opacity) > 0, visibleCaptions };
+  await land.waitForTimeout(900);
+  // The film: frames on the canvas, still faded out, and the playhead is
+  // somewhere past the opening frame after scrolling into the stage.
+  const filmPixels = () => land.evaluate(() => {
+    const c = document.querySelector('.film-canvas');
+    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    let sum = 0;
+    for (let i = 0; i < d.length; i += 4 * 97) sum += d[i] + d[i + 1] + d[i + 2];
+    return sum;
   });
-  console.log('landing stage:', JSON.stringify(stageState), '(cakeBuilding true, 1 caption)');
+  const stageState = await land.evaluate(() => {
+    const film = document.querySelector('.film');
+    const visibleCaptions = Array.from(document.querySelectorAll('.stage-caption')).filter(el => parseFloat(getComputedStyle(el).opacity) > 0.5).length;
+    return {
+      filmLive: film.classList.contains('film-live'),
+      stillHidden: parseFloat(getComputedStyle(film.querySelector('.film-still')).opacity) < 0.05,
+      visibleCaptions,
+    };
+  });
+  // Park the playhead at two known points rather than wheeling blind — the
+  // film holds its last frame, so a wheel that overshoots proves nothing.
+  const geo = await land.evaluate(() => {
+    const s = document.querySelector('.cake-stage');
+    return { top: s.getBoundingClientRect().top + scrollY, len: s.offsetHeight - innerHeight };
+  });
+  await land.evaluate(y => window.scrollTo(0, y), geo.top + geo.len * 0.2);
+  await land.waitForTimeout(1400);
+  const sigA = await filmPixels();
+  await land.evaluate(y => window.scrollTo(0, y), geo.top + geo.len * 0.6);
+  await land.waitForTimeout(1400);
+  stageState.filmMoves = (await filmPixels()) !== sigA;
+  stageState.painted = sigA > 0;
+  console.log('landing stage:', JSON.stringify(stageState), '(filmLive, stillHidden, painted, filmMoves true, 1 caption)');
+  if (!stageState.filmLive || !stageState.painted || !stageState.filmMoves || stageState.visibleCaptions !== 1) errors.push('[landing] film stage not playing: ' + JSON.stringify(stageState));
   await land.screenshot({ path: OUT + '/v4-turntable.png' });
 
   // teaser floats + footer
@@ -119,11 +147,14 @@ async function withGsap(page) {
   const fb = await nofx.evaluate(() => ({
     motionOn: document.documentElement.classList.contains('motion-on'),
     stageAuto: getComputedStyle(document.querySelector('.cake-stage')).height,
-    cakeComplete: Array.from(document.querySelectorAll('#stageCake g, #stageCake rect')).every(el => parseFloat(getComputedStyle(el).opacity) === 1),
+    // no canvas without motion-on: the still (the finished cake) is the page
+    filmStill: (() => { const i = document.querySelector('.film-still'); return i.complete && i.naturalWidth > 0 && parseFloat(getComputedStyle(i).opacity) === 1; })(),
+    noCanvas: getComputedStyle(document.querySelector('.film-canvas')).display === 'none',
     captionsVisible: Array.from(document.querySelectorAll('.stage-caption')).every(el => parseFloat(getComputedStyle(el).opacity) === 1),
     heroVisible: parseFloat(getComputedStyle(document.getElementById('heroTitle')).opacity) === 1,
   }));
   console.log('no-CDN landing:', JSON.stringify(fb));
+  if (fb.motionOn || !fb.filmStill || !fb.noCanvas || !fb.captionsVisible || !fb.heroVisible) errors.push('[nofx] static landing incomplete: ' + JSON.stringify(fb));
   await nofx.close();
 
   // ---- Reduced motion ----

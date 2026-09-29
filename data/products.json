@@ -83,7 +83,9 @@
         "name": "Box of 12",
         "price": 33
       }
-    ]
+    ],
+    "video": "images/video/cupcake-box.mp4",
+    "videoPoster": "images/video/cupcake-box-poster.webp"
   },
   {
     "id": "banana-bread",
@@ -93,7 +95,9 @@
     "image": "images/cutout/banana-bread.svg",
     "leadTimeDays": 1,
     "available": true,
-    "price": 14
+    "price": 14,
+    "video": "images/video/banana-bread.mp4",
+    "videoPoster": "images/video/banana-bread-poster.webp"
   },
   {
     "id": "cookie-box",
@@ -103,7 +107,9 @@
     "image": "images/cutout/cookie-box.svg",
     "leadTimeDays": 1,
     "available": true,
-    "price": 16
+    "price": 16,
+    "video": "images/video/cookie-box.mp4",
+    "videoPoster": "images/video/cookie-box-poster.webp"
   },
   {
     "id": "lemon-drizzle",
@@ -113,6 +119,8 @@
     "image": "images/cutout/lemon-drizzle.svg",
     "leadTimeDays": 3,
     "available": false,
-    "price": 34
+    "price": 34,
+    "video": "images/video/lemon-drizzle.mp4",
+    "videoPoster": "images/video/lemon-drizzle-poster.webp"
   }
 ]

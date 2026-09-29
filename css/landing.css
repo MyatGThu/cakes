@@ -81,8 +81,18 @@ body { overflow-x: clip; }
 }
 @keyframes cueBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
-/* ---------- Act 2 · Turntable stage ---------- */
-.cake-stage { height: 340vh; }
+/* ---------- Act 2 · The screening room ----------
+   The one act that leaves the paper: a dark room with the film in it, so the
+   footage reads as a picture being projected rather than another scrap on
+   the page. Anchored to real film black and projector cream rather than to
+   --ink/--bg, the same way the laneway is anchored to basalt — on Midnight
+   --ink is a light cream and a derived "black" would turn grey. */
+.cake-stage {
+  --film-black: #0d0b0a;
+  --film-cream: #efe6d8;
+  --film-accent: color-mix(in srgb, var(--accent) 62%, #fff);
+  height: 520vh;
+}
 html:not(.motion-on) .cake-stage { height: auto; }
 
 .stage-sticky {
@@ -94,38 +104,54 @@ html:not(.motion-on) .cake-stage { height: auto; }
   justify-items: center;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 90% 60% at 50% 62%, var(--accent-soft) 0%, transparent 62%),
-    var(--bg);
+    radial-gradient(ellipse 70% 60% at 50% 45%, color-mix(in srgb, var(--film-black) 82%, var(--gold)) 0%, transparent 70%),
+    var(--film-black);
+  color: var(--film-cream);
 }
 html:not(.motion-on) .stage-sticky { position: relative; height: auto; padding: 72px 20px; gap: 32px; }
 
-.stage-cake { position: relative; width: min(74vw, 480px); aspect-ratio: 1; z-index: 1; }
-.stage-cake svg { width: 100%; height: 100%; display: block; }
+/* 1.43:1 is the IMAX frame — the film is cut from 4:3 masters, so this only
+   trims a sliver top and bottom. Height-capped so frame + subtitle band
+   always fit one screen. Phones get a square: the cake stays whole. */
+.stage-cake {
+  position: relative; z-index: 1;
+  width: min(92vw, 1100px, calc((100svh - 250px) * 1.43));
+}
+html.motion-on .stage-cake { margin-top: -6svh; }
+.film {
+  position: relative;
+  aspect-ratio: 1.43;
+  overflow: hidden;
+  background: var(--film-black);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--film-cream) 14%, transparent), 0 40px 90px rgba(0, 0, 0, 0.55);
+}
+@media (max-width: 640px) { .film { aspect-ratio: 1; } html.motion-on .stage-cake { margin-top: -10svh; } }
+.film-still, .film-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.film-still { object-fit: cover; transition: opacity 0.5s var(--ease-viscous); }
+.film-canvas { display: none; }
+html.motion-on .film-canvas { display: block; }
+.film.film-live .film-still { opacity: 0; }
 
 .stage-captions { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 html:not(.motion-on) .stage-captions { position: static; display: grid; gap: 18px; }
 
+/* Subtitles: all three share one place under the frame and hand over to
+   each other, the way a title card does — never scattered over the picture. */
 .stage-caption {
   position: absolute;
-  max-width: 300px;
+  left: 50%; bottom: max(4svh, 22px);
+  width: min(92vw, 640px);
+  margin: 0 0 0 calc(min(92vw, 640px) / -2);
+  text-align: center;
   font-family: var(--font-display);
-  font-size: clamp(19px, 2.6vw, 27px);
+  font-size: clamp(18px, 2.3vw, 25px);
   line-height: 1.3;
-  margin: 0;
   text-wrap: balance;
 }
-.stage-caption em { color: var(--accent); font-family: var(--font-serif); font-style: italic; }
+.stage-caption em { color: var(--film-accent); font-family: var(--font-serif); font-style: italic; }
+.stage-caption .stamp { margin: 0 auto 10px; color: var(--film-cream); opacity: 0.8; }
 html.motion-on .stage-caption { opacity: 0; }
-.stage-caption[data-at="0"] { top: 16%; left: 6%; }
-.stage-caption[data-at="1"] { top: 40%; right: 5%; text-align: right; }
-.stage-caption[data-at="2"] { bottom: 14%; left: 8%; }
-@media (max-width: 720px) {
-  .stage-caption { max-width: 220px; font-size: 17px; }
-  .stage-caption[data-at="0"] { top: 8%; left: 5%; }
-  .stage-caption[data-at="1"] { top: auto; bottom: 20%; right: 5%; }
-  .stage-caption[data-at="2"] { bottom: 4%; left: 5%; }
-}
-html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: left; }
+html:not(.motion-on) .stage-caption { position: static; opacity: 1; margin: 0 auto; }
 
 .stamp {
   display: block;
@@ -140,7 +166,6 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
   margin-bottom: 10px;
   transform: rotate(-1.5deg);
 }
-.stage-caption[data-at="1"] .stamp { margin-left: auto; }
 
 /* ---------- Act 3 · Features ---------- */
 .feature-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
@@ -227,7 +252,7 @@ html:not(.motion-on) .stage-caption { position: static; opacity: 1; text-align: 
 .stage-ingredients { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .stage-ing {
   position: absolute;
-  top: 42%;
+  top: 44%;
   left: 50%;
   width: var(--w, 84px);
   height: auto;

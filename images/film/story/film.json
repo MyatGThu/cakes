@@ -1,0 +1,17 @@
+{
+  "frames": 144,
+  "smStep": 2,
+  "lg": [
+    1080,
+    810
+  ],
+  "sm": [
+    600,
+    600
+  ],
+  "sources": [
+    "s1-kling.mp4@3-10",
+    "s2b-kling.mp4@1-8",
+    "s3-seedance.mp4@0.5-6"
+  ]
+}

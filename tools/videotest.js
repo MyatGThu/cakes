@@ -52,6 +52,12 @@ async function withVp9Videos(page) {
   });
 }
 
+// Expectations come from the menu itself, so adding footage to a product (or
+// taking one out of season) doesn't silently break the counts below.
+const MENU = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/products.json'), 'utf8')).filter(p => p.available !== false);
+const WANT_VIDEOS = MENU.filter(p => p.video).length;
+const WANT_STILLS = MENU.length - WANT_VIDEOS;
+
 (async () => {
   await new Promise(r => server.listen(8102, r));
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || (fs.existsSync('/opt/pw-browsers/chromium') ? '/opt/pw-browsers/chromium' : undefined) });
@@ -77,7 +83,8 @@ async function withVp9Videos(page) {
       noAnimLeft: imgs.every(i => !i.getAttribute('src').includes('/anim/')),
     };
   });
-  console.log('desktop setup:', JSON.stringify(setup), '(want 3 videos, 3 stills, all true)');
+  console.log('desktop setup:', JSON.stringify(setup), `(want ${WANT_VIDEOS} videos, ${WANT_STILLS} stills, all true)`);
+  if (setup.videos !== WANT_VIDEOS || setup.stills !== WANT_STILLS || !setup.chromeless || !setup.muted || !setup.idle || !setup.postered) errors.push('[desktop] card media setup: ' + JSON.stringify(setup));
 
   const vanillaCard = p1.locator('.card', { hasText: 'Classic Vanilla' });
   // The page scrolls smoothly (css/style.css gates scroll-behavior on
@@ -113,10 +120,12 @@ async function withVp9Videos(page) {
   await withVp9Videos(p2);
   await p2.goto('http://localhost:8102/shop.html', { waitUntil: 'networkidle' });
   await p2.waitForSelector('.card .photo');
-  console.log('reduced motion:', await p2.evaluate(() => ({
+  const rm = await p2.evaluate(() => ({
     videos: document.querySelectorAll('.card video').length,
     posterStills: Array.from(document.querySelectorAll('.card img.photo')).filter(i => i.getAttribute('src').includes('-poster.webp')).length,
-  })), '(want 0 videos, 3 poster stills)');
+  }));
+  console.log('reduced motion:', rm, `(want 0 videos, ${WANT_VIDEOS} poster stills)`);
+  if (rm.videos !== 0 || rm.posterStills !== WANT_VIDEOS) errors.push('[reduced] ' + JSON.stringify(rm));
   await p2.close();
 
   // ---- 3. Video file missing: card falls back to an image ----
