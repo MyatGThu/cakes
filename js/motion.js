@@ -11,6 +11,8 @@
   var hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
 
   if (motionOK && hasGsap) document.documentElement.classList.add("motion-on");
+  function heroReady() { document.documentElement.classList.remove("motion-pending"); }
+  if (!(motionOK && hasGsap)) heroReady();
   if (!motionOK) {
     try { sessionStorage.removeItem("auretteWipe"); } catch (e) {}
     return;
@@ -80,6 +82,41 @@
     }
   }
 
+  /* ---------- Entrances wait for the page to settle ----------
+     The arrival wipe and the hero entrance used to start while the page was
+     still doing its heaviest work (images decoding, fonts reflowing, on the
+     shop the whole menu rendering), and lagSmoothing(0) then skipped the time
+     lost in those long frames — so their opening frames jumped (measured: the
+     shop's wipe lift ran its first nine frames at ~15fps). They now start on
+     `load` (and, on the shop, once the menu has rendered) plus two frames,
+     with an 800ms failsafe so a slow image can never hold the page. */
+  var settledQueue = [], settled = false;
+  function whenSettled(fn) { if (settled) fn(); else settledQueue.push(fn); }
+  (function () {
+    var loaded = document.readyState === "complete";
+    var menu = !document.getElementById("productGrid");
+    function go() {
+      if (settled) return;
+      settled = true;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { settledQueue.splice(0).forEach(function (fn) { fn(); }); });
+      });
+    }
+    function check() { if (loaded && menu) go(); }
+    if (!loaded) window.addEventListener("load", function () { loaded = true; check(); });
+    if (!menu) document.addEventListener("aurette:menu-rendered", function () { menu = true; check(); });
+    setTimeout(go, 800);
+    check();
+  })();
+
+  /* One layout re-measure for the burst of reasons to re-measure at start-up
+     (fonts, load, the menu, the Instagram tiles) rather than four in a row. */
+  var refreshTimer = 0;
+  function refreshSoon() {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(function () { ScrollTrigger.refresh(); }, 120);
+  }
+
   /* ---------- The page wipe (Dennis Snellenberg's signature move) ----------
      Internal navigation sweeps a curved ink sheet up over the page; the next
      page arrives already covered (html.wipe-hold, set pre-paint) and the
@@ -140,10 +177,11 @@
     wipeLabel.textContent = wipeArrived;
     gsap.set(wipeCenter, { opacity: 1 });
     document.documentElement.classList.remove("wipe-hold");
-    gsap.timeline({ delay: 0.12, onComplete: hideWipe })
+    var lift = gsap.timeline({ paused: true, onComplete: hideWipe })
       .to(wipeCenter, { opacity: 0, y: -26, duration: 0.3, ease: "power2.in" })
       .to(wipePath, { attr: { d: WIPE_LIFT }, duration: 0.42, ease: "power2.in" }, 0.08)
       .to(wipePath, { attr: { d: WIPE_GONE }, duration: 0.34, ease: "power2.out" }, ">");
+    whenSettled(function () { lift.play(); });
   } else {
     hideWipe();
   }
@@ -211,6 +249,10 @@
      easing here would fight the visitor's own hand. */
   var laneway = document.querySelector(".laneway");
   if (laneway) {
+    /* The ghost is centred with translateX(-50%); left to itself GSAP would
+       bake that into a pixel x on the first tween and it would sit hundreds of
+       pixels off-centre after a resize. Hand GSAP the percentage instead. */
+    gsap.set(".lane-ghost", { x: 0, xPercent: -50 });
     gsap.utils.toArray(".lane-layer").forEach(function (layer) {
       var depth = parseFloat(layer.getAttribute("data-lane") || "0.3");
       gsap.fromTo(layer,
@@ -271,7 +313,9 @@
        the few pixels the card appeared to move were just its bounding box
        growing as it turned. */
     function wobble(el, lift) {
+      var rest = null; // the CSS resting tilt, read before GSAP first touches it
       el.addEventListener("mouseenter", function () {
+        if (rest === null) rest = gsap.getProperty(el, "rotation");
         gsap.to(el, {
           rotation: gsap.utils.random(-2.6, 2.6),
           y: lift ? -6 : 0,
@@ -279,13 +323,14 @@
         });
       });
       el.addEventListener("mouseleave", function () {
-        /* clearProps hands the element back to CSS, which is what restores the
-           resting tilt. Without it a hovered scrap settled at a flat 0° and
-           stayed there — the pasted-up angle was lost for the rest of the
-           visit. The last degree of the return is a snap rather than a tween,
-           which at these angles is well under a pixel. */
+        /* Tween back to the resting tilt itself, then clearProps hands the
+           element back to CSS with nothing left to jump. Returning to 0° and
+           letting clearProps restore the tilt snapped the last degree in one
+           frame — about 5px at a card's corners, not the "under a pixel" this
+           comment used to claim. Without clearProps at all a hovered scrap
+           stays flat for the rest of the visit. */
         gsap.to(el, {
-          rotation: 0, y: 0,
+          rotation: rest || 0, y: 0,
           duration: 0.75, ease: viscous, overwrite: "auto",
           clearProps: "transform",
         });
@@ -300,10 +345,8 @@
   /* Three webfonts (Archivo, Fraunces, Caveat) land after first paint and
      reflow the page — without a refresh, ScrollTrigger keeps its stale
      measurements and reveal batches below the fold never fire. */
-  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
-  }
+  window.addEventListener("load", refreshSoon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refreshSoon);
 
   // Generic reveals — everything rises into place.
   /* Calm, not busy: things arrive one at a time. The trigger sits lower in the
@@ -347,15 +390,26 @@
     });
   }
   revealIn(gsap.utils.toArray("[data-reveal]:not(.scrap)"));
-  dealIn(gsap.utils.toArray(".scrap"));
+  /* The shop's "How it works" steps are also scraps, but on desktop the pinned
+     timeline below owns their opacity — and dealIn's overwrite: true deleted
+     that timeline's step tweens, so the highlight never moved. They are dealt
+     in only where there is no pin. */
+  var howSteps = gsap.utils.toArray("#how .step");
+  dealIn(gsap.utils.toArray(".scrap").filter(function (el) { return howSteps.indexOf(el) < 0; }));
+  gsap.matchMedia().add("(max-width: 859px)", function () { dealIn(howSteps); });
   document.addEventListener("aurette:menu-rendered", function () {
     dealIn(gsap.utils.toArray("#productGrid .card"));
-    ScrollTrigger.refresh();
+    refreshSoon();
   });
   document.addEventListener("aurette:ig-rendered", function () {
     revealIn(gsap.utils.toArray(".ig-tile"));
-    ScrollTrigger.refresh();
+    refreshSoon();
   });
+
+  // The hero entrance is one paused timeline, played once the page settles;
+  // its from() tweens still set their starting states immediately.
+  var intro = gsap.timeline({ paused: true });
+  whenSettled(function () { intro.play(); });
 
   // Hero headline: word cascade (landing page).
   var heroTitle = document.getElementById("heroTitle");
@@ -385,12 +439,12 @@
     heroTitle.innerHTML = "";
     heroTitle.appendChild(frag);
     var heroDelay = wipeArrived !== null ? 0.55 : 0.1; // wait for the wipe to lift
-    gsap.from(heroTitle.querySelectorAll(".word"), {
-      yPercent: 70, opacity: 0, duration: 1.0, stagger: 0.07, ease: rise, delay: heroDelay,
-    });
-    gsap.from(".act-hero .hero-mark, .act-hero .eyebrow, .act-hero .sub, .act-hero .cta-row, .scroll-cue", {
-      opacity: 0, y: 20, duration: 0.9, stagger: 0.12, ease: "power2.out", delay: heroDelay + 0.3,
-    });
+    intro.from(heroTitle.querySelectorAll(".word"), {
+      yPercent: 70, opacity: 0, duration: 1.0, stagger: 0.07, ease: rise,
+    }, heroDelay);
+    intro.from(".act-hero .hero-mark, .act-hero .eyebrow, .act-hero .sub, .act-hero .cta-row, .scroll-cue", {
+      opacity: 0, y: 20, duration: 0.9, stagger: 0.12, ease: "power2.out",
+    }, heroDelay + 0.3);
   }
 
   // Hero parallax: scroll depth + pointer drift (desktop fine pointers only).
@@ -420,27 +474,44 @@
     }
     gsap.to(".scroll-cue", {
       opacity: 0,
-      scrollTrigger: { trigger: heroAct, start: "top top", end: "18% top", scrub: true },
+      scrollTrigger: {
+        trigger: heroAct, start: "top top", end: "18% top", scrub: true,
+        // the CSS bob keeps ticking under opacity 0 — stop it once it is gone
+        onLeave: function () { document.documentElement.classList.add("cue-gone"); },
+        onEnterBack: function () { document.documentElement.classList.remove("cue-gone"); },
+      },
     });
 
     // Ingredients: fly IN on arrival (img), bob idly (img), and scatter back
     // OUT as you scroll away (wrapper) — separate layers, no transform fights.
     var introDelay = (wipeArrived !== null ? 0.55 : 0.1) + 0.35;
+    /* The idle bob repeats forever, so it only runs while the hero is on
+       screen — an off-screen loop is main-thread work for nothing (measured:
+       most of an idle phone's per-second budget, with the marquee below). */
+    var bobs = [];
+    var heroOnScreen = ScrollTrigger.create({
+      trigger: heroAct, start: "top bottom", end: "bottom top",
+      onToggle: function (self) {
+        heroOnScreen = self.isActive;
+        bobs.forEach(function (t) { t.paused(!heroOnScreen); });
+      },
+    }).isActive;
     gsap.utils.toArray(".act-hero .ing-fly").forEach(function (el, i) {
       var img = el.querySelector(".ing");
       var fx = parseFloat(el.getAttribute("data-fx") || "0");
       var fy = parseFloat(el.getAttribute("data-fy") || "-160");
       var rot = parseFloat(el.getAttribute("data-rot") || "90");
-      gsap.from(img, {
+      intro.from(img, {
         x: fx, y: fy, rotation: rot, opacity: 0,
-        duration: 1.3, delay: introDelay + i * 0.07, ease: "power3.out",
+        duration: 1.3, ease: "power3.out",
         onComplete: function () {
-          gsap.to(img, {
+          bobs.push(gsap.to(img, {
             y: "+=" + (7 + (i % 3) * 4), rotation: (i % 2 ? 4 : -4),
             duration: 2 + (i % 3) * 0.6, repeat: -1, yoyo: true, ease: "sine.inOut",
-          });
+            paused: !heroOnScreen,
+          }));
         },
-      });
+      }, introDelay + i * 0.07);
       gsap.fromTo(el, { x: 0, y: 0, rotation: 0, opacity: 1 }, {
         x: fx * 0.55, y: -140 - (i % 4) * 70, rotation: rot * 0.4, opacity: 0, ease: "none",
         scrollTrigger: { trigger: heroAct, start: "top top", end: "bottom top", scrub: 0.5 },
@@ -462,6 +533,13 @@
      half the frame count. Until a frame is on the canvas the still stays up,
      and without motion-on there is no canvas at all: the still (the finished
      cake) IS the static page.
+
+     Decoding is the other half of fluid. A loaded <img> is still compressed —
+     the browser may throw its pixels away again — and drawImage() on it
+     decodes on the main thread mid-frame (measured: most of the dropped
+     frames on the stage on phones). So frames near the playhead are turned
+     into ImageBitmaps, which decode off-thread, and bitmaps that fall out of
+     that window are closed so memory stays bounded however long the film is.
 
      data-sequence is an edit list over the cut frames ("1-80,81-120,120-81")
      so a shot can play forwards and then run back on itself — the layers
@@ -487,7 +565,11 @@
     var step = small ? 2 : 1;
     var last = Math.floor((total - 1) / step) * step;
     function snap(i) { return Math.min(last, Math.round(i / step) * step); }
-    var frames = [];
+    var frames = [];   // loaded, still-compressed images
+    var bits = {};     // decoded ImageBitmaps, only near the playhead
+    var decoding = {};
+    var WIN = 12 * step; // frames either side of the playhead kept decoded
+    var canBitmap = typeof window.createImageBitmap === "function";
     var want = 0, drawn = -1, started = false, live = false;
 
     function url(i) { return base + "/" + set + "/" + ("00" + (i + 1)).slice(-3) + ".webp"; }
@@ -508,19 +590,52 @@
       return -1;
     }
     function fit() {
-      var w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+      // Never more canvas pixels than the frames have: painting a 600px frame
+      // into a 718px canvas costs a third more fill for no extra detail.
+      var cap = small ? 600 : 1080;
+      var scale = Math.min(dpr, cap / Math.max(1, canvas.clientWidth));
+      var w = Math.round(canvas.clientWidth * scale), h = Math.round(canvas.clientHeight * scale);
       if (w && h && (canvas.width !== w || canvas.height !== h)) {
         canvas.width = w; canvas.height = h; drawn = -1;
       }
     }
+    // Prefer a frame that is already decoded if one is within a couple of
+    // steps — a near-enough frame now beats the exact one after a stall.
+    function pick(i) {
+      for (var d = 0; d <= 2 * step; d += step) {
+        if (bits[i - d]) return i - d;
+        if (bits[i + d]) return i + d;
+      }
+      return nearest(i);
+    }
+    function decodeWindow() {
+      if (!canBitmap) return;
+      for (var i = Math.max(0, want - WIN); i <= Math.min(last, want + WIN); i += step) {
+        if (frames[i] && !bits[i] && !decoding[i]) {
+          decoding[i] = true;
+          (function (k) {
+            createImageBitmap(frames[k]).then(function (b) {
+              decoding[k] = false;
+              if (Math.abs(k - want) > WIN) { b.close(); return; }
+              bits[k] = b;
+              draw();
+            }, function () { decoding[k] = false; });
+          })(i);
+        }
+      }
+      for (var key in bits) {
+        if (Math.abs(key - want) > WIN) { bits[key].close(); delete bits[key]; }
+      }
+    }
     function draw() {
-      var i = nearest(want);
+      var i = pick(want);
       if (i < 0 || i === drawn) return;
-      var img = frames[i], cw = canvas.width, ch = canvas.height;
+      var src = bits[i] || frames[i], cw = canvas.width, ch = canvas.height;
       if (!cw || !ch) return;
-      var s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight); // cover
-      var w = img.naturalWidth * s, h = img.naturalHeight * s;
-      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
+      var iw = src.naturalWidth || src.width, ih = src.naturalHeight || src.height;
+      var s = Math.max(cw / iw, ch / ih); // cover
+      var w = iw * s, h = ih * s;
+      ctx.drawImage(src, (cw - w) / 2, (ch - h) / 2, w, h);
       drawn = i;
       if (!live) { live = true; el.classList.add("film-live"); }
     }
@@ -539,7 +654,7 @@
             img.onload = function () {
               // decode off the main thread before the canvas ever asks for it
               var ready = img.decode ? img.decode() : Promise.resolve();
-              ready.catch(function () {}).then(function () { frames[i] = img; draw(); done(); });
+              ready.catch(function () {}).then(function () { frames[i] = img; decodeWindow(); draw(); done(); });
             };
             img.onerror = done;
             img.src = url(i);
@@ -551,11 +666,15 @@
     return {
       load: load,
       seek: function (p) {
-        want = snap(seq[Math.round(p * (seq.length - 1))]);
+        var next = snap(seq[Math.round(p * (seq.length - 1))]);
+        if (next !== want) { want = next; decodeWindow(); }
         draw();
       },
     };
   }
+
+  // Every hero starting state is set by now — let it be seen.
+  heroReady();
 
   // The stage: ingredients fly in and vanish into the film, which then plays
   // the cake being made from the scroll position.
@@ -636,7 +755,13 @@
         if (Math.abs(v) > Math.abs(boost.v) || v * boost.v < 0) boost.v = v;
       },
     });
+    // Runs only while the ribbon is on screen, ticker included.
+    loop.paused(!ScrollTrigger.create({
+      trigger: track.parentElement, start: "top bottom", end: "bottom top",
+      onToggle: function (self) { loop.paused(!self.isActive); },
+    }).isActive);
     gsap.ticker.add(function () {
+      if (loop.paused()) return;
       loop.timeScale(gsap.utils.interpolate(loop.timeScale(), boost.v, 0.08));
       boost.v = gsap.utils.interpolate(boost.v, 1, 0.03);
     });

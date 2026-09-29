@@ -38,6 +38,17 @@
           setTimeout(function () { document.documentElement.classList.remove("wipe-hold"); }, 2200);
         }
       } catch (e) { /* the page wipe is optional */ }
+      /* The GSAP scripts are deferred, so the hero would paint plain, then be
+         hidden and re-animated when they arrive — a visible flash on a slow
+         connection. Hold it invisible (visibility, so nothing reflows) until
+         motion.js has set its starting states; the timeout means a script
+         that never arrives costs at most 1.5s, never the hero itself. */
+      try {
+        if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+          document.documentElement.classList.add("motion-pending");
+          setTimeout(function () { document.documentElement.classList.remove("motion-pending"); }, 1500);
+        }
+      } catch (e) { /* optional */ }
     })();
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>

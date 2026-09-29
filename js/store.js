@@ -410,6 +410,7 @@
     var cats = categoryList();
     if (videoWatcher) { videoWatcher.disconnect(); videoWatcher = null; }
     host.innerHTML = "";
+    host.setAttribute("data-rendered", ""); // releases the reserved height (style.css)
     $("emptyNote").hidden = items.length > 0;
 
     /* Filtering silently swaps the grid; without this a screen reader user gets
@@ -1258,6 +1259,7 @@
       openFromHash();
     })
     .catch(function (err) {
+      $("productGrid").setAttribute("data-rendered", "");
       $("shopName").textContent = "Oops";
       $("heroText").textContent =
         "The menu couldn't be loaded. If you're the owner, check that data/products.json and data/settings.json exist. (" +

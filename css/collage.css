@@ -27,16 +27,21 @@ body {
   background-size: 7px 7px, 100% 100%, 100% 100%;
 }
 
-/* One fixed paper-tooth overlay for the entire page (cheapest grain there is). */
+/* One fixed paper-tooth overlay for the entire page.
+   Black noise carried in the ALPHA channel (the feColorMatrix zeroes RGB and
+   keeps the turbulence's alpha), composited normally. It used to be grey
+   noise under mix-blend-mode: multiply, which looks the same but forces the
+   whole viewport to be re-blended on every scrolled frame — measured as the
+   single largest source of dropped frames on the site (36–53 slow frames per
+   landing scroll → 0). Match the look with opacity, never with a blend mode. */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 60;
-  opacity: 0.05;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.016;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 /* ---------- Scraps: a torn sheet of paper pasted on the ground ---------- */

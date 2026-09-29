@@ -118,6 +118,14 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
   transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
 }
 .btn:active { transform: scale(0.97); }
+/* With motion on, GSAP owns the magnetic buttons' transform and writes it
+   every frame; a CSS transition on transform then chases each write and the
+   drawn button lags the real one (measured 4px average, 8px worst). Drop
+   transform from the transition list there — colour and shadow keep theirs. */
+@media (pointer: fine) {
+  html.motion-on .btn-primary { transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease; }
+  html.motion-on .btn-outline { transition: background-color 0.18s ease, color 0.5s var(--ease-viscous), box-shadow 0.18s ease; }
+}
 .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(176, 48, 82, 0.28); }
 .btn-primary:hover { background: var(--accent-dark); }
 .btn-outline { background: transparent; color: var(--accent); border-color: var(--accent); }
@@ -166,6 +174,18 @@ label { font-weight: 600; font-size: 14px; display: block; margin-bottom: 4px; }
                 transform 0.12s ease, box-shadow 0.18s ease;
   }
 }
+
+/* The tilted marquee and the dealt-in cards (which arrive from up to 130px
+   sideways) lean past the viewport edge; clip — not hidden, which would
+   break the sticky header, tab strip and film stage — stops sideways
+   scrolling on every page. */
+body { overflow-x: clip; }
+
+/* The grid is empty until products.json arrives, so everything under it
+   painted in the first screen and was then shoved off it (layout shift 0.84
+   desktop / 0.93 phone). Hold a screen for it until store.js marks it
+   rendered — which it also does when the menu fails to load. */
+#productGrid:not([data-rendered]) { min-height: 100svh; }
 
 /* ---------- Announcement + header ---------- */
 .announcement {
@@ -431,6 +451,7 @@ section.block { padding: clamp(68px, 14vh, 168px) 0; }
    the two pages that have no tabs.
    This works only while no ancestor scrolls or transforms — if `overflow-x:
    hidden` ever lands on body/main/.wrap to chase a scrollbar, it dies quietly.
+   (body's `overflow-x: clip` is fine: clip does not make a scroll container.)
    Short viewports keep the plain scrolling row: on a landscape phone the
    header plus the strip would eat a third of the screen. */
 @media (min-height: 600px) {

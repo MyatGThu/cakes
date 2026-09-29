@@ -1,9 +1,5 @@
 /* Landing-page acts — layered on style.css tokens. */
 
-/* The tilted marquee leans past the viewport edge; clip (not hidden — that
-   would break the sticky header and cake stage) stops sideways scrolling. */
-body { overflow-x: clip; }
-
 .act { position: relative; }
 
 .act > .wrap, .about-tease-inner { position: relative; z-index: 1; }
@@ -80,6 +76,13 @@ body { overflow-x: clip; }
   .cue-arrow { animation: cueBob 1.6s ease-in-out infinite; }
 }
 @keyframes cueBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+html.cue-gone .cue-arrow { animation: none; }
+
+/* Set pre-paint by index.html's head script, cleared by motion.js (or a
+   1.5s failsafe): the hero waits for its entrance instead of flashing. */
+html.motion-pending .act-hero .hero-inner,
+html.motion-pending .act-hero .hero-art,
+html.motion-pending .scroll-cue { visibility: hidden; }
 
 /* ---------- Act 2 · The screening room ----------
    The one act that leaves the paper: a dark room with the film in it, so the
@@ -117,7 +120,10 @@ html:not(.motion-on) .stage-sticky { position: relative; height: auto; padding: 
   position: relative; z-index: 1;
   width: min(92vw, 1100px, calc((100svh - 250px) * 1.43));
 }
-html.motion-on .stage-cake { margin-top: -6svh; }
+/* Its own layer: the scrubbed scale would otherwise repaint the frame and its
+   90px shadow on every scrolled frame (measured: thousands of paint tasks
+   across the stage → a few hundred). */
+html.motion-on .stage-cake { margin-top: -6svh; will-change: transform; }
 .film {
   position: relative;
   aspect-ratio: 1.43;

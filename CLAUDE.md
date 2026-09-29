@@ -109,6 +109,50 @@ firing a real mouseleave that paused the very video the test was measuring.
 `videotest.js` now waits for `scrollY` to stop before hovering. Any new hover
 assertion needs the same wait.
 
+### Frame budget — rules measured, not guessed
+
+A measured audit (frame timing per section, paint/raster traces, CPU-throttled
+phone runs) found where the dropped frames actually came from. Each rule below
+removed a measured cost; keep them:
+
+- **No `mix-blend-mode` on anything fixed or full-screen.** The paper grain
+  (`body::after`) was grey noise under `multiply`, which re-blends the whole
+  viewport every scrolled frame — the single largest cost on the site (landing
+  36–53 slow frames per scroll → 0 without it). It is now black noise carried
+  in alpha at low opacity: same look, normal compositing.
+- **Anything scrubbed with a big shadow gets its own layer** (`will-change:
+  transform` on `.stage-cake`), or it repaints itself and its 90px shadow on
+  every frame.
+- **Never `drawImage` an undecoded image mid-scroll.** The film decodes frames
+  near the playhead into ImageBitmaps (off-thread) and closes the rest.
+- **Infinite loops run only on screen**: the hero bob and the marquee
+  (ticker included) pause via ScrollTrigger `onToggle`; the CSS scroll-cue
+  bob stops under `html.cue-gone`.
+- **Entrances start when the page has settled** — `whenSettled()` in motion.js
+  (`load`, the menu rendered on the shop, then two frames; 800ms failsafe).
+  `lagSmoothing(0)` skips time lost in long frames, so anything started during
+  load visibly jumps. Layout re-measures go through `refreshSoon()`, one
+  debounced `ScrollTrigger.refresh()`, never several in a row.
+- **The hero waits invisibly for its entrance**: index.html's head script adds
+  `html.motion-pending` (visibility, so nothing reflows) and motion.js clears
+  it once the starting states are set — or a 1.5s failsafe does.
+- **Don't let CSS transition a transform GSAP is writing.** The magnetic
+  buttons drop `transform` from their transition list under `motion-on`; a
+  transition chasing per-frame writes made the drawn button lag by ~4px.
+- **`dealIn()` uses `overwrite: true`**, which deletes other tweens on the
+  same element — it must never run on elements a pinned timeline animates
+  (the shop's `#how .step` on desktop; they are dealt in below 860px only).
+- **A wobble returns to the element's resting tilt**, read once with
+  `gsap.getProperty`, before `clearProps` — returning to 0° and letting CSS
+  restore the tilt snapped ~5px at a card's corners.
+- **Percent-centred elements get `xPercent`, not a CSS translate** — GSAP
+  bakes a CSS `translateX(-50%)` into pixels on its first tween (the laneway
+  ghost sat 312px off-centre after a resize).
+- **Reserve space for content that arrives by fetch**: the shop grid holds
+  100svh until `store.js` marks it `data-rendered` (layout shift 0.84 → ~0).
+- `body { overflow-x: clip }` lives in style.css for every page — clip, never
+  hidden, which would break every sticky element.
+
 ### Smooth scroll (Lenis) — why the parallax is smooth
 
 A mouse wheel delivers scroll in discrete jumps, so every scrub-driven tween on
