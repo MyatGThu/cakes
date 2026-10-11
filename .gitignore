@@ -2,3 +2,7 @@ node_modules/
 tools/out/*
 !tools/out/.gitkeep
 tools/testmedia/
+
+# unlazy skill working state
+/.unlazy/
+.unlazy-hook-state.json
